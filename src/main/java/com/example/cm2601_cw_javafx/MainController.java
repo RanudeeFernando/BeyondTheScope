@@ -32,10 +32,11 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("sign-up.fxml"));
             Parent root = loader.load();
 
-            Scene scene = onSignUpButtonClick.getScene();
-            scene.setRoot(root);
 
-        } catch (IOException e) {
+
+        }
+
+        catch (IOException e) {
             e.printStackTrace();
             String errorMessage = "An error occurred while handling the add horse details button";
             System.out.println(errorMessage);
