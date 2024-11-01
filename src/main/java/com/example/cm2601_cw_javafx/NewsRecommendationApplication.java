@@ -13,15 +13,15 @@ public class NewsRecommendationApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Loading the main FXML file
-        FXMLLoader fxmlLoader = new FXMLLoader(NewsRecommendationApplication.class.getResource("main-page.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(),1100,700);
+        FXMLLoader fxmlLoader = new FXMLLoader(NewsRecommendationApplication.class.getResource("main.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(),1100,750);
 
         // Set application logo
         Image icon = new Image(Objects.requireNonNull(NewsRecommendationApplication.class.getResourceAsStream("logo1.png")));
         stage.getIcons().add(icon);
 
         // Setting the stage title and scene
-        stage.setTitle("New Recommendation System");
+        stage.setTitle("News Recommendation System");
         stage.setScene(scene);
 
         // Disable resizing of the stage
