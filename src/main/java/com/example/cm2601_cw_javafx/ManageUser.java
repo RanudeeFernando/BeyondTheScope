@@ -4,11 +4,14 @@ import java.io.*;
 import java.util.List;
 import java.util.UUID;
 
-public class UserStorage {
+public class ManageUser {
     private static final String FILE_NAME = "users.csv"; // Renamed for clarity
 
 
     public String registerUser(String username, String password, String confirmPassword, List<Category> selectedCategories) {
+        if (!validateUsername(username)){
+            return "Username must be at least 8 characters and only contain letters.";
+        }
         if (usernameExists(username)) {
             return "Username already exists!";
         }
@@ -27,6 +30,10 @@ public class UserStorage {
         storeUser(user);
 
         return "User successfully registered!";
+    }
+
+    private boolean validateUsername(String username) {
+        return username.length() >= 8 && username.matches("[A-Za-z]+");
     }
 
     private boolean validatePassword(String password) {
@@ -59,8 +66,9 @@ public class UserStorage {
             }
             writer.write(user.getUserID() + "," + user.getUsername() + "," + user.getPassword() + "," + user.getSelectedCategoriesAsString());
             writer.newLine();
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("The file \"users.csv\" does not exist.");
         }
     }
 

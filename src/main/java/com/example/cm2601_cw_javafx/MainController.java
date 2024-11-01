@@ -35,7 +35,6 @@ public class MainController extends BaseController{
         }
 
         catch (IOException e) {
-            e.printStackTrace();
             String errorMessage = "An error occurred while signing up.";
             System.out.println(errorMessage);
         }
@@ -52,7 +51,6 @@ public class MainController extends BaseController{
         }
 
         catch (IOException e) {
-            e.printStackTrace();
             String errorMessage = "An error occurred while logging in.";
             System.out.println(errorMessage);
         }

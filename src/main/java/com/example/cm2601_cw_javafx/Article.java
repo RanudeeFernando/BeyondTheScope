@@ -45,7 +45,7 @@ public class Article {
     // Optionally, you can override toString() for better display
     @Override
     public String toString() {
-        return STR."Article{articleID='\{articleID}\{'\''}, title='\{title}\{'\''}, category=\{category}, author='\{author}\{'\''}, source='\{source}\{'\''}\{'}'}";
+        return "Article{articleID='" + articleID + '\'' + ", title='" + title + '\'' + ", category=" + category + ", author='" + author + '\'' + ", source='" + source + '\'' + '}';
     }
 
 }
