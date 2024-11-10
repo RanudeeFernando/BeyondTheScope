@@ -11,7 +11,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cm2601_cw_javafx.SignUpController">
    <children>
       <ImageView fx:id="imageViewLogo" fitHeight="125.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true" />
@@ -53,17 +52,17 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <CheckBox fx:id="categoryHealth" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Health">
+            <CheckBox fx:id="categoryHealth" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Health" GridPane.columnIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryBusiness" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Business" GridPane.rowIndex="1">
+            <CheckBox fx:id="categoryBusiness" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Business" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryTechnology" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Technology" GridPane.rowIndex="2">
+            <CheckBox fx:id="categoryTechnology" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Technology" GridPane.rowIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
@@ -73,7 +72,7 @@
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categorySports" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Sports" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <CheckBox fx:id="categorySports" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Sports">
                <font>
                   <Font size="14.0" />
                </font>
@@ -98,7 +97,7 @@
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryAI" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="AI" GridPane.columnIndex="1">
+            <CheckBox fx:id="categoryAI" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="AI" GridPane.rowIndex="2">
                <font>
                   <Font size="14.0" />
                </font>

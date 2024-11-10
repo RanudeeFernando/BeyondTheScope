@@ -17,10 +17,10 @@ import java.util.List;
 public class SignUpController extends BaseController{
 
     // When using csv change instance variable to manageUser
-    private final ManageUser manageUser = new ManageUser();
+    // private final ManageUser manageUser = new ManageUser();
 
     // When using database - SQLite
-    private final UserDatabaseManager userDatabaseManager = new UserDatabaseManager();
+    // private final UserDatabaseManager userDatabaseManager = new UserDatabaseManager();
 
     // When using database - MySQL
     private final UserManager userManager = new UserManager();

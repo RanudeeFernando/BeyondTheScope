@@ -7,11 +7,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserManager {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/news_recommendation_system_db";
 
     public String registerUser(String username, String password, String confirmPassword, List<Category> selectedCategories) {
         if (!validateUsername(username)) {
-            return "Username must be at least 8 characters and only contain letters.";
+            return "Username must be at least 4 characters and only contain letters.";
         }
         if (usernameExists(username)) {
             return "Username already exists!";
@@ -26,8 +25,8 @@ public class UserManager {
             return "Please select at least two categories.";
         }
 
-        try (Connection conn = MySQLConnection.connectToDatabase();
-             PreparedStatement userStatement = conn.prepareStatement("INSERT INTO user (username, password) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = MySQLConnection.connectToDatabase();
+             PreparedStatement userStatement = connection.prepareStatement("INSERT INTO user (username, password) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             userStatement.setString(1, username);
             userStatement.setString(2, password);
@@ -41,6 +40,16 @@ public class UserManager {
                 return "Failed to retrieve generated user ID.";
             }
 
+            // Insert into 'user_category' table for each selected category
+            try (PreparedStatement categoryStatement = connection.prepareStatement(
+                    "INSERT INTO user_category (userID, categoryName) VALUES (?, ?)")) {
+                for (Category category : selectedCategories) {
+                    categoryStatement.setInt(1, userId);
+                    categoryStatement.setString(2, category.getName()); // Use the category name directly
+                    categoryStatement.executeUpdate();
+                }
+            }
+
             return "User successfully registered!";
         } catch (SQLException e) {
             return "Registration failed. Please try again: " + e.getMessage();
@@ -48,7 +57,7 @@ public class UserManager {
     }
 
     private boolean validateUsername(String username) {
-        return username.length() >= 8 && username.matches("[A-Za-z]+");
+        return username.length() >= 4 && username.matches("[A-Za-z]+");
     }
 
     private boolean validatePassword(String password) {
@@ -57,12 +66,12 @@ public class UserManager {
 
     private boolean usernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM user WHERE username = ?";
-        try (Connection conn = MySQLConnection.connectToDatabase();
-             PreparedStatement checkUsernameStatement = conn.prepareStatement(sql)) {
+        try (Connection connection = MySQLConnection.connectToDatabase();
+             PreparedStatement checkUsernameStatement = connection.prepareStatement(sql)) {
             checkUsernameStatement.setString(1, username);
-            ResultSet rs = checkUsernameStatement.executeQuery();
-            rs.next();
-            return rs.getInt(1) > 0;
+            ResultSet resultSet = checkUsernameStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1) > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -6,14 +6,14 @@ public enum Category {
     AI,
     HEALTH,
     BUSINESS,
-    ENTERTAINMENT,
+    NATURE,
     POLITICS,
     SCIENCE,
     EDUCATION,
-    NATURE;
+    ENTERTAINMENT;
 
     public String getName() {
-        return this.name().toLowerCase(); // Returns the category name in lowercase
+        return this.name(); // Returns the category name in lowercase
     }
 
 
