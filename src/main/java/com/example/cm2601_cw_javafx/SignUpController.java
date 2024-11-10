@@ -16,8 +16,15 @@ import java.util.List;
 
 public class SignUpController extends BaseController{
 
+    // When using csv change instance variable to manageUser
     private final ManageUser manageUser = new ManageUser();
+
+    // When using database - SQLite
     private final UserDatabaseManager userDatabaseManager = new UserDatabaseManager();
+
+    // When using database - MySQL
+    private final UserManager userManager = new UserManager();
+
 
     @FXML
     private ImageView imageViewLogo;
@@ -64,7 +71,7 @@ public class SignUpController extends BaseController{
 
         List<Category> selectedCategories = getSelectedCategories();
 
-        String result = userDatabaseManager.registerUser(username, password, confirmPassword, selectedCategories);
+        String result = userManager.registerUser(username, password, confirmPassword, selectedCategories);
         showAlert(result);
 
         // Clear fields if registration is successful

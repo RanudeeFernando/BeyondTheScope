@@ -21,12 +21,13 @@ public class UserDatabaseManager {
                 "category TEXT, " +
                 "FOREIGN KEY(userID) REFERENCES users(userID))";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
+        try (Connection connection = DriverManager.getConnection(DB_URL);
+             Statement stmt = connection.createStatement()) {
             stmt.execute(userTableSQL);
             stmt.execute(categoryTableSQL);
+            System.out.println("CONNECTED TO SQLITE");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("IM TRYINGGGG");
         }
     }
 
@@ -65,7 +66,6 @@ public class UserDatabaseManager {
 
             return "User successfully registered!";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Registration failed. Please try again.";
         }
     }
@@ -86,6 +86,7 @@ public class UserDatabaseManager {
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             return rs.getInt(1) > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

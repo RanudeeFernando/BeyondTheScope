@@ -7,11 +7,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class NewsRecommendationApplication extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
+
         // Loading the main FXML file
         FXMLLoader fxmlLoader = new FXMLLoader(NewsRecommendationApplication.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load(),1100,750);

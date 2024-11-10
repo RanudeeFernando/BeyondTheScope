@@ -1,4 +1,5 @@
 module com.example.cm2601_cw_javafx {
+    requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
