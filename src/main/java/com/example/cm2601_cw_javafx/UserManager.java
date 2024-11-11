@@ -78,4 +78,30 @@ public class UserManager {
             return false;
         }
     }
+
+    public String loginUser(String username, String password) {
+        String sql = "SELECT password FROM user WHERE username = ?";
+        try (Connection connection = MySQLConnection.connectToDatabase();
+             PreparedStatement loginStatement = connection.prepareStatement(sql)) {
+
+            loginStatement.setString(1, username);
+            ResultSet resultSet = loginStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String storedPassword = resultSet.getString("password");
+                if (storedPassword.equals(password)) {
+                    return "Login successful!";
+                } else {
+                    return "Invalid password.";
+                }
+            } else {
+                return "Username not found.";
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Login failed. Please try again: " + e.getMessage();
+        }
+    }
+
 }

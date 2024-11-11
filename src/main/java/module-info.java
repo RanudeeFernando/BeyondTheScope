@@ -3,6 +3,7 @@ module com.example.cm2601_cw_javafx {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires org.json;
 
 
     opens com.example.cm2601_cw_javafx to javafx.fxml;

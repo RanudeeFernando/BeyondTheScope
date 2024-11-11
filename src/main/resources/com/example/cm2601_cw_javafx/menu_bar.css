@@ -1,0 +1,14 @@
+.menu-bar {
+    -fx-background-color: #000000; /* Background color */
+    -fx-padding: 5px; /* Padding */
+}
+
+/* Style for the top-level menu items */
+.menu-bar .label {
+    -fx-text-fill: #ffffff; /* White text color for menu bar items */
+    -fx-font-size: 18px; /* Font size */
+}
+
+.context-menu {
+    -fx-background-color: #333333; /* Background color for dropdown menu */
+}
