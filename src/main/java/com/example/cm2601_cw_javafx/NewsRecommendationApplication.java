@@ -9,7 +9,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class NewsRecommendationApplication extends Application {
 
@@ -33,6 +37,22 @@ public class NewsRecommendationApplication extends Application {
 
         // Displaying the stage
         stage.show();
+
+        // Start the background article fetch scheduler
+        startArticleFetchScheduler();
+
+    }
+
+    private static void startArticleFetchScheduler() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        // Schedule the fetch task to run every 6 hours
+        scheduler.scheduleAtFixedRate(() -> {
+            List<String> articles = ArticleFetcher.fetchArticles();
+            articles.forEach(System.out::println);
+        }, 0, 6, TimeUnit.HOURS);
+
+        System.out.println("Article fetch scheduler started.");
     }
 
     public static void main(String[] args) {
