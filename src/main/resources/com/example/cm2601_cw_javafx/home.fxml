@@ -16,12 +16,27 @@
                <items>
                   <MenuItem mnemonicParsing="false" text="Refresh Page" />
                </items></Menu>
+            <Menu mnemonicParsing="false" text="For You" />
           <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
             <items>
               <MenuItem mnemonicParsing="false" text="View History" />
                 <MenuItem mnemonicParsing="false" text="Manage Preferences" />
             </items>
           </Menu>
+            <Menu fx:id="homeMenu1" mnemonicParsing="false" text="Categories">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Sports" />
+                  <MenuItem mnemonicParsing="false" text="Technology" />
+                  <MenuItem mnemonicParsing="false" text="AI" />
+                  <MenuItem mnemonicParsing="false" text="Health" />
+                  <MenuItem mnemonicParsing="false" text="Business" />
+                  <MenuItem mnemonicParsing="false" text="Nature" />
+                  <MenuItem mnemonicParsing="false" text="Politics" />
+                  <MenuItem mnemonicParsing="false" text="Science" />
+                  <MenuItem mnemonicParsing="false" text="Education" />
+                  <MenuItem mnemonicParsing="false" text="Entertainement" />
+               </items>
+            </Menu>
           <Menu fx:id="logoutMenu" mnemonicParsing="false" text="Logout" />
         </menus>
       </MenuBar>

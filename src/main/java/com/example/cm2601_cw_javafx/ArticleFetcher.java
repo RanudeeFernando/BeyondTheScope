@@ -67,28 +67,28 @@ public class ArticleFetcher {
         return articleTitles;
     }
 
-    // Checks if title and sourceName are non-null and non-empty
+
     private static boolean isValidArticle(String title, String sourceName, String author, String content, String url) {
         return title != null && !title.trim().isEmpty() && !title.equalsIgnoreCase("[Removed]") &&
                 sourceName != null && !sourceName.trim().isEmpty() && !sourceName.equalsIgnoreCase("[Removed]") &&
                 url != null && !url.trim().isEmpty() &&
                 (author == null || !author.trim().equalsIgnoreCase("[Removed]")) &&  // Allow null but check for "[Removed]"
-                (content == null || !content.trim().equalsIgnoreCase("[Removed]")); // Allow null but check for "[Removed]"
+                content != null && !content.trim().isEmpty() && !content.equalsIgnoreCase("[Removed]"); // Ensure content is not null or empty
     }
 
 
     private static void addArticleToDatabase(String title, String source, String author, String content, String url, String publishedDate) {
         String sql = "INSERT INTO article (title, source, author, content, url, publishedDate) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection dbConnection = MySQLConnection.connectToDatabase();
-             PreparedStatement pstmt = dbConnection.prepareStatement(sql)) {
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
 
-            pstmt.setString(1, title);
-            pstmt.setString(2, source);
-            pstmt.setString(3, author);
-            pstmt.setString(4, content);
-            pstmt.setString(5, url);
-            pstmt.setTimestamp(6, parsePublishedDate(publishedDate));
-            pstmt.executeUpdate();
+            statement.setString(1, title);
+            statement.setString(2, source);
+            statement.setString(3, author);
+            statement.setString(4, content);
+            statement.setString(5, url);
+            statement.setTimestamp(6, parsePublishedDate(publishedDate));
+            statement.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,10 +98,10 @@ public class ArticleFetcher {
     private static boolean isDuplicateArticle(String url) {
         String sql = "SELECT COUNT(*) FROM article WHERE url = ?";
         try (Connection dbConnection = MySQLConnection.connectToDatabase();
-             PreparedStatement pstmt = dbConnection.prepareStatement(sql)) {
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
 
-            pstmt.setString(1, url);
-            ResultSet resultSet = pstmt.executeQuery();
+            statement.setString(1, url);
+            ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getInt(1) > 0;
             }
@@ -120,6 +120,7 @@ public class ArticleFetcher {
         }
         return null;
     }
+
 
     public static void main(String[] args) {
         List<String> articles = fetchArticles();
