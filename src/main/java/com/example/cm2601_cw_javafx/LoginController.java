@@ -31,6 +31,7 @@ public class LoginController extends BaseController{
         setLogoImage(imageViewLogo, "images/logo5.png");
     }
 
+/*
     @FXML
     public void handleLogin() {
         String username = usernameField.getText();
@@ -43,6 +44,43 @@ public class LoginController extends BaseController{
         if (result.equals("Login successful!")) {
             clearFields();
             navigateToHomePage();
+        }
+    }
+*/
+
+    @FXML
+    public void handleLogin() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        // First, validate credentials using loginUser()
+        String result = userManager.loginUser(username, password);
+
+        if (result.equals("Login successful!")) {
+            // Retrieve the user ID separately
+            int userId = userManager.getUserIdByUsername(username);
+            if (userId != -1) { // Assuming -1 indicates user ID not found
+                // Set user information in UserSession
+                UserSession.getInstance().setUserId(userId);
+                UserSession.getInstance().setUsername(username);
+
+                // Show success alert
+                showAlert(result);
+
+                // Clear input fields
+                clearFields();
+
+                // Navigate to the home page
+                navigateToHomePage();
+
+            } else {
+                // Handle error if user ID couldn't be retrieved
+                showAlert("An error occurred while retrieving user information.");
+            }
+        }
+        else {
+            // Show error alert for incorrect credentials
+            showAlert(result);
         }
     }
 

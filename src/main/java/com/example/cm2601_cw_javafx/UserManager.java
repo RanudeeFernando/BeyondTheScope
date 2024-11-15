@@ -104,4 +104,22 @@ public class UserManager {
         }
     }
 
+    public int getUserIdByUsername(String username) {
+        try (Connection connection = MySQLConnection.connectToDatabase()) {
+            String query = "SELECT userID FROM user WHERE username = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, username);
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getInt("userID"); // User found, return userID
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // Return -1 to indicate failure
+    }
+
 }

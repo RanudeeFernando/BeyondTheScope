@@ -3,7 +3,7 @@ package com.example.cm2601_cw_javafx;
 import java.sql.Timestamp;
 
 public class Article {
-    private String articleID; // Unique identifier for the article
+    private int articleID; // Unique identifier for the article
     private String title;     // Title of the article
     private String content;   // Full content of the article
     private Category category; // Category determined by NLP
@@ -13,7 +13,7 @@ public class Article {
     private Timestamp publishedDate; // Published date of the article
 
     // Constructor
-    public Article(String articleID, String title, String content, Category category, String author, String source, String url, Timestamp publishedDate) {
+    public Article(int articleID, String title, String content, Category category, String author, String source, String url, Timestamp publishedDate) {
         this.articleID = articleID;
         this.title = title;
         this.content = content;
@@ -25,7 +25,7 @@ public class Article {
     }
 
     // Getters and setters
-    public String getArticleID() {
+    public int getArticleID() {
         return articleID;
     }
 
@@ -57,7 +57,7 @@ public class Article {
         return publishedDate;
     }
 
-    public void setArticleID(String articleID) {
+    public void setArticleID(int articleID) {
         this.articleID = articleID;
     }
 

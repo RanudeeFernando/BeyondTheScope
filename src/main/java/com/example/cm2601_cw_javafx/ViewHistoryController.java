@@ -1,13 +1,21 @@
 package com.example.cm2601_cw_javafx;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ViewHistoryController extends BaseController{
 
@@ -15,10 +23,39 @@ public class ViewHistoryController extends BaseController{
     private AnchorPane rootPane;
     @FXML
     private ImageView imageViewLogo;
+    @FXML
+    private ListView<String> articleListView; // Changed ListView to display Strings for better flexibility
+
+    private HistoryService historyService;
 
 
     public void initialize() {
         setLogoImage(imageViewLogo, "images/logo5.png");
+    }
+
+
+    public void initializeUserViewHistory(int userId) {
+        // Get the database connection from MySQLConnection class
+        Connection connection = MySQLConnection.connectToDatabase();
+
+        if (connection != null) {
+            // Create a HistoryService instance with the database connection
+            historyService = new HistoryService(connection);
+
+            // Retrieve the viewed articles for the given user ID
+            List<UserViewedArticle> viewedArticles = historyService.getViewedArticles(userId);
+
+            // Convert UserViewedArticle objects to their ListView representation
+            ObservableList<String> listViewItems = FXCollections.observableArrayList(
+                    viewedArticles.stream().map(UserViewedArticle::toListViewString).collect(Collectors.toList())
+            );
+
+            // Set the retrieved articles to the ListView
+            articleListView.setItems(listViewItems);
+
+        } else {
+            System.out.println("Failed to initialize user view history due to database connection issues.");
+        }
     }
 
     // Method to return to the home view

@@ -6,14 +6,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class HomeController extends BaseController{
+
+    public MenuItem logoutMenuItem;
     @FXML
     private ImageView imageViewLogo;
     @FXML
@@ -21,15 +26,22 @@ public class HomeController extends BaseController{
     @FXML
     private Menu profileMenu;
     @FXML
-    private Menu logoutMenu;
-    @FXML
     private ListView<String> articleListView; // Add ListView
 
     private final ArticleService articleService = new ArticleService();
+    private HistoryService historyService; // HistoryService instance
 
     public void initialize() {
         setLogoImage(imageViewLogo, "images/logo5.png");
         loadArticles();
+
+        // Initialize database connection and HistoryService instance
+        Connection connection = MySQLConnection.connectToDatabase();
+        if (connection != null) {
+            historyService = new HistoryService(connection);
+        } else {
+            System.out.println("Failed to connect to the database, history tracking won't work.");
+        }
 
         // Set up double-click event for ListView items
         articleListView.setOnMouseClicked(event -> {
@@ -46,6 +58,9 @@ public class HomeController extends BaseController{
                     if (selectedArticle != null) {
                         viewFullArticle(selectedArticle);
                     }
+
+                    // Add the article to the user's viewed history
+                    addArticleToViewedHistory(selectedArticle);
                 }
             }
         });
@@ -79,12 +94,32 @@ public class HomeController extends BaseController{
         }
     }
 
+    private void addArticleToViewedHistory(Article article) {
+        if (historyService != null) {
+            int userId = UserSession.getInstance().getUserId();
+            historyService.addViewedArticle(userId, article.getArticleID());
+        } else {
+            System.out.println("Cannot add to viewed history. HistoryService is not initialized.");
+        }
+    }
+
+
+    // Event handler for "View History" menu item
     @FXML
-    private void navigateToViewHistory() {
+    private void onViewHistoryMenuItemClicked() {
         try {
             // Load the "view-history.fxml" file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view-history.fxml"));
             Parent root = loader.load();
+
+            // Get the controller for view-history.fxml
+            ViewHistoryController controller = loader.getController();
+
+            // Get the current logged-in user's ID from UserSession
+            int userId = UserSession.getInstance().getUserId();
+
+            // Initialize the view history with the current user ID
+            controller.initializeUserViewHistory(userId);
 
             // Set the new root for the current scene
             Scene currentScene = articleListView.getScene();
@@ -96,8 +131,26 @@ public class HomeController extends BaseController{
         }
     }
 
+    // Event handler for "Logout" menu item
+    @FXML
+    private void handleLogout() {
+        // Clear the session
+        UserSession.getInstance().clearSession();
 
+        // Navigate to the login page
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+            Parent root = loader.load();
 
+            // Set the new root for the current scene
+            Scene currentScene = articleListView.getScene();
+            currentScene.setRoot(root);
+
+        } catch (IOException e) {
+            System.out.println("Error while navigating to the login page.");
+            e.printStackTrace();
+        }
+    }
 
 
 }
