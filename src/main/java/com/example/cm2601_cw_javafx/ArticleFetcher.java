@@ -72,7 +72,7 @@ public class ArticleFetcher {
         return title != null && !title.trim().isEmpty() && !title.equalsIgnoreCase("[Removed]") &&
                 sourceName != null && !sourceName.trim().isEmpty() && !sourceName.equalsIgnoreCase("[Removed]") &&
                 url != null && !url.trim().isEmpty() &&
-                (author == null || !author.trim().equalsIgnoreCase("[Removed]")) &&  // Allow null but check for "[Removed]"
+                author != null && !author.trim().equalsIgnoreCase("[Removed]") &&  // Allow null but check for "[Removed]"
                 content != null && !content.trim().isEmpty() && !content.equalsIgnoreCase("[Removed]"); // Ensure content is not null or empty
     }
 

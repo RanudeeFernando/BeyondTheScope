@@ -7,8 +7,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -25,7 +23,7 @@ public class NewsRecommendationApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(),1100,750);
 
         // Set application logo
-        Image icon = new Image(Objects.requireNonNull(NewsRecommendationApplication.class.getResourceAsStream("logo1.png")));
+        Image icon = new Image(Objects.requireNonNull(NewsRecommendationApplication.class.getResourceAsStream("images/logo1.png")));
         stage.getIcons().add(icon);
 
         // Setting the stage title and scene

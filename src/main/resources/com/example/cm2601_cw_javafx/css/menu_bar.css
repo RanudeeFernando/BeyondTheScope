@@ -1,6 +1,6 @@
 .menu-bar {
     -fx-background-color: #000000; /* Background color */
-    -fx-padding: 5px;
+    -fx-padding: 7px;
 }
 
 .menu-bar .label {

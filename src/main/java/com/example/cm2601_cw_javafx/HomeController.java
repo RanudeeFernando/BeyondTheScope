@@ -28,7 +28,7 @@ public class HomeController extends BaseController{
     private final ArticleService articleService = new ArticleService();
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "logo5.png");
+        setLogoImage(imageViewLogo, "images/logo5.png");
         loadArticles();
 
         // Set up double-click event for ListView items
@@ -44,7 +44,7 @@ public class HomeController extends BaseController{
                             .orElse(null);
 
                     if (selectedArticle != null) {
-                        navigateToArticleDetails(selectedArticle);
+                        viewFullArticle(selectedArticle);
                     }
                 }
             }
@@ -59,7 +59,7 @@ public class HomeController extends BaseController{
         articleListView.setItems(FXCollections.observableArrayList(titles));
     }
 
-    private void navigateToArticleDetails(Article article) {
+    private void viewFullArticle(Article article) {
         try {
             // Load the ArticleDetails.fxml file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view-full-article.fxml"));
@@ -74,7 +74,24 @@ public class HomeController extends BaseController{
             currentScene.setRoot(root);
 
         } catch (IOException e) {
-            System.out.println("An error occurred while redirecting to Article Details page.");
+            System.out.println("An error occurred while redirecting to Full Article page.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void navigateToViewHistory() {
+        try {
+            // Load the "view-history.fxml" file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view-history.fxml"));
+            Parent root = loader.load();
+
+            // Set the new root for the current scene
+            Scene currentScene = articleListView.getScene();
+            currentScene.setRoot(root);
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while redirecting to View History page.");
             e.printStackTrace();
         }
     }

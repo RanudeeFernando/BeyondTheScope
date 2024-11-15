@@ -28,7 +28,7 @@ public class LoginController extends BaseController{
     private Button loginButton;
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "logo5.png");
+        setLogoImage(imageViewLogo, "images/logo5.png");
     }
 
     @FXML

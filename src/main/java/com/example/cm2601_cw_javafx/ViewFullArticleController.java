@@ -4,10 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
@@ -18,9 +15,9 @@ import java.text.SimpleDateFormat;
 public class ViewFullArticleController extends BaseController{
 
     @FXML
-    private ImageView imageViewLogo;
+    private AnchorPane rootPane;
     @FXML
-    private Menu homeMenu;
+    private ImageView imageViewLogo;
     @FXML
     private Label titleLabel;
     @FXML
@@ -32,10 +29,10 @@ public class ViewFullArticleController extends BaseController{
     @FXML
     private TextArea contentTextArea;
     @FXML
-    private AnchorPane goHomeMenuItem;
+    private Hyperlink articleURL;
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "logo5.png");
+        setLogoImage(imageViewLogo, "images/logo5.png");
     }
 
     public void setArticleDetails(Article article) {
@@ -52,6 +49,14 @@ public class ViewFullArticleController extends BaseController{
             publishedDateLabel.setText("Published on: N/A"); // Fallback if no date is available
         }
 
+        articleURL.setOnAction(event -> {
+            try {
+                java.awt.Desktop.getDesktop().browse(new java.net.URI(article.getUrl()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
 
     }
 
@@ -63,8 +68,14 @@ public class ViewFullArticleController extends BaseController{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
             Parent root = loader.load();
 
-            // Get the current scene and set the new root
-            Scene currentScene = goHomeMenuItem.getScene();
+            // Use rootPane to access the scene and set the new root
+            // Explanation:
+            // - The MenuItem itself is not part of the visual hierarchy; it cannot directly access the Scene.
+            // - rootPane, as the root container of the current layout, provides a reliable way to access the Scene.
+            // - By using rootPane.getScene(), we ensure that we're modifying the current scene tied to this layout.
+            // - This approach decouples the navigation logic from specific UI components like MenuItems,
+            //   making it easier to maintain and extend, especially if other components also need to trigger the navigation.
+            Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
 
         } catch (IOException e) {

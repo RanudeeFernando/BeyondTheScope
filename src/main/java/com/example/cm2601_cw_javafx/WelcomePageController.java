@@ -1,19 +1,15 @@
 package com.example.cm2601_cw_javafx;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.IOException;
-import java.util.Objects;
 
-public class MainController extends BaseController{
+public class WelcomePageController extends BaseController{
     @FXML
     public Button signUpButton;
 
@@ -21,7 +17,7 @@ public class MainController extends BaseController{
     private ImageView imageViewLogo;
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "logo5.png");
+        setLogoImage(imageViewLogo, "images/logo5.png");
     }
 
     public void onSignUpButtonClick() {
