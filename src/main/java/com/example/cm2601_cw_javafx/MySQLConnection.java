@@ -13,7 +13,6 @@ public class MySQLConnection {
     public static Connection connectToDatabase() {
         try {
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Connected to MySQL database successfully!");
             return connection;
 
         } catch (SQLException e) {

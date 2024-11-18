@@ -13,7 +13,7 @@ public enum Category {
     ENTERTAINMENT;
 
     public String getName() {
-        return this.name(); // Returns the category name in lowercase
+        return this.name(); // Returns the category name in lowercaseAI
     }
 
 
