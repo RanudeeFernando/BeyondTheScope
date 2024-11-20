@@ -21,54 +21,11 @@ public class ArticleFetcher {
     private static final String API_KEY = "829613513f4a4c9794a7ecfc44a91b0c";
     private static final String API_URL = "https://newsapi.org/v2/top-headlines?language=en&pageSize=10&apiKey=" + API_KEY;
 
-//    public static List<String> fetchArticles() {
-//        List<String> articleTitles = new ArrayList<>();
-//        try {
-//            URL url = new URL(API_URL);
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setRequestMethod("GET");
-//
-//            int responseCode = connection.getResponseCode();
-//            if (responseCode == HttpURLConnection.HTTP_OK) {
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//                String inputLine;
-//                StringBuilder response = new StringBuilder();
-//
-//                while ((inputLine = reader.readLine()) != null) {
-//                    response.append(inputLine);
-//                }
-//                reader.close();
-//
-//                JSONObject jsonResponse = new JSONObject(response.toString());
-//                JSONArray articles = jsonResponse.getJSONArray("articles");
-//
-//                for (int i = 0; i < articles.length(); i++) {
-//                    JSONObject article = articles.getJSONObject(i);
-//                    String title = article.optString("title", null);
-//                    String sourceName = article.getJSONObject("source").optString("name", null);
-//                    String author = article.optString("author", null);
-//                    String content = article.optString("content", null);
-//                    String urlField = article.optString("url", null);
-//                    String publishedDate = article.optString("publishedAt", null);
-//
-//                    // Check if title and source are present before proceeding
-//                    if (isValidArticle(title, sourceName, author, content, urlField) && !isDuplicateArticle(urlField)) {
-//                        articleTitles.add(title);
-//                        addArticleToDatabase(title, sourceName, author, content, urlField, publishedDate);
-//                    }
-//                }
-//            } else {
-//                System.out.println("Failed to fetch articles. Response code: " + responseCode);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return articleTitles;
-//    }
-
     // Fetch articles from the API
     public static List<Article> fetchArticles() {
         List<Article> articles = new ArrayList<>();
+        ArticleCategorizer articleCategorizer = new ArticleCategorizer();
+
         try {
             URL url = new URL(API_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -101,8 +58,12 @@ public class ArticleFetcher {
                     if (isValidArticle(title, sourceName, author, content, urlField) && !isDuplicateArticle(urlField)) {
                         Timestamp publishedDateTimestamp = parsePublishedDate(publishedDate);
 
+                        // Categorize the article
+                        Category predictedCategory = articleCategorizer.classifyArticle(content);
+
+
                         // Create an Article object
-                        Article article = new Article(0, title, content, null, author, sourceName, urlField, publishedDateTimestamp);
+                        Article article = new Article(0, title, content, predictedCategory, author, sourceName, urlField, publishedDateTimestamp);
                         articles.add(article);
 
                         // Add the article to the database
@@ -118,7 +79,6 @@ public class ArticleFetcher {
         return articles;
     }
 
-
     private static boolean isValidArticle(String title, String sourceName, String author, String content, String url) {
         return title != null && !title.trim().isEmpty() && !title.equalsIgnoreCase("[Removed]") &&
                 sourceName != null && !sourceName.trim().isEmpty() && !sourceName.equalsIgnoreCase("[Removed]") &&
@@ -128,27 +88,9 @@ public class ArticleFetcher {
     }
 
 
-//    private static void addArticleToDatabase(String title, String source, String author, String content, String url, String publishedDate) {
-//        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate) VALUES (?, ?, ?, ?, ?, ?)";
-//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-//             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
-//
-//            statement.setString(1, title);
-//            statement.setString(2, source);
-//            statement.setString(3, author);
-//            statement.setString(4, content);
-//            statement.setString(5, url);
-//            statement.setTimestamp(6, parsePublishedDate(publishedDate));
-//            statement.executeUpdate();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     // Insert the article into the database
     private static void addArticleToDatabase(Article article) {
-        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, category) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection dbConnection = MySQLConnection.connectToDatabase();
              PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -159,6 +101,7 @@ public class ArticleFetcher {
             statement.setString(4, article.getContent());
             statement.setString(5, article.getUrl());
             statement.setTimestamp(6, article.getPublishedDate());
+            statement.setString(7, String.valueOf(article.getCategory()));
 
             // Execute the insert
             int rowsUpdated = statement.executeUpdate();

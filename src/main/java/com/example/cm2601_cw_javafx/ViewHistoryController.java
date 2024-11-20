@@ -24,8 +24,7 @@ public class ViewHistoryController extends BaseController{
     @FXML
     private ImageView imageViewLogo;
     @FXML
-    private ListView<String> articleListView; // Changed ListView to display Strings for better flexibility
-
+    private ListView<String> articleListView;
     private HistoryService historyService;
 
 
@@ -35,7 +34,6 @@ public class ViewHistoryController extends BaseController{
 
 
     public void initializeUserViewHistory(int userId) {
-        // Get the database connection from MySQLConnection class
         Connection connection = MySQLConnection.connectToDatabase();
 
         if (connection != null) {

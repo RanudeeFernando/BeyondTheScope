@@ -35,7 +35,6 @@ public class HomeController extends BaseController{
         setLogoImage(imageViewLogo, "images/logo5.png");
         loadArticles();
 
-        // Initialize database connection and HistoryService instance
         Connection connection = MySQLConnection.connectToDatabase();
         if (connection != null) {
             historyService = new HistoryService(connection);
@@ -76,15 +75,14 @@ public class HomeController extends BaseController{
 
     private void viewFullArticle(Article article) {
         try {
-            // Load the ArticleDetails.fxml file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view-full-article.fxml"));
             Parent root = loader.load();
 
             // Get the controller and pass the article data
             ViewFullArticleController controller = loader.getController();
             controller.setArticleDetails(article);
+            controller.setLikeButtonStatus();
 
-            // Get the current scene and set the new root
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
 
@@ -108,11 +106,10 @@ public class HomeController extends BaseController{
     @FXML
     private void onViewHistoryMenuItemClicked() {
         try {
-            // Load the "view-history.fxml" file
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view-history.fxml"));
             Parent root = loader.load();
 
-            // Get the controller for view-history.fxml
             ViewHistoryController controller = loader.getController();
 
             // Get the current logged-in user's ID from UserSession
@@ -121,12 +118,33 @@ public class HomeController extends BaseController{
             // Initialize the view history with the current user ID
             controller.initializeUserViewHistory(userId);
 
-            // Set the new root for the current scene
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to View History page.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onViewLikedArticlesMenuItemClicked() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("liked-articles-viewer.fxml"));
+            Parent root = loader.load();
+
+            ViewLikedArticlesController controller = loader.getController();
+
+            int userId = UserSession.getInstance().getUserId();
+
+            controller.initializeUserLikedArticles(userId);
+
+            Scene currentScene = articleListView.getScene();
+            currentScene.setRoot(root);
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while redirecting to View Liked Articles page.");
             e.printStackTrace();
         }
     }
@@ -137,9 +155,8 @@ public class HomeController extends BaseController{
         // Clear the session
         UserSession.getInstance().clearSession();
 
-        // Navigate to the login page
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
             Parent root = loader.load();
 
             // Set the new root for the current scene

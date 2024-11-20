@@ -30,12 +30,24 @@ public class ViewFullArticleController extends BaseController{
     private TextArea contentTextArea;
     @FXML
     private Hyperlink articleURL;
+    @FXML
+    private Button likeButton;
+
+    private UserSession userSession = UserSession.getInstance();
+
+    private int currentArticleId;
+    private UserManager userManager = new UserManager();
 
     public void initialize() {
+
         setLogoImage(imageViewLogo, "images/logo5.png");
+
+
     }
 
+
     public void setArticleDetails(Article article) {
+        this.currentArticleId = article.getArticleID();
         titleLabel.setText(article.getTitle());
         authorLabel.setText("Author: " + article.getAuthor());
         sourceLabel.setText("Source: " + article.getSource());
@@ -60,21 +72,22 @@ public class ViewFullArticleController extends BaseController{
 
     }
 
+    public void setLikeButtonStatus(){
+        int currentUserId = userSession.getUserId();  // Get the logged-in user ID
+        if (userManager.hasLikedArticle(currentUserId, currentArticleId)) {
+            likeButton.setText("Liked");
+        } else {
+            likeButton.setText("Like");
+        }
+    }
 
     // Method to return to the home view
     public void goBackToHome() {
         try {
-            // Load the home page FXML file
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
             Parent root = loader.load();
 
-            // Use rootPane to access the scene and set the new root
-            // Explanation:
-            // - The MenuItem itself is not part of the visual hierarchy; it cannot directly access the Scene.
-            // - rootPane, as the root container of the current layout, provides a reliable way to access the Scene.
-            // - By using rootPane.getScene(), we ensure that we're modifying the current scene tied to this layout.
-            // - This approach decouples the navigation logic from specific UI components like MenuItems,
-            //   making it easier to maintain and extend, especially if other components also need to trigger the navigation.
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
 
@@ -83,4 +96,19 @@ public class ViewFullArticleController extends BaseController{
             e.printStackTrace();
         }
     }
+
+    public void onLikeButtonClick() {
+        int currentUserId = userSession.getUserId();
+        boolean isLiked = userManager.hasLikedArticle(currentUserId, currentArticleId);
+
+        if (isLiked) {
+            userManager.removeLikedArticle(currentUserId, currentArticleId);
+            likeButton.setText("Like");
+        } else {
+            // User has not liked the article, so add the like
+            userManager.addLikedArticle(currentUserId, currentArticleId);
+            likeButton.setText("Liked");  // Update the button text to "Liked"
+        }
+    }
+
 }
