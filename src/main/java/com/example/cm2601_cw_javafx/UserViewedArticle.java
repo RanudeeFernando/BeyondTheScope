@@ -2,7 +2,7 @@ package com.example.cm2601_cw_javafx;
 
 import java.sql.Timestamp;
 
-public class UserViewedArticle {
+public class UserViewedArticle{
     private Article article;    // The article that was viewed
     private Timestamp viewedAt; // When the user viewed the article
 

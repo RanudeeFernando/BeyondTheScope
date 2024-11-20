@@ -46,7 +46,7 @@ public class NewsRecommendationApplication extends Application {
 
         // Schedule the fetch task to run every 6 hours
         scheduler.scheduleAtFixedRate(() -> {
-            List<String> articles = ArticleFetcher.fetchArticles();
+            List<Article> articles = ArticleFetcher.fetchArticles();
             articles.forEach(System.out::println);
         }, 0, 6, TimeUnit.HOURS);
 

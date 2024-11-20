@@ -5,6 +5,7 @@ module com.example.cm2601_cw_javafx {
     requires java.sql;
     requires org.json;
     requires java.desktop;
+    requires java.net.http;
 
 
     opens com.example.cm2601_cw_javafx to javafx.fxml;

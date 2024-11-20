@@ -1,6 +1,7 @@
 package com.example.cm2601_cw_javafx;
 
 public enum Category {
+    WORLD,
     SPORTS,
     TECHNOLOGY,
     AI,
@@ -10,10 +11,11 @@ public enum Category {
     POLITICS,
     SCIENCE,
     EDUCATION,
-    ENTERTAINMENT;
+    ENTERTAINMENT,
+    UNKNOWN;
 
     public String getName() {
-        return this.name(); // Returns the category name in lowercaseAI
+        return this.name(); // Returns the category name in lowercase
     }
 
 
