@@ -40,12 +40,10 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <GridPane layoutX="300.0" layoutY="460.0" prefHeight="138.0" prefWidth="500.0">
+      <GridPane layoutX="300.0" layoutY="460.0" prefHeight="138.0" prefWidth="332.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -53,7 +51,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <CheckBox fx:id="categoryHealth" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Health" GridPane.columnIndex="1">
+            <CheckBox fx:id="categorySports" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Sports" GridPane.columnIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
@@ -63,37 +61,17 @@
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryTechnology" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Technology" GridPane.rowIndex="1">
+            <CheckBox fx:id="categoryTechnology" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Technology" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryEntertainment" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Entertainment" GridPane.columnIndex="3">
+            <CheckBox fx:id="categoryWorld" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="World">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categorySports" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Sports">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </CheckBox>
-            <CheckBox fx:id="categoryNature" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Nature" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </CheckBox>
-            <CheckBox fx:id="categoryPolitics" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Politics" GridPane.columnIndex="2">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </CheckBox>
-            <CheckBox fx:id="categoryScience" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Science" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </CheckBox>
-            <CheckBox fx:id="categoryEducation" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Education" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <CheckBox fx:id="categoryScience" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Science" GridPane.rowIndex="1">
                <font>
                   <Font size="14.0" />
                </font>

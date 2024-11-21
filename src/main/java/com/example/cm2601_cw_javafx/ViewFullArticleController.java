@@ -32,16 +32,16 @@ public class ViewFullArticleController extends BaseController{
     private Hyperlink articleURL;
     @FXML
     private Button likeButton;
+    @FXML
+    private Button skipButton;
 
-    private UserSession userSession = UserSession.getInstance();
+    private final UserSession userSession = UserSession.getInstance();
 
     private int currentArticleId;
-    private UserManager userManager = new UserManager();
+    private final UserManager userManager = new UserManager();
 
     public void initialize() {
-
         setLogoImage(imageViewLogo, "images/logo5.png");
-
 
     }
 
@@ -58,7 +58,7 @@ public class ViewFullArticleController extends BaseController{
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             publishedDateLabel.setText("Published on: " + dateFormat.format(article.getPublishedDate()));
         } else {
-            publishedDateLabel.setText("Published on: N/A"); // Fallback if no date is available
+            publishedDateLabel.setText("Published on: N/A");
         }
 
         articleURL.setOnAction(event -> {
@@ -69,17 +69,19 @@ public class ViewFullArticleController extends BaseController{
             }
         });
 
+        setButtonStates();
+
 
     }
 
-    public void setLikeButtonStatus(){
-        int currentUserId = userSession.getUserId();  // Get the logged-in user ID
-        if (userManager.hasLikedArticle(currentUserId, currentArticleId)) {
-            likeButton.setText("Liked");
-        } else {
-            likeButton.setText("Like");
-        }
-    }
+//    public void setLikeButtonStatus(){
+//        int currentUserId = userSession.getUserId();
+//        if (userManager.hasLikedArticle(currentUserId, currentArticleId)) {
+//            likeButton.setText("Liked");
+//        } else {
+//            likeButton.setText("Like");
+//        }
+//    }
 
     // Method to return to the home view
     public void goBackToHome() {
@@ -97,18 +99,65 @@ public class ViewFullArticleController extends BaseController{
         }
     }
 
+    private void setButtonStates() {
+        int currentUserId = userSession.getUserId();
+
+        // Check if the article is liked or skipped
+        boolean isLiked = userManager.hasLikedArticle(currentUserId, currentArticleId);
+        boolean isSkipped = userManager.hasSkippedArticle(currentUserId, currentArticleId);
+
+        // Log states for debugging
+        System.out.println("isLiked: " + isLiked + ", isSkipped: " + isSkipped);
+
+        // Update button text
+        likeButton.setText(isLiked ? "Liked" : "Like");
+        skipButton.setText(isSkipped ? "Skipped" : "Skip");
+
+        // Update button states
+        skipButton.setDisable(isLiked);
+        likeButton.setDisable(isSkipped);
+    }
+
     public void onLikeButtonClick() {
         int currentUserId = userSession.getUserId();
         boolean isLiked = userManager.hasLikedArticle(currentUserId, currentArticleId);
 
         if (isLiked) {
-            userManager.removeLikedArticle(currentUserId, currentArticleId);
-            likeButton.setText("Like");
+            userManager.unlikedArticle(currentUserId, currentArticleId);
+            // likeButton.setText("Like");
+            showAlert("Article unliked successfully! Your recommendations will be updated accordingly.");
         } else {
-            // User has not liked the article, so add the like
-            userManager.addLikedArticle(currentUserId, currentArticleId);
-            likeButton.setText("Liked");  // Update the button text to "Liked"
+
+            userManager.likedArticle(currentUserId, currentArticleId);
+            // likeButton.setText("Liked");
+            showAlert("Article liked successfully! Your recommendations will be updated accordingly.");
         }
+
+        setButtonStates();
+    }
+
+    public void onSkipButtonClick() {
+        int currentUserId = userSession.getUserId();
+        boolean isSkipped = userManager.hasSkippedArticle(currentUserId, currentArticleId);
+
+        if (!isSkipped) {
+            userManager.skipArticle(currentUserId, currentArticleId);
+            showAlert("Article skipped successfully! You'll be redirected to the home page shortly.");
+            goBackToHome();
+        }
+        else {
+            userManager.unskipArticle(currentUserId, currentArticleId);
+            showAlert("Article unskipped successfully!");
+        }
+
+        setButtonStates();
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 }

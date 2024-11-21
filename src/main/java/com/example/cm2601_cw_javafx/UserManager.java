@@ -120,6 +120,36 @@ public class UserManager {
         return -1;
     }
 
+    public void likedArticle(int userId, int articleId) {
+        String sql = "INSERT INTO user_liked_article (userID, articleID) VALUES (?, ?)";
+        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, articleId);
+            statement.executeUpdate();
+            System.out.println("Article liked successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unlikedArticle(int userId, int articleId) {
+        String sql = "DELETE FROM user_liked_article WHERE userID = ? AND articleID = ?";
+        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, articleId);
+            statement.executeUpdate();
+            System.out.println("Article unliked successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // Method to check if the user has liked the article
     public boolean hasLikedArticle(int userId, int articleId) {
@@ -141,36 +171,6 @@ public class UserManager {
         return false;
     }
 
-
-    public void addLikedArticle(int userId, int articleId) {
-        String sql = "INSERT INTO user_liked_article (userID, articleID) VALUES (?, ?)";
-        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
-
-            statement.setInt(1, userId);
-            statement.setInt(2, articleId);
-            statement.executeUpdate();
-            System.out.println("Article liked successfully!");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeLikedArticle(int userId, int articleId) {
-        String sql = "DELETE FROM user_liked_article WHERE userID = ? AND articleID = ?";
-        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
-
-            statement.setInt(1, userId);
-            statement.setInt(2, articleId);
-            statement.executeUpdate();
-            System.out.println("Article unliked successfully!");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     // Method to get liked articles for the user
     public List<Article> getLikedArticles(int userId) {
@@ -204,6 +204,95 @@ public class UserManager {
         }
         return likedArticles;
     }
+
+    public void skipArticle(int userId, int articleId) {
+        String sql = "INSERT INTO user_skipped_article (userID, articleID) VALUES (?, ?)";
+        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, articleId);
+            statement.executeUpdate();
+            System.out.println("Article skipped successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unskipArticle(int userId, int articleId) {
+        String sql = "DELETE FROM user_skipped_article WHERE userID = ? AND articleID = ?";
+        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, articleId);
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Article unskipped successfully!");
+            } else {
+                System.out.println("No skipped record found for the article.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public boolean hasSkippedArticle(int userId, int articleId) {
+        String sql = "SELECT COUNT(*) FROM user_skipped_article WHERE userID = ? AND articleID = ?";
+        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, articleId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<Article> getSkippedArticles(int userId) {
+        List<Article> skippedArticles = new ArrayList<>();
+        String sql = "SELECT a.* FROM article a INNER JOIN user_skipped_article sa ON a.articleID = sa.articleID WHERE sa.userID = ?";
+
+        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int articleId = resultSet.getInt("articleID");
+                String title = resultSet.getString("title");
+                String content = resultSet.getString("content");
+                String author = resultSet.getString("author");
+                String source = resultSet.getString("source");
+                String url = resultSet.getString("url");
+                Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
+                String categoryName = resultSet.getString("category");
+
+                Category category = Category.fromString(categoryName);
+
+                Article article = new Article(articleId, title, content, category, author, source, url, publishedDate);
+                skippedArticles.add(article);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return skippedArticles;
+    }
+
+
 
 
 

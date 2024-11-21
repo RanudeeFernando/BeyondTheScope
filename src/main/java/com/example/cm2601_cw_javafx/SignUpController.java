@@ -35,23 +35,15 @@ public class SignUpController extends BaseController{
     @FXML
     private TextField confirmPasswordField;
     @FXML
-    private CheckBox categoryHealth;
+    private CheckBox categoryWorld;
     @FXML
     private CheckBox categoryBusiness;
     @FXML
     private CheckBox categoryTechnology;
     @FXML
-    private CheckBox categoryEntertainment;
-    @FXML
     private CheckBox categorySports;
     @FXML
-    private CheckBox categoryNature;
-    @FXML
-    private CheckBox categoryPolitics;
-    @FXML
     private CheckBox categoryScience;
-    @FXML
-    private CheckBox categoryEducation;
     @FXML
     private CheckBox categoryAI;
     @FXML
@@ -83,19 +75,16 @@ public class SignUpController extends BaseController{
 
     private List<Category> getSelectedCategories() {
         List<Category> selectedCategories = new ArrayList<>();
-        if (categoryHealth.isSelected()) selectedCategories.add(Category.HEALTH);
+        if (categoryWorld.isSelected()) selectedCategories.add(Category.WORLD);
         if (categoryBusiness.isSelected()) selectedCategories.add(Category.BUSINESS);
         if (categoryTechnology.isSelected()) selectedCategories.add(Category.TECHNOLOGY);
-        if (categoryEntertainment.isSelected()) selectedCategories.add(Category.ENTERTAINMENT);
         if (categorySports.isSelected()) selectedCategories.add(Category.SPORTS);
-        if (categoryNature.isSelected()) selectedCategories.add(Category.NATURE);
-        if (categoryPolitics.isSelected()) selectedCategories.add(Category.POLITICS);
         if (categoryScience.isSelected()) selectedCategories.add(Category.SCIENCE);
-        if (categoryEducation.isSelected()) selectedCategories.add(Category.EDUCATION);
         if (categoryAI.isSelected()) selectedCategories.add(Category.AI);
 
         return selectedCategories;
     }
+
 
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -111,15 +100,11 @@ public class SignUpController extends BaseController{
         confirmPasswordField.clear();
 
         // Uncheck all category checkboxes
-        categoryHealth.setSelected(false);
+        categoryWorld.setSelected(false);
         categoryBusiness.setSelected(false);
         categoryTechnology.setSelected(false);
-        categoryEntertainment.setSelected(false);
         categorySports.setSelected(false);
-        categoryNature.setSelected(false);
-        categoryPolitics.setSelected(false);
         categoryScience.setSelected(false);
-        categoryEducation.setSelected(false);
         categoryAI.setSelected(false);
     }
 

@@ -24,7 +24,6 @@ public class ArticleFetcher {
     // Fetch articles from the API
     public static List<Article> fetchArticles() {
         List<Article> articles = new ArrayList<>();
-        ArticleCategorizer articleCategorizer = new ArticleCategorizer();
 
         try {
             URL url = new URL(API_URL);
@@ -58,12 +57,10 @@ public class ArticleFetcher {
                     if (isValidArticle(title, sourceName, author, content, urlField) && !isDuplicateArticle(urlField)) {
                         Timestamp publishedDateTimestamp = parsePublishedDate(publishedDate);
 
-                        // Categorize the article
-                        Category predictedCategory = articleCategorizer.classifyArticle(content);
-
+                        Category category = Category.UNKNOWN;
 
                         // Create an Article object
-                        Article article = new Article(0, title, content, predictedCategory, author, sourceName, urlField, publishedDateTimestamp);
+                        Article article = new Article(0, title, content, category, author, sourceName, urlField, publishedDateTimestamp);
                         articles.add(article);
 
                         // Add the article to the database

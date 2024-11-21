@@ -26,7 +26,7 @@ public class ArticleCategorizer {
         String responseBody = response.body();
 
         // Print the raw response
-        System.out.println("Raw API Response: " + responseBody);
+        System.out.println("Raw API Response: " + responseBody + "\n");
 
         try {
             JSONArray jsonResponseArray = new JSONArray(responseBody);
@@ -49,12 +49,11 @@ public class ArticleCategorizer {
                 }
             }
 
-            // Map the string category to the Category enum
             return mapStringToCategory(predictedCategory);
 
         } catch (Exception e) {
             // Handle the case where the response is not valid JSON
-            System.out.println("Error parsing JSON response: " + e.getMessage());
+            System.out.println("Error parsing JSON response: " + e.getMessage() + "\n");
             return Category.UNKNOWN;
         }
     }
@@ -82,7 +81,6 @@ public class ArticleCategorizer {
                 Category predictedCategory = classifyArticle(article.getContent());
                 article.setCategory(predictedCategory);  // Set the category as the enum
 
-                // Update the category in the database
                 updateArticleCategoryInDatabase(article);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -90,7 +88,7 @@ public class ArticleCategorizer {
         }
     }
 
-    // Send request to Hugging Face Inference API
+
     private HttpResponse<String> sendRequestToHuggingFace(JSONObject jsonRequest) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 

@@ -9,11 +9,8 @@ public enum Category {
     AI,
     HEALTH,
     BUSINESS,
-    NATURE,
     POLITICS,
     SCIENCE,
-    EDUCATION,
-    ENTERTAINMENT,
     UNKNOWN;
 
     public String getName() {

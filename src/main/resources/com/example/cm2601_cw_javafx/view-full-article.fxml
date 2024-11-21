@@ -67,6 +67,6 @@
       <TextArea fx:id="contentTextArea" editable="false" layoutX="33.0" layoutY="289.0" prefHeight="346.0" prefWidth="1031.0" wrapText="true" />
       <Hyperlink fx:id="articleURL" layoutX="43.0" layoutY="600.0" prefHeight="24.0" prefWidth="123.0" text="Read Full Article Here" />
       <Button fx:id="likeButton" layoutX="34.0" layoutY="666.0" mnemonicParsing="false" onAction="#onLikeButtonClick" prefHeight="35.0" prefWidth="114.0" text="Like" />
-      <Button layoutX="176.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="114.0" text="Skip" />
+      <Button fx:id="skipButton" layoutX="176.0" layoutY="666.0" mnemonicParsing="false" onAction="#onSkipButtonClick" prefHeight="35.0" prefWidth="114.0" text="Skip" />
    </children>
 </AnchorPane>

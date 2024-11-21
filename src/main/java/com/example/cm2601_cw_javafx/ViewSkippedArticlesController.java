@@ -1,46 +1,38 @@
 package com.example.cm2601_cw_javafx;
 
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ViewLikedArticlesController extends BaseController{
-    @FXML
-    private ImageView imageViewLogo;
-    @FXML
-    private AnchorPane rootPane;
+public class ViewSkippedArticlesController {
 
     @FXML
-    private ListView<String> likedArticleListView;
+    private ListView<String> skippedArticlesListView;
 
+    private final UserSession userSession = UserSession.getInstance();
     private final UserManager userManager = new UserManager();
 
-    public void initialize(){
-        setLogoImage(imageViewLogo, "images/logo5.png");
+    public void initialize() {
+        loadSkippedArticles();
     }
 
-    // Method to initialize and load liked articles
-    public void initializeUserLikedArticles(int userId) {
+    private void loadSkippedArticles() {
+        int currentUserId = userSession.getUserId();
+        List<Article> skippedArticles = userManager.getSkippedArticles(currentUserId);
 
-        List<Article> likedArticles = userManager.getLikedArticles(userId);
-
-        for (Article article : likedArticles) {
-            likedArticleListView.getItems().add(article.getTitle());
+        for (Article article : skippedArticles) {
+            skippedArticlesListView.getItems().add(article.getTitle());
         }
 
-        likedArticleListView.setOnMouseClicked((MouseEvent event) -> {
-            String selectedTitle = likedArticleListView.getSelectionModel().getSelectedItem();
-            Article selectedArticle = likedArticles.stream()
+        skippedArticlesListView.setOnMouseClicked((MouseEvent event) -> {
+            String selectedTitle = skippedArticlesListView.getSelectionModel().getSelectedItem();
+            Article selectedArticle = skippedArticles.stream()
                     .filter(article -> article.getTitle().equals(selectedTitle))
                     .findFirst()
                     .orElse(null);
@@ -49,7 +41,6 @@ public class ViewLikedArticlesController extends BaseController{
                 openArticleDetails(selectedArticle);
             }
         });
-
     }
 
     private void openArticleDetails(Article article) {
@@ -60,7 +51,7 @@ public class ViewLikedArticlesController extends BaseController{
             ViewFullArticleController controller = loader.getController();
             controller.setArticleDetails(article);
 
-            Scene currentScene = likedArticleListView.getScene();
+            Scene currentScene = skippedArticlesListView.getScene();
             currentScene.setRoot(root);
 
         } catch (IOException e) {
@@ -70,11 +61,10 @@ public class ViewLikedArticlesController extends BaseController{
 
     public void goBackToHome() {
         try {
-            // Load the home page FXML file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
             Parent root = loader.load();
 
-            Scene currentScene = rootPane.getScene();
+            Scene currentScene = skippedArticlesListView.getScene();
             currentScene.setRoot(root);
 
         } catch (IOException e) {
@@ -83,3 +73,5 @@ public class ViewLikedArticlesController extends BaseController{
         }
     }
 }
+
+

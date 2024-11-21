@@ -9,7 +9,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -42,13 +41,15 @@ public class HomeController extends BaseController{
             System.out.println("Failed to connect to the database, history tracking won't work.");
         }
 
+        int userID = UserSession.getInstance().getUserId();
+
         // Set up double-click event for ListView items
         articleListView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) { // Detect double-click
                 String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
                 if (selectedTitle != null) {
                     // Find the Article object corresponding to the selected title
-                    Article selectedArticle = articleService.getAllArticles()
+                    Article selectedArticle = articleService.getAllArticles(userID)
                             .stream()
                             .filter(article -> article.getTitle().equals(selectedTitle))
                             .findFirst()
@@ -66,7 +67,8 @@ public class HomeController extends BaseController{
     }
 
     private void loadArticles() {
-        List<Article> articles = articleService.getAllArticles();
+        int userID = UserSession.getInstance().getUserId();
+        List<Article> articles = articleService.getAllArticles(userID);
         List<String> titles = articles.stream()
                 .map(Article::getTitle) // Extracting the title for display
                 .collect(Collectors.toList());
@@ -81,7 +83,7 @@ public class HomeController extends BaseController{
             // Get the controller and pass the article data
             ViewFullArticleController controller = loader.getController();
             controller.setArticleDetails(article);
-            controller.setLikeButtonStatus();
+            // controller.setLikeButtonStatus();
 
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
@@ -131,7 +133,7 @@ public class HomeController extends BaseController{
     private void onViewLikedArticlesMenuItemClicked() {
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("liked-articles-viewer.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view-liked-articles.fxml"));
             Parent root = loader.load();
 
             ViewLikedArticlesController controller = loader.getController();
@@ -145,6 +147,22 @@ public class HomeController extends BaseController{
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to View Liked Articles page.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onViewSkippedArticlesMenuItemClicked() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view-skipped-articles.fxml"));
+            Parent root = loader.load();
+
+            Scene currentScene = articleListView.getScene();
+            currentScene.setRoot(root);
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while redirecting to View Skipped Articles page.");
             e.printStackTrace();
         }
     }
