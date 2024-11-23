@@ -61,10 +61,13 @@ public class ArticleService {
                 String url = resultSet.getString("url");
                 Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
 
-                UserManager userManager = new UserManager();
+                // RegularUserManager regularUserManager = new RegularUserManager();
+
+                UserDAO userDAO = new UserDAO();
+                SystemUserManager systemUserManager = new SystemUserManager(userDAO);
 
                 // Check if the user has skipped this article
-                if (!userManager.hasSkippedArticle(userId, articleId)) {
+                if (!systemUserManager.hasSkippedArticle(userId, articleId)) {
                     Article article = new Article(articleId, title, content, null, author, source, url, publishedDate);
                     articles.add(article);
                 }

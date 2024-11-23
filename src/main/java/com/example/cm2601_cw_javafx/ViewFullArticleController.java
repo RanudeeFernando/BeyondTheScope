@@ -38,7 +38,11 @@ public class ViewFullArticleController extends BaseController{
     private final UserSession userSession = UserSession.getInstance();
 
     private int currentArticleId;
-    private final UserManager userManager = new UserManager();
+
+    // private final RegularUserManager regularUserManager = new RegularUserManager();
+
+    private final UserDAO userDAO = new UserDAO();
+    private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
 
     public void initialize() {
         setLogoImage(imageViewLogo, "images/logo5.png");
@@ -74,14 +78,6 @@ public class ViewFullArticleController extends BaseController{
 
     }
 
-//    public void setLikeButtonStatus(){
-//        int currentUserId = userSession.getUserId();
-//        if (userManager.hasLikedArticle(currentUserId, currentArticleId)) {
-//            likeButton.setText("Liked");
-//        } else {
-//            likeButton.setText("Like");
-//        }
-//    }
 
     // Method to return to the home view
     public void goBackToHome() {
@@ -103,8 +99,8 @@ public class ViewFullArticleController extends BaseController{
         int currentUserId = userSession.getUserId();
 
         // Check if the article is liked or skipped
-        boolean isLiked = userManager.hasLikedArticle(currentUserId, currentArticleId);
-        boolean isSkipped = userManager.hasSkippedArticle(currentUserId, currentArticleId);
+        boolean isLiked = systemUserManager.hasLikedArticle(currentUserId, currentArticleId);
+        boolean isSkipped = systemUserManager.hasSkippedArticle(currentUserId, currentArticleId);
 
         // Log states for debugging
         System.out.println("isLiked: " + isLiked + ", isSkipped: " + isSkipped);
@@ -120,15 +116,15 @@ public class ViewFullArticleController extends BaseController{
 
     public void onLikeButtonClick() {
         int currentUserId = userSession.getUserId();
-        boolean isLiked = userManager.hasLikedArticle(currentUserId, currentArticleId);
+        boolean isLiked = systemUserManager.hasLikedArticle(currentUserId, currentArticleId);
 
         if (isLiked) {
-            userManager.unlikedArticle(currentUserId, currentArticleId);
+            systemUserManager.unlikeArticle(currentUserId, currentArticleId);
             // likeButton.setText("Like");
             showAlert("Article unliked successfully! Your recommendations will be updated accordingly.");
         } else {
 
-            userManager.likedArticle(currentUserId, currentArticleId);
+            systemUserManager.likeArticle(currentUserId, currentArticleId);
             // likeButton.setText("Liked");
             showAlert("Article liked successfully! Your recommendations will be updated accordingly.");
         }
@@ -138,15 +134,15 @@ public class ViewFullArticleController extends BaseController{
 
     public void onSkipButtonClick() {
         int currentUserId = userSession.getUserId();
-        boolean isSkipped = userManager.hasSkippedArticle(currentUserId, currentArticleId);
+        boolean isSkipped = systemUserManager.hasSkippedArticle(currentUserId, currentArticleId);
 
         if (!isSkipped) {
-            userManager.skipArticle(currentUserId, currentArticleId);
+            systemUserManager.skipArticle(currentUserId, currentArticleId);
             showAlert("Article skipped successfully! You'll be redirected to the home page shortly.");
             goBackToHome();
         }
         else {
-            userManager.unskipArticle(currentUserId, currentArticleId);
+            systemUserManager.unskipArticle(currentUserId, currentArticleId);
             showAlert("Article unskipped successfully!");
         }
 
@@ -159,5 +155,7 @@ public class ViewFullArticleController extends BaseController{
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 
 }

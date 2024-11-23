@@ -3,10 +3,9 @@ package com.example.cm2601_cw_javafx;
 public class UserSession {
     private static UserSession instance;
 
-    private int userId; // Stores the user ID of the logged-in user
-    private String username; // Stores the username of the logged-in user
+    private int userId;
+    private String username;
 
-    // Private constructor to prevent instantiation from outside
     private UserSession() {
     }
 

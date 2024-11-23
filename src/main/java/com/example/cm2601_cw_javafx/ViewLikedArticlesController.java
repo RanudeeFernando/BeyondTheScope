@@ -1,6 +1,5 @@
 package com.example.cm2601_cw_javafx;
 
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ViewLikedArticlesController extends BaseController{
     @FXML
@@ -23,7 +21,12 @@ public class ViewLikedArticlesController extends BaseController{
     @FXML
     private ListView<String> likedArticleListView;
 
-    private final UserManager userManager = new UserManager();
+    // private final RegularUserManager regularUserManager = new RegularUserManager();
+
+    private final UserDAO userDAO = new UserDAO();
+    private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
+
+
 
     public void initialize(){
         setLogoImage(imageViewLogo, "images/logo5.png");
@@ -32,7 +35,7 @@ public class ViewLikedArticlesController extends BaseController{
     // Method to initialize and load liked articles
     public void initializeUserLikedArticles(int userId) {
 
-        List<Article> likedArticles = userManager.getLikedArticles(userId);
+        List<Article> likedArticles = systemUserManager.getLikedArticles(userId);
 
         for (Article article : likedArticles) {
             likedArticleListView.getItems().add(article.getTitle());

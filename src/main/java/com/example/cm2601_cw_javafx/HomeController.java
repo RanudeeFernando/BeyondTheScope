@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -31,6 +32,7 @@ public class HomeController extends BaseController{
     private HistoryService historyService; // HistoryService instance
 
     public void initialize() {
+
         setLogoImage(imageViewLogo, "images/logo5.png");
         loadArticles();
 
@@ -42,6 +44,10 @@ public class HomeController extends BaseController{
         }
 
         int userID = UserSession.getInstance().getUserId();
+        String name = UserSession.getInstance().getUsername();
+
+        // Debug statement
+        System.out.println("Hello " + name + userID);
 
         // Set up double-click event for ListView items
         articleListView.setOnMouseClicked(event -> {
@@ -186,6 +192,8 @@ public class HomeController extends BaseController{
             e.printStackTrace();
         }
     }
+
+
 
 
 }

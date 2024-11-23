@@ -26,10 +26,10 @@
 //        }
 //
 //        String userID = UUID.randomUUID().toString();
-//        User user = new User(userID, username, password, selectedCategories);
+//        RegularUser user = new RegularUser(userID, username, password, selectedCategories);
 //        storeUser(user);
 //
-//        return "User successfully registered!";
+//        return "RegularUser successfully registered!";
 //    }
 //
 //    private boolean validateUsername(String username) {
@@ -55,7 +55,7 @@
 //        return false;
 //    }
 //
-//    private void storeUser(User user) {
+//    private void storeUser(RegularUser user) {
 //        File file = new File(FILE_NAME);
 //        boolean fileExists = file.exists();
 //

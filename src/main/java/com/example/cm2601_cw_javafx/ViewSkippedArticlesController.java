@@ -16,7 +16,11 @@ public class ViewSkippedArticlesController {
     private ListView<String> skippedArticlesListView;
 
     private final UserSession userSession = UserSession.getInstance();
-    private final UserManager userManager = new UserManager();
+
+    //private final RegularUserManager regularUserManager = new RegularUserManager();
+
+    private final UserDAO userDAO = new UserDAO();
+    private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
 
     public void initialize() {
         loadSkippedArticles();
@@ -24,7 +28,7 @@ public class ViewSkippedArticlesController {
 
     private void loadSkippedArticles() {
         int currentUserId = userSession.getUserId();
-        List<Article> skippedArticles = userManager.getSkippedArticles(currentUserId);
+        List<Article> skippedArticles = systemUserManager.getSkippedArticles(currentUserId);
 
         for (Article article : skippedArticles) {
             skippedArticlesListView.getItems().add(article.getTitle());

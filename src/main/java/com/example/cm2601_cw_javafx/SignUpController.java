@@ -23,7 +23,10 @@ public class SignUpController extends BaseController{
     // private final UserDatabaseManager userDatabaseManager = new UserDatabaseManager();
 
     // When using database - MySQL
-    private final UserManager userManager = new UserManager();
+   // private final RegularUserManager regularUserManager = new RegularUserManager();
+
+    private final UserDAO userDAO = new UserDAO();
+    private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
 
 
     @FXML
@@ -49,8 +52,6 @@ public class SignUpController extends BaseController{
     @FXML
     private Button signUpButton;
 
-
-
     public void initialize() {
         setLogoImage(imageViewLogo, "images/logo5.png");
     }
@@ -63,7 +64,7 @@ public class SignUpController extends BaseController{
 
         List<Category> selectedCategories = getSelectedCategories();
 
-        String result = userManager.registerUser(username, password, confirmPassword, selectedCategories);
+        String result = systemUserManager.registerUser(username, password, confirmPassword, selectedCategories);
         showAlert(result);
 
         // Clear fields if registration is successful
