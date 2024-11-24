@@ -37,21 +37,21 @@ public class NewsRecommendationApplication extends Application {
         stage.show();
 
         // Start the background article fetch scheduler
-        startArticleFetchScheduler();
+//        startArticleFetchScheduler();
 
     }
 
-    private static void startArticleFetchScheduler() {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        // Schedule the fetch task to run every 6 hours
-        scheduler.scheduleAtFixedRate(() -> {
-            List<Article> articles = ArticleFetcher.fetchArticles();
-            articles.forEach(System.out::println);
-        }, 0, 6, TimeUnit.HOURS);
-
-        System.out.println("Article fetch scheduler started.");
-    }
+//    private static void startArticleFetchScheduler() {
+//        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+//
+//        // Schedule the fetch task to run every 6 hours
+//        scheduler.scheduleAtFixedRate(() -> {
+//            List<Article> articles = ArticleFetcher.fetchArticles();
+//            articles.forEach(System.out::println);
+//        }, 0, 6, TimeUnit.HOURS);
+//
+//        System.out.println("Article fetch scheduler started.");
+//    }
 
     public static void main(String[] args) {
         launch();

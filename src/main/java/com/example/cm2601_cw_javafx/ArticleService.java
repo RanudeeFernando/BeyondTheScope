@@ -79,4 +79,23 @@ public class ArticleService {
         return articles;
     }
 
+    public boolean deleteArticleByID(int articleID) {
+        String sql = "DELETE FROM article WHERE articleID = ?";
+
+        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+
+            statement.setInt(1, articleID);
+
+            int rowsAffected = statement.executeUpdate(); // Execute the delete operation
+            return rowsAffected > 0; // Return true if at least one row was deleted
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
 }

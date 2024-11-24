@@ -5,17 +5,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.util.List;
 
-public class ViewSkippedArticlesController {
+public class ViewSkippedArticlesController extends BaseController{
+
+    @FXML
+    private ImageView imageViewLogo;
 
     @FXML
     private ListView<String> skippedArticlesListView;
 
-    private final UserSession userSession = UserSession.getInstance();
+    //private final UserSession userSession = UserSession.getInstance();
+
+    RegularUser user = (RegularUser) UserSession.getInstance().getLoggedInUser();
 
     //private final RegularUserManager regularUserManager = new RegularUserManager();
 
@@ -27,7 +33,7 @@ public class ViewSkippedArticlesController {
     }
 
     private void loadSkippedArticles() {
-        int currentUserId = userSession.getUserId();
+        int currentUserId = user.getUserID();
         List<Article> skippedArticles = systemUserManager.getSkippedArticles(currentUserId);
 
         for (Article article : skippedArticles) {

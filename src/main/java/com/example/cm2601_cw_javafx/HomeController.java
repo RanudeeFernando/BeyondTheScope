@@ -31,9 +31,10 @@ public class HomeController extends BaseController{
     private final ArticleService articleService = new ArticleService();
     private HistoryService historyService; // HistoryService instance
 
+    RegularUser user = (RegularUser) UserSession.getInstance().getLoggedInUser();
+
     public void initialize() {
 
-        setLogoImage(imageViewLogo, "images/logo5.png");
         loadArticles();
 
         Connection connection = MySQLConnection.connectToDatabase();
@@ -43,8 +44,8 @@ public class HomeController extends BaseController{
             System.out.println("Failed to connect to the database, history tracking won't work.");
         }
 
-        int userID = UserSession.getInstance().getUserId();
-        String name = UserSession.getInstance().getUsername();
+        int userID = user.getUserID();
+        String name = user.getUsername();
 
         // Debug statement
         System.out.println("Hello " + name + userID);
@@ -73,7 +74,7 @@ public class HomeController extends BaseController{
     }
 
     private void loadArticles() {
-        int userID = UserSession.getInstance().getUserId();
+        int userID = user.getUserID();
         List<Article> articles = articleService.getAllArticles(userID);
         List<String> titles = articles.stream()
                 .map(Article::getTitle) // Extracting the title for display
@@ -102,7 +103,7 @@ public class HomeController extends BaseController{
 
     private void addArticleToViewedHistory(Article article) {
         if (historyService != null) {
-            int userId = UserSession.getInstance().getUserId();
+            int userId = user.getUserID();
             historyService.addViewedArticle(userId, article.getArticleID());
         } else {
             System.out.println("Cannot add to viewed history. HistoryService is not initialized.");
@@ -121,7 +122,7 @@ public class HomeController extends BaseController{
             ViewHistoryController controller = loader.getController();
 
             // Get the current logged-in user's ID from UserSession
-            int userId = UserSession.getInstance().getUserId();
+            int userId = user.getUserID();
 
             // Initialize the view history with the current user ID
             controller.initializeUserViewHistory(userId);
@@ -144,7 +145,7 @@ public class HomeController extends BaseController{
 
             ViewLikedArticlesController controller = loader.getController();
 
-            int userId = UserSession.getInstance().getUserId();
+            int userId = user.getUserID();
 
             controller.initializeUserLikedArticles(userId);
 

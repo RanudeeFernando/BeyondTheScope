@@ -22,114 +22,51 @@ public class LoginController extends BaseController{
     @FXML
     private Button loginButton;
 
-//    private final RegularUserManager regularUserManager = new RegularUserManager();
-
-//    public void initialize() {
-//        setLogoImage(imageViewLogo, "images/logo5.png");
-//    }
-
-//    @FXML
-//    public void handleLogin() {
-//        String username = usernameField.getText();
-//        String password = passwordField.getText();
-//
-//        // First, validate credentials using loginUser()
-//        String result = regularUserManager.loginUser(username, password);
-//
-//        if (result.equals("Login successful!")) {
-//            // Retrieve the user ID separately
-//            int userId = regularUserManager.getUserIdByUsername(username);
-//            if (userId != -1) { // Assuming -1 indicates user ID not found
-//                // Set user information in UserSession
-//                UserSession.getInstance().setUserId(userId);
-//                UserSession.getInstance().setUsername(username);
-//
-//                // Show success alert
-//                showAlert(result);
-//
-//                // Clear input fields
-//                clearFields();
-//
-//                // Navigate to the home page
-//                navigateToHomePage();
-//
-//            } else {
-//                showAlert("An error occurred while retrieving user information.");
-//            }
-//        }
-//        else {
-//            showAlert(result);
-//        }
-//    }
-
-//    private void showAlert(String message) {
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//        alert.setHeaderText(null);
-//        alert.setContentText(message);
-//        alert.showAndWait();
-//    }
-//
-//    private void clearFields() {
-//        usernameField.clear();
-//        passwordField.clear();
-//    }
-//
-//    private void navigateToHomePage() {
-//        try {
-//            // Load the home page FXML file
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
-//            Parent root = loader.load();
-//
-//            Scene scene = loginButton.getScene();
-//            scene.setRoot(root);
-//
-//        } catch (IOException e) {
-//            System.out.println("An error occurred while redirecting to Home page.");
-//            e.printStackTrace();
-//
-//        }
-//    }
-
-    // ------------------------------------------------------------------------------------------------------
-
-
     private final UserDAO userDAO = new UserDAO();
     private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
 
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "images/logo5.png");
+
     }
 
-    // METHOD 1 AFTER ADDING ADMIN
+
 //    @FXML
 //    public void handleLogin() {
 //        String username = usernameField.getText();
 //        String password = passwordField.getText();
 //
-//        // Step 1: Authenticate the user
 //        String authResult = systemUserManager.authenticateUser(username, password);
 //
 //        if ("Login successful!".equals(authResult)) {
 //
-//            showAlert(authResult);
+//            int userId = systemUserManager.getUserIdByUsername(username);
+//            if (userId != -1) {
 //
-//            SystemUser loggedInUser = systemUserManager.getUserByRole(username);
+//                UserSession.getInstance().setUserId(userId);
+//                UserSession.getInstance().setUsername(username);
 //
-//            if (loggedInUser instanceof Admin) {
-//                navigateToAdminDashboard();
-//            } else if (loggedInUser instanceof RegularUser) {
-//                navigateToHomePage();
+//                System.out.println("User ID set in session: " + UserSession.getInstance().getUserId());
+//                System.out.println("Username set in session: " + UserSession.getInstance().getUsername());
+//
+//                SystemUser loggedInUser = UserSession.getInstance().getLoggedInUser();
+//
+//                // SystemUser loggedInUser = systemUserManager.getUserByRole(username);
+//
+//                if (loggedInUser instanceof Admin) {
+//                    navigateToAdminDashboard();
+//                } else if (loggedInUser instanceof RegularUser) {
+//                    navigateToHomePage();
+//                } else {
+//                    showAlert("Unknown role. Login failed.");
+//                }
 //            } else {
-//                showAlert("Unknown role. Login failed.");
+//                showAlert("An error occurred while retrieving user information.");
 //            }
-//        }
-//        else {
-//            // Show the error message from authentication
+//        } else {
 //            showAlert(authResult);
 //        }
 //
-//        // Clear input fields
 //        clearFields();
 //    }
 
@@ -138,26 +75,21 @@ public class LoginController extends BaseController{
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        // Step 1: Authenticate the user
         String authResult = systemUserManager.authenticateUser(username, password);
 
         if ("Login successful!".equals(authResult)) {
-            // Retrieve the user ID separately
-            int userId = systemUserManager.getUserIdByUsername(username);
-            if (userId != -1) { // Assuming -1 indicates user ID not found
-                // Set user information in UserSession
-                UserSession.getInstance().setUserId(userId);
-                UserSession.getInstance().setUsername(username);
+            SystemUser loggedInUser = systemUserManager.getUserByRole(username);
 
-                System.out.println("User ID set in session: " + UserSession.getInstance().getUserId());
-                System.out.println("Username set in session: " + UserSession.getInstance().getUsername());
+            if (loggedInUser != null) {
+                UserSession.getInstance().setLoggedInUser(loggedInUser);
 
-                // Retrieve the user object by role
-                SystemUser loggedInUser = systemUserManager.getUserByRole(username);
+                System.out.println("User set in session: " + loggedInUser.getUsername());
 
                 if (loggedInUser instanceof Admin) {
+                    showAlert("Successfully logged in as Admin! You will be redirected to the Admin Dashboard shortly.");
                     navigateToAdminDashboard();
                 } else if (loggedInUser instanceof RegularUser) {
+                    showAlert("Login successful! You will be redirected to the Home page shortly.");
                     navigateToHomePage();
                 } else {
                     showAlert("Unknown role. Login failed.");

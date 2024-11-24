@@ -10,6 +10,13 @@ public abstract class SystemUser {
         this.username = username;
         this.password = password;
     }
+
+    public SystemUser(int userID, String username){
+        this.userID = userID;
+        this.username = username;
+        this.password = null;
+    }
+
     public int getUserID() {
         return userID;
     }
@@ -33,6 +40,9 @@ public abstract class SystemUser {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
+    public abstract String getRole();
 
 
 }

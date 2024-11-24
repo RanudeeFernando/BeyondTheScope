@@ -29,7 +29,7 @@ public class ViewHistoryController extends BaseController{
 
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "images/logo5.png");
+
     }
 
 

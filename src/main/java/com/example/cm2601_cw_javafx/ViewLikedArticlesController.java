@@ -29,7 +29,7 @@ public class ViewLikedArticlesController extends BaseController{
 
 
     public void initialize(){
-        setLogoImage(imageViewLogo, "images/logo5.png");
+
     }
 
     // Method to initialize and load liked articles

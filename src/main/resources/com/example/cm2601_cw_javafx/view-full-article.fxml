@@ -7,13 +7,17 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cm2601_cw_javafx.ViewFullArticleController">
    <children>
-      <ImageView fx:id="imageViewLogo" fitHeight="125.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageViewLogo" fitHeight="125.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/logo5.png" />
+         </image></ImageView>
       <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@css/menu_bar.css">
          <menus>
             <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home ">

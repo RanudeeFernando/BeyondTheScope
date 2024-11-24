@@ -2,9 +2,10 @@ package com.example.cm2601_cw_javafx;
 
 public class UserSession {
     private static UserSession instance;
+    private SystemUser loggedInUser;
 
-    private int userId;
-    private String username;
+//    private int userId;
+//    private String username;
 
     private UserSession() {
     }
@@ -17,27 +18,33 @@ public class UserSession {
         return instance;
     }
 
-    // Setters for user session information
-    public void setUserId(int userId) {
-        this.userId = userId;
+//    public void setUserID(int userId) {
+//        this.userId = userId;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
+//
+//    public int getUserID() {
+//        return userId;
+//    }
+//
+//    public String getUsername() {
+//        return username;
+//    }
+
+    public void setLoggedInUser(SystemUser user) {
+        this.loggedInUser = user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public SystemUser getLoggedInUser() {
+        return loggedInUser;
     }
 
-    // Getters for user session information
-    public int getUserId() {
-        return userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    // Method to clear session data (e.g., when logging out)
     public void clearSession() {
-        userId = 0;
-        username = null;
+//        userId = 0;
+//        username = null;
+        loggedInUser = null;
     }
 }

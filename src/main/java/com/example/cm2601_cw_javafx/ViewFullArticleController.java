@@ -35,7 +35,8 @@ public class ViewFullArticleController extends BaseController{
     @FXML
     private Button skipButton;
 
-    private final UserSession userSession = UserSession.getInstance();
+    // private final UserSession userSession = UserSession.getInstance();
+    RegularUser user = (RegularUser) UserSession.getInstance().getLoggedInUser();
 
     private int currentArticleId;
 
@@ -45,7 +46,7 @@ public class ViewFullArticleController extends BaseController{
     private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "images/logo5.png");
+
 
     }
 
@@ -96,7 +97,7 @@ public class ViewFullArticleController extends BaseController{
     }
 
     private void setButtonStates() {
-        int currentUserId = userSession.getUserId();
+        int currentUserId = user.getUserID();
 
         // Check if the article is liked or skipped
         boolean isLiked = systemUserManager.hasLikedArticle(currentUserId, currentArticleId);
@@ -115,7 +116,7 @@ public class ViewFullArticleController extends BaseController{
     }
 
     public void onLikeButtonClick() {
-        int currentUserId = userSession.getUserId();
+        int currentUserId = user.getUserID();
         boolean isLiked = systemUserManager.hasLikedArticle(currentUserId, currentArticleId);
 
         if (isLiked) {
@@ -133,7 +134,7 @@ public class ViewFullArticleController extends BaseController{
     }
 
     public void onSkipButtonClick() {
-        int currentUserId = userSession.getUserId();
+        int currentUserId = user.getUserID();
         boolean isSkipped = systemUserManager.hasSkippedArticle(currentUserId, currentArticleId);
 
         if (!isSkipped) {

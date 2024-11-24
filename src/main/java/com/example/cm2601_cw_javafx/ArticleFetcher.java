@@ -21,7 +21,6 @@ public class ArticleFetcher {
     private static final String API_KEY = "829613513f4a4c9794a7ecfc44a91b0c";
     private static final String API_URL = "https://newsapi.org/v2/top-headlines?language=en&pageSize=10&apiKey=" + API_KEY;
 
-    // Fetch articles from the API
     public static List<Article> fetchArticles() {
         List<Article> articles = new ArrayList<>();
 
@@ -33,9 +32,9 @@ public class ArticleFetcher {
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
                 StringBuilder response = new StringBuilder();
 
+                String inputLine;
                 while ((inputLine = reader.readLine()) != null) {
                     response.append(inputLine);
                 }
@@ -53,18 +52,12 @@ public class ArticleFetcher {
                     String urlField = articleJson.optString("url", null);
                     String publishedDate = articleJson.optString("publishedAt", null);
 
-                    // Check if the article is valid and not a duplicate
                     if (isValidArticle(title, sourceName, author, content, urlField) && !isDuplicateArticle(urlField)) {
                         Timestamp publishedDateTimestamp = parsePublishedDate(publishedDate);
-
                         Category category = Category.UNKNOWN;
 
-                        // Create an Article object
                         Article article = new Article(0, title, content, category, author, sourceName, urlField, publishedDateTimestamp);
                         articles.add(article);
-
-                        // Add the article to the database
-                        addArticleToDatabase(article);
                     }
                 }
             } else {
@@ -73,7 +66,19 @@ public class ArticleFetcher {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return articles;
+    }
+
+    public static void saveArticles(List<Article> articles) {
+        for (Article article : articles) {
+            try {
+                addArticleToDatabase(article);
+            } catch (Exception e) {
+                System.err.println("Failed to save article: " + article.getTitle());
+                e.printStackTrace();
+            }
+        }
     }
 
     private static boolean isValidArticle(String title, String sourceName, String author, String content, String url) {
@@ -145,6 +150,7 @@ public class ArticleFetcher {
 
     public static void main(String[] args) {
         List<Article> articles = fetchArticles();
+        saveArticles(articles);
         articles.forEach(System.out::println);
     }
 

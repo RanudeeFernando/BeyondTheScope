@@ -17,7 +17,7 @@ public class WelcomePageController extends BaseController{
     private ImageView imageViewLogo;
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "images/logo5.png");
+
     }
 
     public void onSignUpButtonClick() {

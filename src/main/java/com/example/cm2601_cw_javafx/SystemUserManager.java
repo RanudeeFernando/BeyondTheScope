@@ -39,7 +39,9 @@ public class SystemUserManager {
         try {
             int userId = userDAO.insertUser(username, password);
             userDAO.insertUserPreferences(userId, selectedCategories);
+            RegularUser user = new RegularUser(userId, username, password, selectedCategories);
             return "User successfully registered!";
+
         } catch (SQLException e) {
             return "Registration failed: " + e.getMessage();
         }

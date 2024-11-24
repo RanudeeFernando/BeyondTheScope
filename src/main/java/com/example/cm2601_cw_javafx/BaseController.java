@@ -6,8 +6,4 @@ import java.util.Objects;
 
 public class BaseController {
 
-    public void setLogoImage(ImageView imageViewLogo, String imagePath) {
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
-        imageViewLogo.setImage(image);
-    }
 }

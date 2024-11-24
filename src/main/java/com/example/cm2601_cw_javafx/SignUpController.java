@@ -53,7 +53,7 @@ public class SignUpController extends BaseController{
     private Button signUpButton;
 
     public void initialize() {
-        setLogoImage(imageViewLogo, "images/logo5.png");
+
     }
 
     @FXML

@@ -17,7 +17,10 @@ public class RegularUser extends SystemUser{
         this.selectedCategories = selectedCategories;
     }
 
-
+    @Override
+    public String getRole() {
+        return "User";
+    }
 
     public String getSelectedCategoriesAsString() {
         return String.join(",", selectedCategories.stream().map(Category::name).toList());
