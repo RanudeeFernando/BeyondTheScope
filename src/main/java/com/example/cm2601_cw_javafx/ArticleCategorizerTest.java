@@ -16,13 +16,15 @@ public class ArticleCategorizerTest {
                     .toList();
 
             if (unknownCategoryArticles.isEmpty()) {
-                System.out.println("No articles with unknown category to categorize.");
+                System.out.println("No articles left to categorize.");
                 return;
             }
 
             // Categorize only unknown-category articles
             ArticleCategorizer categorizer = new ArticleCategorizer();
-            categorizer.categorizeArticles(unknownCategoryArticles);
+            // categorizer.categorizeArticles(unknownCategoryArticles);
+
+            categorizer.categorizeUnknownArticles();
 
             // Display results for categorized unknown articles
             unknownCategoryArticles.forEach(article -> {

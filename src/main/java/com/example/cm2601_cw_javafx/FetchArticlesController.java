@@ -1,11 +1,14 @@
 package com.example.cm2601_cw_javafx;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -16,41 +19,55 @@ public class FetchArticlesController {
     private ListView<String> articleListView;
     @FXML
     private AnchorPane rootPane;
+    @FXML
+    private TextArea logArea;
+    @FXML
+    private Button fetchArticlesButton;
 
     @FXML
     private void initialize() {
-        // Handle double-click event to show article details
-        articleListView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) { // Double-click
-                String selectedItem = articleListView.getSelectionModel().getSelectedItem();
-                if (selectedItem != null) {
-                    showAlert("Article Details:\n" + selectedItem);
-                }
-            }
-        });
+
     }
 
     @FXML
     private void handleFetchArticles() {
-        try {
-            List<Article> articles = ArticleFetcher.fetchArticles();
+        fetchArticlesButton.setDisable(true);
 
-            if (articles.isEmpty()) {
-                showAlert("No new articles were fetched from the API.");
-            } else {
-                ArticleFetcher.saveArticles(articles);
+        new Thread(() -> {
+            try {
+                appendLog("Starting article fetching process...");
+                List<Article> articles = ArticleFetcher.fetchArticles();
 
-                articleListView.getItems().clear();
-                for (Article article : articles) {
-                    articleListView.getItems().add("Title: " + article.getTitle() + " | Published Date: " + article.getPublishedDate());
+                if (articles.isEmpty()) {
+                    appendLog("No new articles were fetched from the API.");
+                } else {
+                    ArticleFetcher.saveArticles(articles);
+                    appendLog("Fetched " + articles.size() + " articles. Saving to database...");
+
+                    Platform.runLater(() -> {
+                        articleListView.getItems().clear();
+                        for (Article article : articles) {
+                            String logMessage = "Title: " + article.getTitle() + " | Published Date: " + article.getPublishedDate();
+                            articleListView.getItems().add(logMessage);
+                            // appendLog("Saved: " + logMessage);
+                        }
+                    });
+
+                    appendLog("Successfully fetched and saved " + articles.size() + " articles.");
                 }
+            } catch (Exception e) {
+                appendLog("An error occurred while fetching articles: " + e.getMessage());
+                e.printStackTrace();
 
-                showAlert("Successfully fetched and saved " + articles.size() + " articles.");
+            } finally {
+
+                Platform.runLater(() -> fetchArticlesButton.setDisable(false));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("An error occurred while fetching articles. Please try again.");
-        }
+        }).start();
+    }
+
+    private void appendLog(String message) {
+        Platform.runLater(() -> logArea.appendText(message + "\n"));
     }
 
     private void showAlert(String message) {

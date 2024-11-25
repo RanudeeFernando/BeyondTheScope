@@ -25,7 +25,7 @@
             <Menu fx:id="dashboardMenu" mnemonicParsing="false" text="Dashboard" />
             <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
                <items>
-                  <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
+                  <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
                </items>
             </Menu>
          </menus>
@@ -45,17 +45,17 @@
                   <Font size="24.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handleDeleteArticles" prefHeight="120.0" prefWidth="350.0" text="Delete Articles" GridPane.rowIndex="1">
+            <Button mnemonicParsing="false" onAction="#handleDeleteArticles" prefHeight="120.0" prefWidth="350.0" text="Delete Articles" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="24.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handleArticleCategoriesButton" prefHeight="120.0" prefWidth="350.0" text="Handle Article Categories" GridPane.columnIndex="1">
+            <Button mnemonicParsing="false" onAction="#handleArticleCategoriesButton" prefHeight="120.0" prefWidth="350.0" text="Categorize Articles" GridPane.columnIndex="1">
                <font>
                   <Font size="24.0" />
                </font>
             </Button>
-            <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="120.0" prefWidth="350.0" text="Logout" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button fx:id="editCategoryButton" mnemonicParsing="false" prefHeight="120.0" prefWidth="350.0" text="Edit Article Category" GridPane.rowIndex="1">
                <font>
                   <Font size="24.0" />
                </font>

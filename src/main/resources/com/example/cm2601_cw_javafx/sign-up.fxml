@@ -44,9 +44,10 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <GridPane layoutX="300.0" layoutY="460.0" prefHeight="138.0" prefWidth="332.0">
+      <GridPane layoutX="300.0" layoutY="460.0" prefHeight="138.0" prefWidth="538.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
@@ -65,22 +66,27 @@
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryTechnology" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Technology" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <CheckBox fx:id="categoryHealthLife" mnemonicParsing="false" prefHeight="32.0" prefWidth="167.0" text="Health &amp; Lifestyle" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryWorld" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="World">
+            <CheckBox fx:id="categoryEntertainment" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Entertainment">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryScience" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Science" GridPane.rowIndex="1">
+            <CheckBox fx:id="categoryScienceTech" mnemonicParsing="false" prefHeight="32.0" prefWidth="190.0" text="Science &amp; Technology" GridPane.columnIndex="2">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="categoryAI" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="AI" GridPane.rowIndex="2">
+            <CheckBox fx:id="categoryPolitics" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Politics" GridPane.rowIndex="2">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="categoryEducation" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Education" GridPane.rowIndex="1">
                <font>
                   <Font size="14.0" />
                </font>

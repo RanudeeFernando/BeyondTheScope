@@ -121,10 +121,8 @@ public class HomeController extends BaseController{
 
             ViewHistoryController controller = loader.getController();
 
-            // Get the current logged-in user's ID from UserSession
             int userId = user.getUserID();
 
-            // Initialize the view history with the current user ID
             controller.initializeUserViewHistory(userId);
 
             Scene currentScene = articleListView.getScene();

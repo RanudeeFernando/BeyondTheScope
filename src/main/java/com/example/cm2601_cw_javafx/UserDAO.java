@@ -70,15 +70,52 @@ public class UserDAO {
         return -1;
     }
 
+//    public void insertUserPreferences(int userId, List<Category> categories) throws SQLException {
+//        String sql = "INSERT INTO user_category (userID, categoryName) VALUES (?, ?)";
+//
+//        try (Connection connection = MySQLConnection.connectToDatabase();
+//             PreparedStatement statement = connection.prepareStatement(sql)) {
+//
+//            for (Category category : categories) {
+//                statement.setInt(1, userId);
+//                statement.setString(2, category.getName());
+//                statement.executeUpdate();
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Error inserting user preferences: " + e.getMessage());
+//            throw e;
+//        }
+//    }
+//
+//    public List<Category> getUserPreferences(int userId) throws SQLException {
+//        String sql = "SELECT categoryName FROM user_category WHERE userID = ?";
+//        List<Category> categories = new ArrayList<>();
+//
+//        try (Connection connection = MySQLConnection.connectToDatabase();
+//             PreparedStatement statement = connection.prepareStatement(sql)) {
+//
+//            statement.setInt(1, userId);
+//            ResultSet resultSet = statement.executeQuery();
+//
+//            while (resultSet.next()) {
+//                categories.add(Category.fromString(resultSet.getString("categoryName")));
+//            }
+//        }
+//        return categories;
+//    }
+
     public void insertUserPreferences(int userId, List<Category> categories) throws SQLException {
-        String sql = "INSERT INTO user_category (userID, categoryName) VALUES (?, ?)";
+        String sql = "INSERT INTO user_category (userID, categoryID) VALUES (?, ?)";
 
         try (Connection connection = MySQLConnection.connectToDatabase();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             for (Category category : categories) {
+                // Fetch categoryID based on category name
+                int categoryID = getCategoryID(category.name(), connection);
+
                 statement.setInt(1, userId);
-                statement.setString(2, category.getName());
+                statement.setInt(2, categoryID);
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -87,8 +124,24 @@ public class UserDAO {
         }
     }
 
+    // Helper method to get categoryID from the Category table
+    private int getCategoryID(String categoryName, Connection connection) throws SQLException {
+        String sql = "SELECT categoryID FROM Category WHERE categoryName = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, categoryName);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("categoryID");
+            } else {
+                throw new SQLException("Category not found: " + categoryName);
+            }
+        }
+    }
+
     public List<Category> getUserPreferences(int userId) throws SQLException {
-        String sql = "SELECT categoryName FROM user_category WHERE userID = ?";
+        String sql = "SELECT c.categoryName FROM user_category uc " +
+                "JOIN Category c ON uc.categoryID = c.categoryID " +
+                "WHERE uc.userID = ?";
         List<Category> categories = new ArrayList<>();
 
         try (Connection connection = MySQLConnection.connectToDatabase();
@@ -98,8 +151,11 @@ public class UserDAO {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                categories.add(Category.fromString(resultSet.getString("categoryName")));
+                categories.add(Category.valueOf(resultSet.getString("categoryName")));
             }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving user preferences: " + e.getMessage());
+            throw e;
         }
         return categories;
     }
@@ -140,8 +196,39 @@ public class UserDAO {
         }
     }
 
+//    public List<Article> getLikedArticles(int userId) throws SQLException {
+//        String sql = "SELECT a.* FROM article a INNER JOIN user_liked_article la ON a.articleID = la.articleID WHERE la.userID = ?";
+//        List<Article> likedArticles = new ArrayList<>();
+//
+//        try (Connection connection = MySQLConnection.connectToDatabase();
+//             PreparedStatement statement = connection.prepareStatement(sql)) {
+//
+//            statement.setInt(1, userId);
+//            ResultSet resultSet = statement.executeQuery();
+//
+//            while (resultSet.next()) {
+//                int articleId = resultSet.getInt("articleID");
+//                String title = resultSet.getString("title");
+//                String content = resultSet.getString("content");
+//                String author = resultSet.getString("author");
+//                String source = resultSet.getString("source");
+//                String url = resultSet.getString("url");
+//                Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
+//                String categoryName = resultSet.getString("category");
+//
+//                Category category = Category.fromString(categoryName);
+//                Article article = new Article(articleId, title, content, category, author, source, url, publishedDate);
+//                likedArticles.add(article);
+//            }
+//        }
+//        return likedArticles;
+//    }
+
     public List<Article> getLikedArticles(int userId) throws SQLException {
-        String sql = "SELECT a.* FROM article a INNER JOIN user_liked_article la ON a.articleID = la.articleID WHERE la.userID = ?";
+        String sql = "SELECT a.*, c.categoryName FROM article a " +
+                "INNER JOIN user_liked_article la ON a.articleID = la.articleID " +
+                "LEFT JOIN Category c ON a.categoryID = c.categoryID " +
+                "WHERE la.userID = ?";
         List<Article> likedArticles = new ArrayList<>();
 
         try (Connection connection = MySQLConnection.connectToDatabase();
@@ -158,12 +245,18 @@ public class UserDAO {
                 String source = resultSet.getString("source");
                 String url = resultSet.getString("url");
                 Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
-                String categoryName = resultSet.getString("category");
+                String categoryName = resultSet.getString("categoryName"); // Retrieved from Category table
 
-                Category category = Category.fromString(categoryName);
+                // Convert categoryName to Category enum
+                Category category = categoryName != null ? Category.valueOf(categoryName) : Category.UNKNOWN;
+
+                // Create an Article object
                 Article article = new Article(articleId, title, content, category, author, source, url, publishedDate);
                 likedArticles.add(article);
             }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving liked articles: " + e.getMessage());
+            throw e;
         }
         return likedArticles;
     }
@@ -205,9 +298,41 @@ public class UserDAO {
         }
     }
 
+//    public List<Article> getSkippedArticles(int userId) throws SQLException {
+//        String sql = "SELECT a.* FROM article a " +
+//                "INNER JOIN user_skipped_article sa ON a.articleID = sa.articleID " +
+//                "WHERE sa.userID = ?";
+//        List<Article> skippedArticles = new ArrayList<>();
+//
+//        try (Connection connection = MySQLConnection.connectToDatabase();
+//             PreparedStatement statement = connection.prepareStatement(sql)) {
+//
+//            statement.setInt(1, userId);
+//            ResultSet resultSet = statement.executeQuery();
+//
+//            while (resultSet.next()) {
+//                int articleId = resultSet.getInt("articleID");
+//                String title = resultSet.getString("title");
+//                String content = resultSet.getString("content");
+//                String author = resultSet.getString("author");
+//                String source = resultSet.getString("source");
+//                String url = resultSet.getString("url");
+//                Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
+//                String categoryName = resultSet.getString("category");
+//
+//                Category category = Category.fromString(categoryName);
+//
+//                Article article = new Article(articleId, title, content, category, author, source, url, publishedDate);
+//                skippedArticles.add(article);
+//            }
+//        }
+//        return skippedArticles;
+//    }
+
     public List<Article> getSkippedArticles(int userId) throws SQLException {
-        String sql = "SELECT a.* FROM article a " +
+        String sql = "SELECT a.*, c.categoryName FROM article a " +
                 "INNER JOIN user_skipped_article sa ON a.articleID = sa.articleID " +
+                "LEFT JOIN Category c ON a.categoryID = c.categoryID " +
                 "WHERE sa.userID = ?";
         List<Article> skippedArticles = new ArrayList<>();
 
@@ -225,14 +350,19 @@ public class UserDAO {
                 String source = resultSet.getString("source");
                 String url = resultSet.getString("url");
                 Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
-                String categoryName = resultSet.getString("category");
+                String categoryName = resultSet.getString("categoryName"); // Retrieved from Category table
 
-                Category category = Category.fromString(categoryName);
+                Category category = categoryName != null ? Category.valueOf(categoryName) : Category.UNKNOWN;
 
+                // Create an Article object
                 Article article = new Article(articleId, title, content, category, author, source, url, publishedDate);
                 skippedArticles.add(article);
             }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving skipped articles: " + e.getMessage());
+            throw e;
         }
         return skippedArticles;
     }
+
 }

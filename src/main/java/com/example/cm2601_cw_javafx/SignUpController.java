@@ -38,17 +38,19 @@ public class SignUpController extends BaseController{
     @FXML
     private TextField confirmPasswordField;
     @FXML
-    private CheckBox categoryWorld;
+    private CheckBox categoryPolitics;
     @FXML
     private CheckBox categoryBusiness;
     @FXML
-    private CheckBox categoryTechnology;
+    private CheckBox categoryScienceTech;
     @FXML
     private CheckBox categorySports;
     @FXML
-    private CheckBox categoryScience;
+    private CheckBox categoryHealthLife;
     @FXML
-    private CheckBox categoryAI;
+    private CheckBox categoryEducation;
+    @FXML
+    private CheckBox categoryEntertainment;
     @FXML
     private Button signUpButton;
 
@@ -70,18 +72,19 @@ public class SignUpController extends BaseController{
         // Clear fields if registration is successful
         if (result.equals("User successfully registered!")) {
             clearFields();
-            navigateToHomePage();
+            navigateToLoginPage();
         }
     }
 
     private List<Category> getSelectedCategories() {
         List<Category> selectedCategories = new ArrayList<>();
-        if (categoryWorld.isSelected()) selectedCategories.add(Category.WORLD);
+        if (categoryPolitics.isSelected()) selectedCategories.add(Category.POLITICS);
         if (categoryBusiness.isSelected()) selectedCategories.add(Category.BUSINESS);
-        if (categoryTechnology.isSelected()) selectedCategories.add(Category.TECHNOLOGY);
+        if (categoryScienceTech.isSelected()) selectedCategories.add(Category.SCIENCE_TECH);
         if (categorySports.isSelected()) selectedCategories.add(Category.SPORTS);
-        if (categoryScience.isSelected()) selectedCategories.add(Category.SCIENCE);
-        if (categoryAI.isSelected()) selectedCategories.add(Category.AI);
+        if (categoryHealthLife.isSelected()) selectedCategories.add(Category.HEALTH_LIFESTYLE);
+        if (categoryEducation.isSelected()) selectedCategories.add(Category.EDUCATION);
+        if (categoryEntertainment.isSelected()) selectedCategories.add(Category.ENTERTAINMENT);
 
         return selectedCategories;
     }
@@ -101,26 +104,28 @@ public class SignUpController extends BaseController{
         confirmPasswordField.clear();
 
         // Uncheck all category checkboxes
-        categoryWorld.setSelected(false);
+        categoryPolitics.setSelected(false);
         categoryBusiness.setSelected(false);
-        categoryTechnology.setSelected(false);
+        categoryScienceTech.setSelected(false);
         categorySports.setSelected(false);
-        categoryScience.setSelected(false);
-        categoryAI.setSelected(false);
+        categoryHealthLife.setSelected(false);
+        categoryEducation.setSelected(false);
+        categoryEntertainment.setSelected(false);
     }
 
-    private void navigateToHomePage() {
+    private void navigateToLoginPage() {
+
         try {
             // Load the home page FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
             Parent root = loader.load();
 
-            // Update the existing scene's root
             Scene scene = signUpButton.getScene();
             scene.setRoot(root);
 
         } catch (IOException e) {
-            System.out.println("An error occurred while redirecting to Home page.");
+            System.out.println("An error occurred while redirecting to login page.");
+            e.printStackTrace();
         }
     }
 

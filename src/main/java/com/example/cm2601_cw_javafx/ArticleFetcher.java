@@ -91,35 +91,80 @@ public class ArticleFetcher {
 
 
     // Insert the article into the database
+//    private static void addArticleToDatabase(Article article) {
+//        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, category) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//
+//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+//             PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+//            // Set the parameters from the Article object
+//            statement.setString(1, article.getTitle());
+//            statement.setString(2, article.getSource());
+//            statement.setString(3, article.getAuthor());
+//            statement.setString(4, article.getContent());
+//            statement.setString(5, article.getUrl());
+//            statement.setTimestamp(6, article.getPublishedDate());
+//            statement.setString(7, String.valueOf(article.getCategory()));
+//
+//            // Execute the insert
+//            int rowsUpdated = statement.executeUpdate();
+//
+//            // If the insert was successful, retrieve the generated articleID
+//            if (rowsUpdated > 0) {
+//                ResultSet generatedKeys = statement.getGeneratedKeys();
+//                if (generatedKeys.next()) {
+//                    int generatedArticleID = generatedKeys.getInt(1);
+//                    article.setArticleID(generatedArticleID); // Set the generated articleID in the Article object
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     private static void addArticleToDatabase(Article article) {
-        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, category) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, categoryID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection dbConnection = MySQLConnection.connectToDatabase();
              PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            // Set the parameters from the Article object
+
             statement.setString(1, article.getTitle());
             statement.setString(2, article.getSource());
             statement.setString(3, article.getAuthor());
             statement.setString(4, article.getContent());
             statement.setString(5, article.getUrl());
             statement.setTimestamp(6, article.getPublishedDate());
-            statement.setString(7, String.valueOf(article.getCategory()));
 
-            // Execute the insert
+            int categoryID = getCategoryID(article.getCategory().name(), dbConnection);
+            statement.setInt(7, categoryID);
+
             int rowsUpdated = statement.executeUpdate();
 
-            // If the insert was successful, retrieve the generated articleID
             if (rowsUpdated > 0) {
                 ResultSet generatedKeys = statement.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     int generatedArticleID = generatedKeys.getInt(1);
-                    article.setArticleID(generatedArticleID); // Set the generated articleID in the Article object
+                    article.setArticleID(generatedArticleID);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+    private static int getCategoryID(String categoryName, Connection dbConnection) throws Exception {
+        String sql = "SELECT categoryID FROM Category WHERE categoryName = ?";
+        try (PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+            statement.setString(1, categoryName);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("categoryID");
+            } else {
+                throw new Exception("Category not found: " + categoryName);
+            }
+        }
+    }
+
 
     private static boolean isDuplicateArticle(String url) {
         String sql = "SELECT COUNT(*) FROM article WHERE url = ?";

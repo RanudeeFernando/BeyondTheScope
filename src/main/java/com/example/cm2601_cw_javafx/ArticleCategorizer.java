@@ -6,6 +6,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -13,7 +14,9 @@ import org.json.JSONObject;
 
 public class ArticleCategorizer {
     private static final String API_KEY = "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";
-    private static final String MODEL_URL = "https://api-inference.huggingface.co/models/ranudee/news-category-classifier";
+//    private static final String MODEL_URL = "https://api-inference.huggingface.co/models/ranudee/news-category-classifier";
+
+    private static final String MODEL_URL = "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-topic-latest";
 
 
     // Method to classify a single article
@@ -26,7 +29,7 @@ public class ArticleCategorizer {
         String responseBody = response.body();
 
         // Print the raw response
-        System.out.println("Raw API Response: " + responseBody + "\n");
+        System.out.println("Raw API Response: " + responseBody);
 
         try {
             JSONArray jsonResponseArray = new JSONArray(responseBody);
@@ -58,17 +61,58 @@ public class ArticleCategorizer {
         }
     }
 
-    // Method to map the string category to the Category enum
-    private Category mapStringToCategory(String category) {
-        switch (category) {
-            case "LABEL_0":
-                return Category.WORLD;
-            case "LABEL_1":
-                return Category.SPORTS;
-            case "LABEL_2":
+
+//    private Category mapStringToCategory(String category) {
+//        switch (category) {
+//            case "LABEL_0":
+//                return Category.WORLD;
+//            case "LABEL_1":
+//                return Category.SPORTS;
+//            case "LABEL_2":
+//                return Category.BUSINESS;
+//            case "LABEL_3":
+//                return Category.SCIENCE;
+//            default:
+//                return Category.UNKNOWN;
+//        }
+//    }
+
+    private Category mapStringToCategory(String label) {
+        switch (label.toLowerCase()) {
+            case "arts_&_culture":
+            case "music":
+            case "film_tv_&_video":
+            case "celebrity_&_pop_culture":
+            case "fashion_&_style":
+            case "gaming":
+                return Category.ENTERTAINMENT; // Includes arts and cultural topics
+
+            case "business_&_entrepreneurs":
                 return Category.BUSINESS;
-            case "LABEL_3":
-                return Category.SCIENCE;
+
+            case "learning_&_educational":
+            case "youth_&_student_life":
+                return Category.EDUCATION;
+
+            // Combine health, lifestyle, and travel under one category
+            case "food_&_dining":
+            case "fitness_&_health":
+            case "family":
+            case "relationships":
+            case "diaries_&_daily_life":
+            case "other_hobbies":
+            case "travel_&_adventure":
+                return Category.HEALTH_LIFESTYLE;
+
+            case "news_&_social_concern":
+                return Category.POLITICS;
+
+            case "science_&_technology":
+                return Category.SCIENCE_TECH;
+
+            case "sports":
+                return Category.SPORTS;
+
             default:
                 return Category.UNKNOWN;
         }
@@ -81,7 +125,9 @@ public class ArticleCategorizer {
                 Category predictedCategory = classifyArticle(article.getContent());
                 article.setCategory(predictedCategory);  // Set the category as the enum
 
-                updateArticleCategoryInDatabase(article);
+                ArticleService articleService = new ArticleService();
+
+                articleService.updateArticleCategoryInDatabase(article);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -103,26 +149,50 @@ public class ArticleCategorizer {
     }
 
 
-    private void updateArticleCategoryInDatabase(Article article) {
-        String sql = "UPDATE article SET category = ? WHERE articleID = ?";
+//    private void updateArticleCategoryInDatabase(Article article) {
+//        String sql = "UPDATE article SET category = ? WHERE articleID = ?";
+//
+//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+//             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+//
+//            statement.setString(1, article.getCategory().name());
+//            statement.setInt(2, article.getArticleID());
+//
+//            int rowsUpdated = statement.executeUpdate();
+//
+//            // Check if the update was successful
+//            if (rowsUpdated > 0) {
+//                System.out.println("Article category updated successfully.\n");
+//            } else {
+//                System.out.println("No article found with the given ID.");
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
 
-            statement.setString(1, article.getCategory().name());
-            statement.setInt(2, article.getArticleID());
+    public void categorizeUnknownArticles() {
+        ArticleService articleService = new ArticleService();
+        List<Article> unknownArticles = articleService.getArticlesWithUnknownCategory();
 
-            int rowsUpdated = statement.executeUpdate();
+        if (unknownArticles.isEmpty()) {
+            System.out.println("No articles with 'UNKNOWN' category to categorize.");
+            return;
+        }
 
-            // Check if the update was successful
-            if (rowsUpdated > 0) {
-                System.out.println("Article category updated successfully.");
-            } else {
-                System.out.println("No article found with the given ID.");
+        for (Article article : unknownArticles) {
+            try {
+                Category predictedCategory = classifyArticle(article.getContent());
+                article.setCategory(predictedCategory);
+                articleService.updateArticleCategoryInDatabase(article);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
+
+
 }

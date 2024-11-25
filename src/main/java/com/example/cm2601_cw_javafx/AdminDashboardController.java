@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
@@ -47,7 +48,7 @@ public class AdminDashboardController {
     @FXML
     private void handleArticleCategoriesButton() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("handle-article-categories.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("categorize-articles.fxml"));
             Parent root = loader.load();
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
@@ -96,6 +97,8 @@ public class AdminDashboardController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 
 
 
