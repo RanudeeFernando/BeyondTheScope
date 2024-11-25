@@ -70,12 +70,6 @@ public class FetchArticlesController {
         Platform.runLater(() -> logArea.appendText(message + "\n"));
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
     @FXML
     private void goBackToDashboard() {

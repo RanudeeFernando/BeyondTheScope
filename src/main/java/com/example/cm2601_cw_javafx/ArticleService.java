@@ -180,7 +180,7 @@ public class ArticleService {
         return articles;
     }
 
-    void updateArticleCategoryInDatabase(Article article) {
+    public void updateArticleCategoryInDatabase(Article article) {
         String fetchCategoryIDSql = "SELECT categoryID FROM category WHERE categoryName = ?";
         String updateArticleSql = "UPDATE article SET categoryID = ? WHERE articleID = ?";
 
@@ -212,6 +212,39 @@ public class ArticleService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Article getArticleByID(int articleId) {
+        String sql = "SELECT a.*, c.categoryName FROM article a " +
+                "LEFT JOIN category c ON a.categoryID = c.categoryID " +
+                "WHERE a.articleID = ?";
+
+        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+
+            statement.setInt(1, articleId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String title = resultSet.getString("title");
+                String source = resultSet.getString("source");
+                String author = resultSet.getString("author");
+                String content = resultSet.getString("content");
+                String url = resultSet.getString("url");
+                Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
+                String categoryName = resultSet.getString("categoryName"); // From the JOIN with Category table
+
+                Category category = categoryName != null ? Category.valueOf(categoryName) : Category.UNKNOWN;
+
+                return new Article(articleId, title, content, category, author, source, url, publishedDate);
+            } else {
+                System.out.println("No article found with ID: " + articleId);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

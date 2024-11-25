@@ -46,14 +46,27 @@ public class AdminDashboardController {
     }
 
     @FXML
-    private void handleArticleCategoriesButton() {
+    private void handleCategorizeArticles() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("categorize-articles.fxml"));
             Parent root = loader.load();
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
         } catch (IOException e) {
-            System.out.println("Error while navigating to the Handle Article Categories page.");
+            System.out.println("Error while navigating to the Categorize Articles page.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleUpdateCategory() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("update-category.fxml"));
+            Parent root = loader.load();
+            Scene currentScene = rootPane.getScene();
+            currentScene.setRoot(root);
+        } catch (IOException e) {
+            System.out.println("Error while navigating to the Update Article Category page.");
             e.printStackTrace();
         }
     }
