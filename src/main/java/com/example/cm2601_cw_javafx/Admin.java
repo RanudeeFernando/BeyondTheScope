@@ -25,8 +25,8 @@ public class Admin extends SystemUser{
         }
 
         try {
-            int articleIDInt = Integer.parseInt(articleID.trim()); // Convert String to int
-            return articleService.deleteArticleByID(articleIDInt); // Delegate to ArticleService
+            int articleIDInt = Integer.parseInt(articleID.trim());
+            return articleService.deleteArticleByID(articleIDInt);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid Article ID. Please enter a numeric value.");
         }

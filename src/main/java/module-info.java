@@ -7,7 +7,7 @@ module com.example.cm2601_cw_javafx {
     requires java.desktop;
     requires java.net.http;
     requires org.jetbrains.annotations;
-
+    requires mahout.mr;
 
     opens com.example.cm2601_cw_javafx to javafx.fxml;
     exports com.example.cm2601_cw_javafx;
