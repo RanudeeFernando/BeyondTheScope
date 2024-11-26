@@ -177,7 +177,11 @@ public class SystemUserManager {
 
     public void likeArticle(int userId, int articleId) {
         try {
-            userDAO.likeArticle(userId, articleId);
+            // userDAO.likeArticle(userId, articleId);
+
+            // CHANGE
+            userDAO.addInteraction(userId, articleId, "LIKE");
+
             System.out.println("Article liked successfully!");
         } catch (SQLException e) {
             System.out.println("Error liking article: " + e.getMessage());
@@ -187,7 +191,11 @@ public class SystemUserManager {
 
     public void unlikeArticle(int userId, int articleId) {
         try {
-            userDAO.unlikeArticle(userId, articleId);
+            // userDAO.unlikeArticle(userId, articleId);
+
+            // CHANGE
+            userDAO.removeInteraction(userId, articleId);
+
             System.out.println("Article unliked successfully!");
         } catch (SQLException e) {
             System.out.println("Error unliking article: " + e.getMessage());
@@ -197,7 +205,10 @@ public class SystemUserManager {
 
     public boolean hasLikedArticle(int userId, int articleId) {
         try {
-            return userDAO.hasLikedArticle(userId, articleId);
+            // CHANGED
+            // return userDAO.hasLikedArticle(userId, articleId);
+            return userDAO.hasInteraction(userId,articleId,"LIKE");
+
         } catch (SQLException e) {
             System.out.println("Error checking if article is liked: " + e.getMessage());
             return false;
@@ -206,7 +217,11 @@ public class SystemUserManager {
 
     public List<Article> getLikedArticles(int userId) {
         try {
-            return userDAO.getLikedArticles(userId);
+            // CHANGED
+            // return userDAO.getLikedArticles(userId);
+
+            return userDAO.getArticlesByInteraction(userId, "LIKE");
+
         } catch (SQLException e) {
             System.out.println("Error retrieving liked articles: " + e.getMessage());
             return List.of();
@@ -215,7 +230,13 @@ public class SystemUserManager {
 
     public void skipArticle(int userId, int articleId) {
         try {
-            userDAO.skipArticle(userId, articleId);
+
+            // userDAO.skipArticle(userId, articleId);
+
+            // CHANGED
+            userDAO.addInteraction(userId, articleId, "SKIP");
+
+
             System.out.println("Article skipped successfully!");
         } catch (SQLException e) {
             System.out.println("Error skipping article: " + e.getMessage());
@@ -225,7 +246,11 @@ public class SystemUserManager {
 
     public void unskipArticle(int userId, int articleId) {
         try {
-            userDAO.unskipArticle(userId, articleId);
+            // userDAO.unskipArticle(userId, articleId);
+
+            // CHANGED
+            userDAO.removeInteraction(userId, articleId);
+
             System.out.println("Article unskipped successfully!");
         } catch (SQLException e) {
             System.out.println("Error unskipping article: " + e.getMessage());
@@ -235,7 +260,11 @@ public class SystemUserManager {
 
     public boolean hasSkippedArticle(int userId, int articleId) {
         try {
-            return userDAO.hasSkippedArticle(userId, articleId);
+            // CHANGED
+            // return userDAO.hasSkippedArticle(userId, articleId);
+
+            return userDAO.hasInteraction(userId, articleId, "SKIP");
+
         } catch (SQLException e) {
             System.err.println("Error checking if article is skipped: " + e.getMessage());
             // Optionally, log the exception or take appropriate action
@@ -245,7 +274,11 @@ public class SystemUserManager {
 
     public List<Article> getSkippedArticles(int userId) {
         try {
-            return userDAO.getSkippedArticles(userId);
+            // CHANGED
+            // return userDAO.getSkippedArticles(userId);
+
+            return userDAO.getArticlesByInteraction(userId, "SKIP");
+
         } catch (SQLException e) {
             System.out.println("Error retrieving skipped articles: " + e.getMessage());
             return List.of();

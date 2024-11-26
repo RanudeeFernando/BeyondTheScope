@@ -365,4 +365,76 @@ public class UserDAO {
         return skippedArticles;
     }
 
+    public void addInteraction(int userId, int articleId, String interactionType) throws SQLException {
+        String sql = "INSERT INTO user_article_interaction (userID, articleID, interactionType) VALUES (?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE interactionType = ?";
+        try (Connection connection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, articleId);
+            statement.setString(3, interactionType);
+            statement.setString(4, interactionType); // Update if already exists
+            statement.executeUpdate();
+        }
+    }
+
+    public void removeInteraction(int userId, int articleId) throws SQLException {
+        String sql = "DELETE FROM user_article_interaction WHERE userID = ? AND articleID = ?";
+        try (Connection connection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, articleId);
+            statement.executeUpdate();
+        }
+    }
+    public boolean hasInteraction(int userId, int articleId, String interactionType) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM user_article_interaction WHERE userID = ? AND articleID = ? AND interactionType = ?";
+        try (Connection connection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, articleId);
+            statement.setString(3, interactionType);
+            ResultSet resultSet = statement.executeQuery();
+
+            return resultSet.next() && resultSet.getInt(1) > 0;
+        }
+    }
+
+    public List<Article> getArticlesByInteraction(int userId, String interactionType) throws SQLException {
+        String sql = "SELECT a.*, c.categoryName FROM article a " +
+                "INNER JOIN user_article_interaction ui ON a.articleID = ui.articleID " +
+                "LEFT JOIN Category c ON a.categoryID = c.categoryID " +
+                "WHERE ui.userID = ? AND ui.interactionType = ?";
+        List<Article> articles = new ArrayList<>();
+
+        try (Connection connection = MySQLConnection.connectToDatabase();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setString(2, interactionType);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int articleId = resultSet.getInt("articleID");
+                String title = resultSet.getString("title");
+                String content = resultSet.getString("content");
+                String author = resultSet.getString("author");
+                String source = resultSet.getString("source");
+                String url = resultSet.getString("url");
+                Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
+                String categoryName = resultSet.getString("categoryName");
+
+                Category category = categoryName != null ? Category.valueOf(categoryName) : Category.UNKNOWN;
+
+                // Create an Article object
+                Article article = new Article(articleId, title, content, category, author, source, url, publishedDate);
+                articles.add(article);
+            }
+        }
+        return articles;
+    }
+
 }
