@@ -7,12 +7,8 @@ module com.example.cm2601_cw_javafx {
     requires java.desktop;
     requires java.net.http;
     requires org.jetbrains.annotations;
+    requires librec.core;
 
-    requires lenskit.api;
-    requires lenskit.core;
-    requires lenskit.knn;
-
-    requires lenskit.data.structures;
 
 
 

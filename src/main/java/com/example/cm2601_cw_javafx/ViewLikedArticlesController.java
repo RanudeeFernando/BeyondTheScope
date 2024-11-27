@@ -28,6 +28,7 @@ public class ViewLikedArticlesController extends BaseController{
 
 
 
+
     public void initialize(){
 
     }
@@ -51,7 +52,10 @@ public class ViewLikedArticlesController extends BaseController{
             if (selectedArticle != null) {
                 openArticleDetails(selectedArticle);
             }
+
         });
+
+
 
     }
 

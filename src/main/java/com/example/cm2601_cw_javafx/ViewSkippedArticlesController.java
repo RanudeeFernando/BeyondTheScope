@@ -50,6 +50,9 @@ public class ViewSkippedArticlesController extends BaseController{
             if (selectedArticle != null) {
                 openArticleDetails(selectedArticle);
             }
+
+            HomeController homeController = new HomeController();
+            homeController.addArticleToViewedHistory(selectedArticle);
         });
     }
 

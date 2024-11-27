@@ -124,6 +124,7 @@ public class LoginController extends BaseController{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
             Parent root = loader.load();
 
+
             Scene scene = loginButton.getScene();
             scene.setRoot(root);
 

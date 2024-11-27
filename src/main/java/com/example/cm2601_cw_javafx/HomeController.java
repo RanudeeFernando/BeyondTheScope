@@ -101,7 +101,7 @@ public class HomeController extends BaseController{
         }
     }
 
-    private void addArticleToViewedHistory(Article article) {
+    public void addArticleToViewedHistory(Article article) {
         if (historyService != null) {
             int userId = user.getUserID();
             historyService.addViewedArticle(userId, article.getArticleID());
