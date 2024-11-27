@@ -7,7 +7,15 @@ module com.example.cm2601_cw_javafx {
     requires java.desktop;
     requires java.net.http;
     requires org.jetbrains.annotations;
-    requires mahout.mr;
+
+    requires lenskit.api;
+    requires lenskit.core;
+    requires lenskit.knn;
+
+    requires lenskit.data.structures;
+
+
+
 
     opens com.example.cm2601_cw_javafx to javafx.fxml;
     exports com.example.cm2601_cw_javafx;

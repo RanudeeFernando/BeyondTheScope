@@ -90,15 +90,27 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.mahout</groupId>
-      <artifactId>mahout-mr</artifactId>
-      <version>0.13.0</version>
+      <groupId>org.lenskit</groupId>
+      <artifactId>lenskit-api</artifactId>
+      <version>3.0-M3</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.mahout.commons</groupId>
-      <artifactId>commons-cli</artifactId>
-      <version>2.0-mahout</version>
+      <groupId>org.lenskit</groupId>
+      <artifactId>lenskit-core</artifactId>
+      <version>3.0-M3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.lenskit</groupId>
+      <artifactId>lenskit-knn</artifactId>
+      <version>3.0-M3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.grouplens.lenskit</groupId>
+      <artifactId>lenskit-data-structures</artifactId>
+      <version>3.0-T5</version>
     </dependency>
 
   </dependencies>
