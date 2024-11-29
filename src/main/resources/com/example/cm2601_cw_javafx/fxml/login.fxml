@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cm2601_cw_javafx.controllers.LoginController">
+   <children>
+      <ImageView fx:id="imageViewLogo" fitHeight="125.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/logo5.png" />
+         </image></ImageView>
+      <Text layoutX="374.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back!" wrappingWidth="351.2033500671387">
+         <font>
+            <Font size="48.0" />
+         </font>
+      </Text>
+      <Text layoutX="300.0" layoutY="287.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please enter login details to continue!" textAlignment="CENTER" wrappingWidth="304.80329513549805">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="usernameField" layoutX="300.0" layoutY="334.0" prefHeight="45.0" prefWidth="500.0" promptText="Username">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+      <PasswordField fx:id="passwordField" layoutX="300.0" layoutY="410.0" prefHeight="45.0" prefWidth="500.0" promptText="Password">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </PasswordField>
+      <Button fx:id="loginButton" layoutX="300.0" layoutY="510.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="52.0" prefWidth="500.0" text="Login">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

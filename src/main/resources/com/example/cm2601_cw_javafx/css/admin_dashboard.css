@@ -11,3 +11,13 @@
 .button:hover {
     -fx-opacity: 0.8;
 }
+
+#logoutButton {
+    -fx-background-color: #D22B2B;
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-border-width: 2px;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+}

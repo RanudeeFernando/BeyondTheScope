@@ -10,9 +10,8 @@ module com.example.cm2601_cw_javafx {
     requires librec.core;
 
 
-
-
-
     opens com.example.cm2601_cw_javafx to javafx.fxml;
     exports com.example.cm2601_cw_javafx;
+    exports com.example.cm2601_cw_javafx.controllers;
+    opens com.example.cm2601_cw_javafx.controllers to javafx.fxml;
 }

@@ -247,6 +247,26 @@ public class ArticleService {
         return null;
     }
 
+    public static String getArticleNameById(String itemId) {
+        String query = "SELECT title FROM article WHERE articleID = ?";
+        String articleName = "[No Title]";
+
+        try (Connection connection = MySQLConnection.connectToDatabase();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, itemId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                articleName = resultSet.getString("title");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return articleName;
+    }
 
 
 

@@ -118,7 +118,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>com.example.cm2601_cw_javafx/com.example.cm2601_cw_javafx.NewsRecommendationApplication</mainClass>
+              <mainClass>com.example.cm2601_cw_javafx/com.example.cm2601_cw_javafx.NewsApplication</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

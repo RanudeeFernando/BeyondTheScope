@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 public class ArticleFetcher {
     private static final String API_KEY = "829613513f4a4c9794a7ecfc44a91b0c";
-    private static final String API_URL = "https://newsapi.org/v2/top-headlines?language=en&pageSize=10&apiKey=" + API_KEY;
+    private static final String API_URL = "https://newsapi.org/v2/top-headlines?language=en&pageSize=20&apiKey=" + API_KEY;
 
     public static List<Article> fetchArticles() {
         List<Article> articles = new ArrayList<>();
