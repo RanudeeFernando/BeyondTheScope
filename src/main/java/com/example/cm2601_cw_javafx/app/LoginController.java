@@ -1,7 +1,6 @@
-package com.example.cm2601_cw_javafx.controllers;
+package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.*;
-import com.example.cm2601_cw_javafx.controllers.BaseController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,8 +15,6 @@ import java.io.IOException;
 public class LoginController extends BaseController {
 
     @FXML
-    private ImageView imageViewLogo;
-    @FXML
     private TextField usernameField;
     @FXML
     private TextField passwordField;
@@ -31,46 +28,6 @@ public class LoginController extends BaseController {
     public void initialize() {
 
     }
-
-
-//    @FXML
-//    public void handleLogin() {
-//        String username = usernameField.getText();
-//        String password = passwordField.getText();
-//
-//        String authResult = systemUserManager.authenticateUser(username, password);
-//
-//        if ("Login successful!".equals(authResult)) {
-//
-//            int userId = systemUserManager.getUserIdByUsername(username);
-//            if (userId != -1) {
-//
-//                UserSession.getInstance().setUserId(userId);
-//                UserSession.getInstance().setUsername(username);
-//
-//                System.out.println("User ID set in session: " + UserSession.getInstance().getUserId());
-//                System.out.println("Username set in session: " + UserSession.getInstance().getUsername());
-//
-//                SystemUser loggedInUser = UserSession.getInstance().getLoggedInUser();
-//
-//                // SystemUser loggedInUser = systemUserManager.getUserByRole(username);
-//
-//                if (loggedInUser instanceof Admin) {
-//                    navigateToAdminDashboard();
-//                } else if (loggedInUser instanceof RegularUser) {
-//                    navigateToHomePage();
-//                } else {
-//                    showAlert("Unknown role. Login failed.");
-//                }
-//            } else {
-//                showAlert("An error occurred while retrieving user information.");
-//            }
-//        } else {
-//            showAlert(authResult);
-//        }
-//
-//        clearFields();
-//    }
 
     @FXML
     public void handleLogin() {
@@ -90,7 +47,7 @@ public class LoginController extends BaseController {
                 if (loggedInUser instanceof Admin) {
                     showAlert("Successfully logged in as Admin! You will be redirected to the Admin Dashboard shortly.");
                     navigateToAdminDashboard();
-                } else if (loggedInUser instanceof RegularUser) {
+                } else if (loggedInUser instanceof User) {
                     showAlert("Login successful! You will be redirected to the Home page shortly.");
                     navigateToHomePage();
                 } else {

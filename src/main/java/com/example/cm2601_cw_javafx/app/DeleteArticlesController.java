@@ -1,4 +1,4 @@
-package com.example.cm2601_cw_javafx.controllers;
+package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.Admin;
 import com.example.cm2601_cw_javafx.Article;
@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 

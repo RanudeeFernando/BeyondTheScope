@@ -49,7 +49,7 @@
 //                }
 //            }
 //
-//            return "RegularUser successfully registered!";
+//            return "User successfully registered!";
 //        } catch (SQLException e) {
 //            return "Registration failed. Please try again: " + e.getMessage();
 //        }
@@ -111,7 +111,7 @@
 //
 //                ResultSet resultSet = preparedStatement.executeQuery();
 //                if (resultSet.next()) {
-//                    return resultSet.getInt("userID"); // RegularUser found, return userID
+//                    return resultSet.getInt("userID"); // User found, return userID
 //                }
 //            }
 //        } catch (SQLException e) {

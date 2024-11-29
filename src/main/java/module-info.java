@@ -12,6 +12,6 @@ module com.example.cm2601_cw_javafx {
 
     opens com.example.cm2601_cw_javafx to javafx.fxml;
     exports com.example.cm2601_cw_javafx;
-    exports com.example.cm2601_cw_javafx.controllers;
-    opens com.example.cm2601_cw_javafx.controllers to javafx.fxml;
+    exports com.example.cm2601_cw_javafx.app;
+    opens com.example.cm2601_cw_javafx.app to javafx.fxml;
 }

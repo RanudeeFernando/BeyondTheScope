@@ -1,4 +1,4 @@
-package com.example.cm2601_cw_javafx.controllers;
+package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.Article;
 import com.example.cm2601_cw_javafx.ArticleCategorizer;

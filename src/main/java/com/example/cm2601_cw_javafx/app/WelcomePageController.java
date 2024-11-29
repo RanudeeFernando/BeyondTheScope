@@ -1,6 +1,5 @@
-package com.example.cm2601_cw_javafx.controllers;
+package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.controllers.BaseController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

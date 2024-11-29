@@ -1,9 +1,8 @@
-package com.example.cm2601_cw_javafx.controllers;
+package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.HistoryService;
 import com.example.cm2601_cw_javafx.MySQLConnection;
 import com.example.cm2601_cw_javafx.UserViewedArticle;
-import com.example.cm2601_cw_javafx.controllers.BaseController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

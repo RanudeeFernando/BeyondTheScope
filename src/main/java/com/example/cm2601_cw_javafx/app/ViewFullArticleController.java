@@ -1,7 +1,6 @@
-package com.example.cm2601_cw_javafx.controllers;
+package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.*;
-import com.example.cm2601_cw_javafx.controllers.BaseController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,7 +37,7 @@ public class ViewFullArticleController extends BaseController {
     private Button skipButton;
 
     // private final UserSession userSession = UserSession.getInstance();
-    RegularUser user = (RegularUser) UserSession.getInstance().getLoggedInUser();
+    User user = (User) UserSession.getInstance().getLoggedInUser();
 
     private int currentArticleId;
 

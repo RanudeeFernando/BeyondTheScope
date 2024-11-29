@@ -1,4 +1,4 @@
-package com.example.cm2601_cw_javafx.controllers;
+package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.*;
 import javafx.collections.FXCollections;
@@ -32,7 +32,7 @@ public class HomeController extends BaseController {
     private final ArticleService articleService = new ArticleService();
     private HistoryService historyService; // HistoryService instance
 
-    RegularUser user = (RegularUser) UserSession.getInstance().getLoggedInUser();
+    User user = (User) UserSession.getInstance().getLoggedInUser();
 
     public void initialize() {
 
@@ -202,6 +202,22 @@ public class HomeController extends BaseController {
         Stage stage = (Stage) articleListView.getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+    @FXML
+    private void onUpdateProfileMenuItemClicked() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/update-profile.fxml"));
+            Parent root = loader.load();
+
+            Scene currentScene = articleListView.getScene();
+            currentScene.setRoot(root);
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while redirecting to Update Profile page.");
+            e.printStackTrace();
+        }
     }
 
 

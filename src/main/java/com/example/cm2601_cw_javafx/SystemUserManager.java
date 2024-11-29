@@ -39,7 +39,7 @@ public class SystemUserManager {
         try {
             int userId = userDAO.insertUser(username, password);
             userDAO.insertUserPreferences(userId, selectedCategories);
-            RegularUser user = new RegularUser(userId, username, password, selectedCategories);
+            User user = new User(userId, username, password, selectedCategories);
             return "User successfully registered!";
 
         } catch (SQLException e) {
@@ -81,7 +81,7 @@ public class SystemUserManager {
                 return new Admin(userID, username, password);
             }
             else if ("USER".equalsIgnoreCase(role)) {
-                return new RegularUser(userID, username, password);
+                return new User(userID, username, password);
             }
             else {
                 System.out.println("Unknown role: " + role);
@@ -123,7 +123,7 @@ public class SystemUserManager {
 //            if ("ADMIN".equalsIgnoreCase(role)) {
 //                return new Admin(userID, username, password);
 //            } else if ("USER".equalsIgnoreCase(role)) {
-//                return new RegularUser(userID, username, password);
+//                return new User(userID, username, password);
 //            } else {
 //                System.out.println("Unknown role: " + role);
 //                return null;
@@ -155,7 +155,7 @@ public class SystemUserManager {
             if ("ADMIN".equalsIgnoreCase(role)) {
                 return new Admin(userID, username, password);
             } else if ("USER".equalsIgnoreCase(role)) {
-                return new RegularUser(userID, username, password);
+                return new User(userID, username, password);
             } else {
                 System.out.println("Unknown role: " + role);
                 return null;
@@ -167,11 +167,11 @@ public class SystemUserManager {
     }
 
 
-    private boolean validateUsername(String username) {
+    public boolean validateUsername(String username) {
         return username.length() >= 4 && username.matches("[A-Za-z]+");
     }
 
-    private boolean validatePassword(String password) {
+    public boolean validatePassword(String password) {
         return password.length() >= 8 && password.matches(".*[A-Za-z].*") && password.matches(".*\\d.*");
     }
 

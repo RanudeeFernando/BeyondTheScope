@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cm2601_cw_javafx.app.UpdateProfileController">
+   <children>
+      <ImageView fx:id="imageViewLogo" fitHeight="125.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/logo5.png" />
+         </image>
+      </ImageView>
+      <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
+         <menus>
+            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home ">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#goBackToHome" text="Go Back" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="For You" />
+         </menus>
+      </MenuBar>
+      <Label fx:id="titleLabel" layoutX="71.0" layoutY="188.0" prefHeight="28.0" prefWidth="985.0" text="Update Profile " wrapText="true">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <GridPane layoutX="71.0" layoutY="235.0" prefHeight="196.0" prefWidth="458.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.39996337890625" minWidth="10.0" prefWidth="175.0000244140625" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.2000274658203" minWidth="10.0" prefWidth="282.9999755859375" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Current Password" GridPane.rowIndex="1">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="New Password" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <TextField fx:id="usernameField" editable="false" prefHeight="35.0" prefWidth="285.0" GridPane.columnIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Password" GridPane.rowIndex="3">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <PasswordField fx:id="currentPasswordField" prefHeight="35.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <PasswordField fx:id="newPasswordField" prefHeight="35.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <PasswordField fx:id="confirmPasswordField" prefHeight="35.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+      <Text layoutX="71.0" layoutY="489.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Update Your Interests:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <GridPane layoutX="71.0" layoutY="506.0" prefHeight="138.0" prefWidth="538.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <CheckBox fx:id="categorySports" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Sports" GridPane.columnIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="categoryBusiness" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Business" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="categoryEntertainment" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Entertainment">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="categoryScienceTech" mnemonicParsing="false" prefHeight="32.0" prefWidth="190.0" text="Science &amp; Technology" GridPane.columnIndex="2">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="categoryPolitics" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Politics" GridPane.rowIndex="2">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="categoryEducation" mnemonicParsing="false" prefHeight="32.0" prefWidth="111.0" text="Education" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="categoryHealthLife" mnemonicParsing="false" prefHeight="32.0" prefWidth="167.0" text="Health &amp; Lifestyle" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+         </children>
+      </GridPane>
+      <Button layoutX="673.0" layoutY="652.0" mnemonicParsing="false" onAction="#updateInterests" prefHeight="35.0" prefWidth="176.0" text="Update Interests">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="673.0" layoutY="391.0" mnemonicParsing="false" onAction="#updatePassword" prefHeight="35.0" prefWidth="176.0" text="Update Password">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

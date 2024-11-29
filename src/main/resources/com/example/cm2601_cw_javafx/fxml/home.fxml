@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cm2601_cw_javafx.controllers.HomeController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cm2601_cw_javafx.app.HomeController">
    <children>
       <ImageView fx:id="imageViewLogo" fitHeight="125.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -18,34 +18,20 @@
          </image></ImageView>
       <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
         <menus>
-          <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home ">
+          <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home " />
+            <Menu mnemonicParsing="false" text="For You">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Refresh Page" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleViewRecommendations" text="Get Recommendations" />
                </items></Menu>
-            <Menu mnemonicParsing="false" text="For You" />
           <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
             <items>
+                <MenuItem mnemonicParsing="false" onAction="#onUpdateProfileMenuItemClicked" text="Update Profile" />
               <MenuItem fx:id="viewHistoryMenuItem" mnemonicParsing="false" onAction="#onViewHistoryMenuItemClicked" text="View History" />
                   <MenuItem mnemonicParsing="false" onAction="#onViewLikedArticlesMenuItemClicked" text="View Liked Articles" />
                   <MenuItem mnemonicParsing="false" onAction="#onViewSkippedArticlesMenuItemClicked" text="View Skipped Articles" />
-                <MenuItem mnemonicParsing="false" text="Manage Preferences" />
                   <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
             </items>
           </Menu>
-            <Menu fx:id="homeMenu1" mnemonicParsing="false" text="Categories">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Sports" />
-                  <MenuItem mnemonicParsing="false" text="Technology" />
-                  <MenuItem mnemonicParsing="false" text="AI" />
-                  <MenuItem mnemonicParsing="false" text="Health" />
-                  <MenuItem mnemonicParsing="false" text="Business" />
-                  <MenuItem mnemonicParsing="false" text="Nature" />
-                  <MenuItem mnemonicParsing="false" text="Politics" />
-                  <MenuItem mnemonicParsing="false" text="Science" />
-                  <MenuItem mnemonicParsing="false" text="Education" />
-                  <MenuItem mnemonicParsing="false" text="Entertainement" />
-               </items>
-            </Menu>
         </menus>
       </MenuBar>
       <ListView fx:id="articleListView" layoutX="42.0" layoutY="244.0" prefHeight="487.0" prefWidth="1016.0" stylesheets="@../css/menu_bar.css" />

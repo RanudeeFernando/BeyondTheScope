@@ -64,7 +64,7 @@
 //                pstmtCategory.executeUpdate();
 //            }
 //
-//            return "RegularUser successfully registered!";
+//            return "User successfully registered!";
 //        } catch (SQLException e) {
 //            return "Registration failed. Please try again.";
 //        }

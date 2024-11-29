@@ -1,8 +1,8 @@
-package com.example.cm2601_cw_javafx.controllers;
+package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.ArticleService;
 import com.example.cm2601_cw_javafx.RecommendationModel;
-import com.example.cm2601_cw_javafx.RegularUser;
+import com.example.cm2601_cw_javafx.User;
 import com.example.cm2601_cw_javafx.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +21,7 @@ public class GetRecommendationsController {
     @FXML
     private AnchorPane rootPane;
 
-    RegularUser user = (RegularUser) UserSession.getInstance().getLoggedInUser();
+    User user = (User) UserSession.getInstance().getLoggedInUser();
     private int loggedInUserId = user.getUserID();
 
 
