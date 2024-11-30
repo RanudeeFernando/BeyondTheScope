@@ -50,7 +50,7 @@ public class RecommendationModel {
         v.userID,
         v.articleID,
         (COUNT(DISTINCT v.viewedAt) * 1.0 +
-         COALESCE(i.like_count, 0) * 5.0) AS full_weight
+         COALESCE(i.like_count, 0) * 3.0) AS full_weight
     FROM user_viewed_article v
     LEFT JOIN (
         SELECT
@@ -124,6 +124,15 @@ public class RecommendationModel {
 
             // Retrieve recommendations
             recommendations = recommender.getRecommendedList();
+
+            for (RecommendedItem recommendation : recommendations) {
+                System.out.println("User: " + recommendation.getUserId() +
+                        ", Item: " + recommendation.getItemId() +
+                        ", Score: " + recommendation.getValue());
+            }
+
+
+
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

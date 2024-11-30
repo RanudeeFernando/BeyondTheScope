@@ -39,6 +39,8 @@ public class GetRecommendationsController {
                 String displayText = "Article: " + articleName +
                         ", Score: " + recommendation.getValue();
 
+                System.out.println("Article id: " + recommendation.getItemId());
+
                 recommendationListView.getItems().add(displayText);
             }
         }
