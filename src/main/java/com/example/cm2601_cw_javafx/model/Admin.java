@@ -3,17 +3,16 @@ package com.example.cm2601_cw_javafx.model;
 import com.example.cm2601_cw_javafx.db.DBManager;
 
 public class Admin extends SystemUser {
-    // private final ArticleService articleService;
+
     private final DBManager DBManager = new DBManager();
 
     public Admin(int userID, String username, String password) {
         super(userID, username, password);
-        //this.articleService = new ArticleService();
+
     }
 
     public Admin(int userID, String username){
         super(userID, username);
-        //this.articleService = new ArticleService();
 
     }
 

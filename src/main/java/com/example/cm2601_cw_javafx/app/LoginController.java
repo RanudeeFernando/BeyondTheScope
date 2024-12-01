@@ -29,10 +29,6 @@ public class LoginController extends BaseController {
     private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
 
 
-    public void initialize() {
-
-    }
-
     @FXML
     public void handleLogin() {
         String username = usernameField.getText();
@@ -112,6 +108,80 @@ public class LoginController extends BaseController {
             e.printStackTrace();
         }
     }
+
+    // ---------------------------
+
+//    @FXML
+//    public void handleLogin() {
+//        String username = usernameField.getText();
+//        String password = passwordField.getText();
+//
+//        String authResult = systemUserManager.authenticateUser(username, password);
+//
+//        if ("Login successful!".equals(authResult)) {
+//            SystemUser loggedInUser = systemUserManager.getUserByRole(username);
+//
+//            if (loggedInUser != null) {
+//                System.out.println("Authenticated User: " + loggedInUser.getUsername());
+//
+//                if (loggedInUser instanceof Admin) {
+//                    showAlert("Successfully logged in as Admin! You will be redirected to the Admin Dashboard shortly.");
+//                    navigateToAdminDashboard((Admin) loggedInUser); // Pass the Admin object
+//                } else if (loggedInUser instanceof User) {
+//                    showAlert("Login successful! You will be redirected to the Home page shortly.");
+//                    navigateToHomePage((User) loggedInUser); // Pass the User object
+//                } else {
+//                    showAlert("Unknown role. Login failed.");
+//                }
+//            } else {
+//                showAlert("An error occurred while retrieving user information.");
+//            }
+//        } else {
+//            showAlert(authResult);
+//        }
+//
+//        clearFields();
+//    }
+//
+//    private void navigateToHomePage(User user) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
+//            Parent root = loader.load();
+//
+//            // Pass the User object to the HomeController
+//            HomeController controller = loader.getController();
+//            if (controller != null) {
+//                controller.setUser(user); // Call setUser in HomeController
+//            }
+//
+//            Scene scene = loginButton.getScene();
+//            scene.setRoot(root);
+//
+//        } catch (IOException e) {
+//            System.out.println("An error occurred while redirecting to the Home page.");
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private void navigateToAdminDashboard(Admin admin) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/admin-dashboard.fxml"));
+//            Parent root = loader.load();
+//
+//            // Pass the Admin object to the AdminDashboardController
+//            AdminDashboardController controller = loader.getController();
+//            if (controller != null) {
+//                controller.setAdmin(admin); // Call setAdmin in AdminDashboardController
+//            }
+//
+//            Scene scene = loginButton.getScene();
+//            scene.setRoot(root);
+//
+//        } catch (IOException e) {
+//            System.out.println("Error navigating to Admin Dashboard: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
 
 
 

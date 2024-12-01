@@ -71,6 +71,7 @@ public class DeleteArticlesController {
                 articleIDTextField.clear();
             } else {
                 showAlert("No article found with the given ID: " + articleIDText);
+                articleIDTextField.clear();
             }
 
         } catch (NumberFormatException e) {

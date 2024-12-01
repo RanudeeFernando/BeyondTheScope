@@ -25,43 +25,60 @@ public class RecommendationModel {
     private static final String CSV_FILE_PATH = "user_interactions.csv";
 
     public static void generateCSV() {
+        String query = """
+        SELECT
+            v.userID,
+            v.articleID,
+            (COUNT(DISTINCT v.viewedAt) * 1.0 +
+             COALESCE(i.like_count, 0) * 3.0 +
+             COALESCE(i.skip_count, 0) * -2.0) AS full_weight
+        FROM user_viewed_article v
+        LEFT JOIN (
+            SELECT
+                userID,
+                articleID,
+                SUM(CASE WHEN interactionType = 'SKIP' THEN 1 ELSE 0 END) AS skip_count,
+                SUM(CASE WHEN interactionType = 'LIKE' THEN 1 ELSE 0 END) AS like_count
+            FROM user_article_interaction
+            GROUP BY userID, articleID
+        ) i ON v.userID = i.userID AND v.articleID = i.articleID
+        GROUP BY v.userID, v.articleID;
+    """;
+
 //        String query = """
+//    SELECT
+//        v.userID,
+//        v.articleID,
+//        (COUNT(DISTINCT v.viewedAt) * 1.0 +
+//         COALESCE(i.like_count, 0) * 3.0) AS full_weight
+//    FROM user_viewed_article v
+//    LEFT JOIN (
 //        SELECT
-//            v.userID,
-//            v.articleID,
-//            (COUNT(DISTINCT v.viewedAt) * 1.0 +
-//             COALESCE(i.like_count, 0) * 5.0 +
-//             COALESCE(i.skip_count, 0) * -2.0) AS full_weight
-//        FROM user_viewed_article v
-//        LEFT JOIN (
-//            SELECT
-//                userID,
-//                articleID,
-//                SUM(CASE WHEN interactionType = 'SKIP' THEN 1 ELSE 0 END) AS skip_count,
-//                SUM(CASE WHEN interactionType = 'LIKE' THEN 1 ELSE 0 END) AS like_count
-//            FROM user_article_interaction
-//            GROUP BY userID, articleID
-//        ) i ON v.userID = i.userID AND v.articleID = i.articleID
-//        GROUP BY v.userID, v.articleID;
+//            userID,
+//            articleID,
+//            SUM(CASE WHEN interactionType = 'LIKE' THEN 1 ELSE 0 END) AS like_count
+//        FROM user_article_interaction
+//        GROUP BY userID, articleID
+//    ) i ON v.userID = i.userID AND v.articleID = i.articleID
+//    GROUP BY v.userID, v.articleID;
 //    """;
 
-        String query = """
-    SELECT
-        v.userID,
-        v.articleID,
-        (COUNT(DISTINCT v.viewedAt) * 1.0 +
-         COALESCE(i.like_count, 0) * 3.0) AS full_weight
-    FROM user_viewed_article v
-    LEFT JOIN (
-        SELECT
-            userID,
-            articleID,
-            SUM(CASE WHEN interactionType = 'LIKE' THEN 1 ELSE 0 END) AS like_count
-        FROM user_article_interaction
-        GROUP BY userID, articleID
-    ) i ON v.userID = i.userID AND v.articleID = i.articleID
-    GROUP BY v.userID, v.articleID;
-    """;
+//        String query = """
+//    SELECT
+//        userID,
+//        articleID,
+//        (COALESCE(like_count, 0) * 1.0 +
+//         COALESCE(skip_count, 0) * -1.0) AS full_weight
+//    FROM (
+//        SELECT
+//            userID,
+//            articleID,
+//            SUM(CASE WHEN interactionType = 'LIKE' THEN 1 ELSE 0 END) AS like_count,
+//            SUM(CASE WHEN interactionType = 'SKIP' THEN 1 ELSE 0 END) AS skip_count
+//        FROM user_article_interaction
+//        GROUP BY userID, articleID
+//    ) interaction_summary;
+//    """;
 
         try (Connection conn = DBManager.connectToDatabase();
              Statement stmt = conn.createStatement();
@@ -151,7 +168,7 @@ public class RecommendationModel {
             Configuration conf = new Configuration();
             conf.set("dfs.data.dir", ".");
             conf.set("data.model.splitter", "ratio");
-            conf.set("data.splitter.trainset.ratio", "0.8");
+            conf.set("data.splitter.trainset.ratio", "0.7");
             conf.set("data.column.format", "UIR");
             conf.set("data.model.format", "text");
             conf.set("data.input.path", CSV_FILE_PATH);

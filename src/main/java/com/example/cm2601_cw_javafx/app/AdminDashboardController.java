@@ -1,5 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
+import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,11 +25,13 @@ public class AdminDashboardController {
     @FXML
     private Button logoutButton;
 
+//    private Admin loggedInAdmin;
+//
+//    public void setAdmin(Admin admin) {
+//        this.loggedInAdmin = admin;
+//
+//    }
 
-    public void initialize() {
-        System.out.println("Welcome, Admin: " + UserSession.getInstance().getLoggedInUser().getUsername());
-
-    }
 
     @FXML
     private void handleFetchArticlesButton() {

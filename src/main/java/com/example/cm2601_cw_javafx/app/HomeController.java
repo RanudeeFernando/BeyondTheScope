@@ -32,29 +32,20 @@ public class HomeController extends BaseController {
     @FXML
     private ListView<String> articleListView; // Add ListView
 
-    // private final ArticleService articleService = new ArticleService();
-
-    // private HistoryService historyService; // HistoryService instance
-
     private final DBManager DBManager = new DBManager();
 
-    //Connection connection = MySQLConnection.connectToDatabase();
-
-    Connection connection = DBManager.connectToDatabase();
-
     User user = (User) UserSession.getInstance().getLoggedInUser();
+
+//    private User loggedInUser;
+//
+//    public void setUser(User user) {
+//        this.loggedInUser = user;
+//
+//    }
 
     public void initialize() {
 
         loadArticles();
-
-//        Connection connection = MySQLConnection.connectToDatabase();
-//        if (connection != null) {
-//            historyService = new HistoryService(connection);
-//        } else {
-//            System.out.println("Failed to connect to the database, history tracking won't work.");
-//        }
-
 
         int userID = user.getUserID();
         String name = user.getUsername();
@@ -112,12 +103,9 @@ public class HomeController extends BaseController {
     }
 
     public void addArticleToViewedHistory(Article article) {
-        if (connection != null) {
-            int userId = user.getUserID();
-            DBManager.addViewedArticle(userId, article.getArticleID());
-        } else {
-            System.out.println("Cannot add to viewed history. HistoryService is not initialized.");
-        }
+        int userId = user.getUserID();
+        DBManager.addViewedArticle(userId, article.getArticleID());
+
     }
 
 
@@ -230,6 +218,7 @@ public class HomeController extends BaseController {
             e.printStackTrace();
         }
     }
+
 
 
 
