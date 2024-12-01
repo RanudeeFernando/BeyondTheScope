@@ -92,7 +92,7 @@ import java.util.List;
 //
 //                // RegularUserManager regularUserManager = new RegularUserManager();
 //
-//                UserDBManager userDBManager = new UserDBManager();
+//                DBManager userDBManager = new DBManager();
 //                SystemUserManager systemUserManager = new SystemUserManager(userDBManager);
 //
 //                // Check if the user has skipped this article

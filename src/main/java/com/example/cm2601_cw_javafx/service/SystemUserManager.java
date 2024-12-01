@@ -1,21 +1,20 @@
 package com.example.cm2601_cw_javafx.service;
 
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Category;
-import com.example.cm2601_cw_javafx.db.UserDBManager;
 import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.SystemUser;
 import com.example.cm2601_cw_javafx.model.User;
-
 import java.sql.SQLException;
 import java.util.List;
 
 public class SystemUserManager {
 
-    private final UserDBManager userDBManager;
+    private final DBManager DBManager;
 
-    public SystemUserManager(UserDBManager userDBManager) {
-        this.userDBManager = userDBManager;
+    public SystemUserManager(DBManager DBManager) {
+        this.DBManager = DBManager;
     }
 
     public String registerUser(String username, String password, String confirmPassword, List<Category> selectedCategories) {
@@ -24,7 +23,7 @@ public class SystemUserManager {
         }
 
         try {
-            if (userDBManager.usernameExists(username)) {
+            if (DBManager.usernameExists(username)) {
                 return "Username already exists!";
             }
         } catch (SQLException e) {
@@ -44,8 +43,8 @@ public class SystemUserManager {
         }
 
         try {
-            int userId = userDBManager.insertUser(username, password);
-            userDBManager.insertUserPreferences(userId, selectedCategories);
+            int userId = DBManager.insertUser(username, password);
+            DBManager.insertUserPreferences(userId, selectedCategories);
             User user = new User(userId, username, password, selectedCategories);
             return "User successfully registered!";
 
@@ -56,7 +55,7 @@ public class SystemUserManager {
 
     public String authenticateUser(String username, String password) {
         try {
-            Object[] userInfo = userDBManager.getUserInfo(username);
+            Object[] userInfo = DBManager.getUserInfo(username);
             if (userInfo == null) {
                 return "Username not found.";
             }
@@ -75,7 +74,7 @@ public class SystemUserManager {
 
     public SystemUser getUserByRole(String username) {
         try {
-            Object[] userInfo = userDBManager.getUserInfo(username);
+            Object[] userInfo = DBManager.getUserInfo(username);
             if (userInfo == null) {
                 return null;
             }
@@ -102,48 +101,16 @@ public class SystemUserManager {
 
     public int getUserIdByUsername(String username) {
         try {
-            return userDBManager.getUserIdByUsername(username);
+            return DBManager.getUserIdByUsername(username);
         } catch (SQLException e) {
             System.out.println("Error retrieving user ID by username: " + e.getMessage());
             return -1;
         }
     }
 
-//    public SystemUser loginUser(String username, String password) {
-//        try {
-//
-//            Object[] userInfo = userDBManager.getUserInfo(username);
-//            if (userInfo == null) {
-//                System.out.println("Username not found.");
-//                return null;
-//            }
-//
-//            int userID = (int) userInfo[0];
-//            String storedPassword = (String) userInfo[1];
-//            String role = (String) userInfo[2];
-//
-//            if (!password.equals(storedPassword)) {
-//                System.out.println("Invalid password.");
-//                return null;
-//            }
-//
-//            if ("ADMIN".equalsIgnoreCase(role)) {
-//                return new Admin(userID, username, password);
-//            } else if ("USER".equalsIgnoreCase(role)) {
-//                return new User(userID, username, password);
-//            } else {
-//                System.out.println("Unknown role: " + role);
-//                return null;
-//            }
-//        } catch (SQLException e) {
-//            System.out.println("Login failed due to database error: " + e.getMessage());
-//            return null;
-//        }
-//    }
-
     public SystemUser loginUser(String username, String password) {
         try {
-            Object[] userInfo = userDBManager.getUserInfo(username);
+            Object[] userInfo = DBManager.getUserInfo(username);
             if (userInfo == null) {
                 System.out.println("Username not found.");
                 return null;
@@ -184,10 +151,10 @@ public class SystemUserManager {
 
     public void likeArticle(int userId, int articleId) {
         try {
-            // userDBManager.likeArticle(userId, articleId);
+            // DBManager.likeArticle(userId, articleId);
 
             // CHANGE
-            userDBManager.addInteraction(userId, articleId, "LIKE");
+            DBManager.addInteraction(userId, articleId, "LIKE");
 
             System.out.println("Article liked successfully!");
         } catch (SQLException e) {
@@ -198,10 +165,10 @@ public class SystemUserManager {
 
     public void unlikeArticle(int userId, int articleId) {
         try {
-            // userDBManager.unlikeArticle(userId, articleId);
+            // DBManager.unlikeArticle(userId, articleId);
 
             // CHANGE
-            userDBManager.removeInteraction(userId, articleId);
+            DBManager.removeInteraction(userId, articleId);
 
             System.out.println("Article unliked successfully!");
         } catch (SQLException e) {
@@ -213,8 +180,8 @@ public class SystemUserManager {
     public boolean hasLikedArticle(int userId, int articleId) {
         try {
             // CHANGED
-            // return userDBManager.hasLikedArticle(userId, articleId);
-            return userDBManager.hasInteraction(userId,articleId,"LIKE");
+            // return DBManager.hasLikedArticle(userId, articleId);
+            return DBManager.hasInteraction(userId,articleId,"LIKE");
 
         } catch (SQLException e) {
             System.out.println("Error checking if article is liked: " + e.getMessage());
@@ -225,9 +192,9 @@ public class SystemUserManager {
     public List<Article> getLikedArticles(int userId) {
         try {
             // CHANGED
-            // return userDBManager.getLikedArticles(userId);
+            // return DBManager.getLikedArticles(userId);
 
-            return userDBManager.getArticlesByInteraction(userId, "LIKE");
+            return DBManager.getArticlesByInteraction(userId, "LIKE");
 
         } catch (SQLException e) {
             System.out.println("Error retrieving liked articles: " + e.getMessage());
@@ -238,10 +205,10 @@ public class SystemUserManager {
     public void skipArticle(int userId, int articleId) {
         try {
 
-            // userDBManager.skipArticle(userId, articleId);
+            // DBManager.skipArticle(userId, articleId);
 
             // CHANGED
-            userDBManager.addInteraction(userId, articleId, "SKIP");
+            DBManager.addInteraction(userId, articleId, "SKIP");
 
 
             System.out.println("Article skipped successfully!");
@@ -253,10 +220,10 @@ public class SystemUserManager {
 
     public void unskipArticle(int userId, int articleId) {
         try {
-            // userDBManager.unskipArticle(userId, articleId);
+            // DBManager.unskipArticle(userId, articleId);
 
             // CHANGED
-            userDBManager.removeInteraction(userId, articleId);
+            DBManager.removeInteraction(userId, articleId);
 
             System.out.println("Article unskipped successfully!");
         } catch (SQLException e) {
@@ -268,9 +235,9 @@ public class SystemUserManager {
     public boolean hasSkippedArticle(int userId, int articleId) {
         try {
             // CHANGED
-            // return userDBManager.hasSkippedArticle(userId, articleId);
+            // return DBManager.hasSkippedArticle(userId, articleId);
 
-            return userDBManager.hasInteraction(userId, articleId, "SKIP");
+            return DBManager.hasInteraction(userId, articleId, "SKIP");
 
         } catch (SQLException e) {
             System.err.println("Error checking if article is skipped: " + e.getMessage());
@@ -282,9 +249,9 @@ public class SystemUserManager {
     public List<Article> getSkippedArticles(int userId) {
         try {
             // CHANGED
-            // return userDBManager.getSkippedArticles(userId);
+            // return DBManager.getSkippedArticles(userId);
 
-            return userDBManager.getArticlesByInteraction(userId, "SKIP");
+            return DBManager.getArticlesByInteraction(userId, "SKIP");
 
         } catch (SQLException e) {
             System.out.println("Error retrieving skipped articles: " + e.getMessage());

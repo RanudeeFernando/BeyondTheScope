@@ -1,7 +1,7 @@
 package com.example.cm2601_cw_javafx.app;
 
 
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.UserViewedArticle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,16 +31,16 @@ public class ViewHistoryController extends BaseController {
 
 
     public void initializeUserViewHistory(int userId) {
-        Connection connection = UserDBManager.connectToDatabase();
+        Connection connection = DBManager.connectToDatabase();
 
         if (connection != null) {
             // Create a HistoryService instance with the database connection
             // historyService = new HistoryService(connection);
 
-            UserDBManager userDBManager = new UserDBManager();
+            DBManager DBManager = new DBManager();
 
             // Retrieve the viewed articles for the given user ID
-            List<UserViewedArticle> viewedArticles = userDBManager.getViewedArticles(userId);
+            List<UserViewedArticle> viewedArticles = DBManager.getViewedArticles(userId);
 
             // Convert UserViewedArticle objects to their ListView representation
             ObservableList<String> listViewItems = FXCollections.observableArrayList(

@@ -15,6 +15,7 @@ public class User extends SystemUser {
         this.viewedArticles = new ArrayList<>();
         this.likedArticles = new ArrayList<>();
         this.skippedArticles = new ArrayList<>();
+        this.recommendedArticles = new ArrayList<>();
     }
 
 
@@ -87,7 +88,6 @@ public class User extends SystemUser {
     public boolean isRecommended(Article article) {
         return recommendedArticles.contains(article);
     }
-
 
     public void addToViewedArticles(UserViewedArticle viewedArticle) {
         viewedArticles.add(viewedArticle);

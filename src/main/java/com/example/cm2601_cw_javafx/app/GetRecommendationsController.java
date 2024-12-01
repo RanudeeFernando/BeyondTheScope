@@ -1,6 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.User;
 import com.example.cm2601_cw_javafx.model.UserSession;
 import com.example.cm2601_cw_javafx.service.RecommendationModel;
@@ -36,7 +36,7 @@ public class GetRecommendationsController {
             if (recommendation.getUserId().equals(String.valueOf(loggedInUserId))) {
                 //String articleName = ArticleService.getArticleNameById(recommendation.getItemId());
 
-                String articleName = UserDBManager.getArticleNameById(recommendation.getItemId());
+                String articleName = DBManager.getArticleNameById(recommendation.getItemId());
 
                 String displayText = "Article: " + articleName +
                         ", Score: " + recommendation.getValue();

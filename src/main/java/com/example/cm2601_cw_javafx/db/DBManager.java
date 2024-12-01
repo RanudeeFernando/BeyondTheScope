@@ -4,12 +4,11 @@ import com.example.cm2601_cw_javafx.model.Category;
 import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import com.example.cm2601_cw_javafx.model.UserViewedArticle;
 import com.example.cm2601_cw_javafx.model.Article;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDBManager {
+public class DBManager {
 
     private static final String URL = "jdbc:mysql://localhost:3306/news_recommendation_system_db";
 
@@ -277,7 +276,7 @@ public class UserDBManager {
                 String content = resultSet.getString("content");
                 String url = resultSet.getString("url");
                 Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
-                String categoryName = resultSet.getString("categoryName"); // From the JOIN with Category table
+                String categoryName = resultSet.getString("categoryName");
 
                 Category category = categoryName != null ? Category.valueOf(categoryName) : Category.UNKNOWN;
 
@@ -313,8 +312,8 @@ public class UserDBManager {
 
                 // RegularUserManager regularUserManager = new RegularUserManager();
 
-                UserDBManager userDBManager = new UserDBManager();
-                SystemUserManager systemUserManager = new SystemUserManager(userDBManager);
+                DBManager DBManager = new DBManager();
+                SystemUserManager systemUserManager = new SystemUserManager(DBManager);
 
                 // Check if the user has skipped this article
                 if (!systemUserManager.hasSkippedArticle(userId, articleId)) {

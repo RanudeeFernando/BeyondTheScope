@@ -1,6 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.UserSession;
@@ -25,7 +25,7 @@ public class DeleteArticlesController {
     private TextField articleIDTextField;
 
     // private final ArticleService articleService = new ArticleService();
-    private final UserDBManager userDBManager = new UserDBManager();
+    private final DBManager DBManager = new DBManager();
 
     public void initialize() {
         loadArticles();
@@ -36,7 +36,7 @@ public class DeleteArticlesController {
         try {
 
             articleListView.getItems().clear();
-            List<Article> articles = userDBManager.getAllArticles();
+            List<Article> articles = DBManager.getAllArticles();
 
             if (articles.isEmpty()) {
                 showAlert("No articles found in the database.");

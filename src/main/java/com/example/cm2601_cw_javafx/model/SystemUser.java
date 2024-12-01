@@ -41,7 +41,6 @@ public abstract class SystemUser {
         this.password = password;
     }
 
-
     public abstract String getRole();
 
 

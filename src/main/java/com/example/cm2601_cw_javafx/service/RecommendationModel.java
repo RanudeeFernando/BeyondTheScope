@@ -1,6 +1,6 @@
 package com.example.cm2601_cw_javafx.service;
 
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 import net.librec.conf.Configuration;
 import net.librec.data.DataModel;
 import net.librec.data.model.TextDataModel;
@@ -63,7 +63,7 @@ public class RecommendationModel {
     GROUP BY v.userID, v.articleID;
     """;
 
-        try (Connection conn = UserDBManager.connectToDatabase();
+        try (Connection conn = DBManager.connectToDatabase();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query);
              FileWriter csvWriter = new FileWriter(CSV_FILE_PATH)) {

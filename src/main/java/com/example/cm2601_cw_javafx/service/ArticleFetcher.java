@@ -7,17 +7,17 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import com.example.cm2601_cw_javafx.db.DBManager;
 
 import com.example.cm2601_cw_javafx.model.Category;
-import com.example.cm2601_cw_javafx.db.UserDBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ArticleFetcher {
     private static final String API_KEY = "829613513f4a4c9794a7ecfc44a91b0c";
-    private static final String API_URL = "https://newsapi.org/v2/top-headlines?language=en&pageSize=20&apiKey=" + API_KEY;
-    private final UserDBManager userDBManager = new UserDBManager();
+    private static final String API_URL = "https://newsapi.org/v2/top-headlines?language=en&pageSize=7&apiKey=" + API_KEY;
+    private final DBManager dBManager = new DBManager();
 
     public static List<Article> fetchArticles() {
         List<Article> articles = new ArrayList<>();
@@ -50,7 +50,7 @@ public class ArticleFetcher {
                     String urlField = articleJson.optString("url", null);
                     String publishedDate = articleJson.optString("publishedAt", null);
 
-                    if (isValidArticle(title, sourceName, author, content, urlField) && !UserDBManager.isDuplicateArticle(urlField)) {
+                    if (isValidArticle(title, sourceName, author, content, urlField) && !DBManager.isDuplicateArticle(urlField)) {
                         Timestamp publishedDateTimestamp = parsePublishedDate(publishedDate);
                         Category category = Category.UNKNOWN;
 
@@ -71,7 +71,7 @@ public class ArticleFetcher {
     public static void saveArticles(List<Article> articles) {
         for (Article article : articles) {
             try {
-                UserDBManager.addArticleToDatabase(article);
+                DBManager.addArticleToDatabase(article);
             } catch (Exception e) {
                 System.err.println("Failed to save article: " + article.getTitle());
                 e.printStackTrace();
@@ -88,98 +88,6 @@ public class ArticleFetcher {
     }
 
 
-    // Insert the article into the database
-//    private static void addArticleToDatabase(Article article) {
-//        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, category) VALUES (?, ?, ?, ?, ?, ?, ?)";
-//
-//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-//             PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-//            // Set the parameters from the Article object
-//            statement.setString(1, article.getTitle());
-//            statement.setString(2, article.getSource());
-//            statement.setString(3, article.getAuthor());
-//            statement.setString(4, article.getContent());
-//            statement.setString(5, article.getUrl());
-//            statement.setTimestamp(6, article.getPublishedDate());
-//            statement.setString(7, String.valueOf(article.getCategory()));
-//
-//            // Execute the insert
-//            int rowsUpdated = statement.executeUpdate();
-//
-//            // If the insert was successful, retrieve the generated articleID
-//            if (rowsUpdated > 0) {
-//                ResultSet generatedKeys = statement.getGeneratedKeys();
-//                if (generatedKeys.next()) {
-//                    int generatedArticleID = generatedKeys.getInt(1);
-//                    article.setArticleID(generatedArticleID); // Set the generated articleID in the Article object
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    private static void addArticleToDatabase(Article article) {
-//        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, categoryID) VALUES (?, ?, ?, ?, ?, ?, ?)";
-//
-//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-//             PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-//
-//            statement.setString(1, article.getTitle());
-//            statement.setString(2, article.getSource());
-//            statement.setString(3, article.getAuthor());
-//            statement.setString(4, article.getContent());
-//            statement.setString(5, article.getUrl());
-//            statement.setTimestamp(6, article.getPublishedDate());
-//
-//            int categoryID = getCategoryID(article.getCategory().name(), dbConnection);
-//            statement.setInt(7, categoryID);
-//
-//            int rowsUpdated = statement.executeUpdate();
-//
-//            if (rowsUpdated > 0) {
-//                ResultSet generatedKeys = statement.getGeneratedKeys();
-//                if (generatedKeys.next()) {
-//                    int generatedArticleID = generatedKeys.getInt(1);
-//                    article.setArticleID(generatedArticleID);
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
-//    private static int getCategoryID(String categoryName, Connection dbConnection) throws Exception {
-//        String sql = "SELECT categoryID FROM Category WHERE categoryName = ?";
-//        try (PreparedStatement statement = dbConnection.prepareStatement(sql)) {
-//            statement.setString(1, categoryName);
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                return resultSet.getInt("categoryID");
-//            } else {
-//                throw new Exception("Category not found: " + categoryName);
-//            }
-//        }
-//    }
-
-
-//    private static boolean isDuplicateArticle(String url) {
-//        String sql = "SELECT COUNT(*) FROM article WHERE url = ?";
-//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-//             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
-//
-//            statement.setString(1, url);
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                return resultSet.getInt(1) > 0;
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
 
     private static Timestamp parsePublishedDate(String publishedDate) {
         try {

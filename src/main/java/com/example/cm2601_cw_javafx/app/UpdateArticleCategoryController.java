@@ -1,9 +1,9 @@
 package com.example.cm2601_cw_javafx.app;
 
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 //import com.example.cm2601_cw_javafx.ArticleService;
 import com.example.cm2601_cw_javafx.model.Category;
-import com.example.cm2601_cw_javafx.db.UserDBManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,7 +27,7 @@ public class UpdateArticleCategoryController {
     @FXML
     private TextArea logArea;
 
-    UserDBManager userDBManager = new UserDBManager();
+    DBManager DBManager = new DBManager();
 
     @FXML
     private void initialize() {
@@ -42,7 +42,7 @@ public class UpdateArticleCategoryController {
     private void loadArticles() {
         // ArticleService articleService = new ArticleService();
 
-        List<Article> articles = userDBManager.getAllArticles();
+        List<Article> articles = DBManager.getAllArticles();
 
         articleListView.getItems().clear();
         for (Article article : articles) {
@@ -63,7 +63,7 @@ public class UpdateArticleCategoryController {
 
             //ArticleService articleService = new ArticleService();
 
-            Article article = userDBManager.getArticleByID(articleID);
+            Article article = DBManager.getArticleByID(articleID);
 
             if (article == null) {
                 showAlert("Article ID " + articleID + " not found.");
@@ -71,7 +71,7 @@ public class UpdateArticleCategoryController {
             }
 
             article.setCategory(selectedCategory);
-            userDBManager.updateArticleCategoryInDatabase(article);
+            DBManager.updateArticleCategoryInDatabase(article);
 
             showAlert("Article ID " + articleID + " updated to category " + selectedCategory + ".");
             articleIdField.clear();

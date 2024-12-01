@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 import com.example.cm2601_cw_javafx.model.Category;
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -127,8 +127,8 @@ public class ArticleCategorizer {
 
                 //ArticleService articleService = new ArticleService();
 
-                UserDBManager userDBManager = new UserDBManager();
-                userDBManager.updateArticleCategoryInDatabase(article);
+                DBManager DBManager = new DBManager();
+                DBManager.updateArticleCategoryInDatabase(article);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -176,10 +176,10 @@ public class ArticleCategorizer {
 
 
     public void categorizeUnknownArticles() {
-        UserDBManager userDBManager = new UserDBManager();
+        DBManager DBManager = new DBManager();
         //ArticleService articleService = new ArticleService();
 
-        List<Article> unknownArticles = userDBManager.getArticlesWithUnknownCategory();
+        List<Article> unknownArticles = DBManager.getArticlesWithUnknownCategory();
 
         if (unknownArticles.isEmpty()) {
             System.out.println("No articles with 'UNKNOWN' category to categorize.");
@@ -190,7 +190,7 @@ public class ArticleCategorizer {
             try {
                 Category predictedCategory = classifyArticle(article.getContent());
                 article.setCategory(predictedCategory);
-                userDBManager.updateArticleCategoryInDatabase(article);
+                DBManager.updateArticleCategoryInDatabase(article);
 
             } catch (Exception e) {
                 e.printStackTrace();

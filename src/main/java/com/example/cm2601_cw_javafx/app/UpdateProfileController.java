@@ -1,6 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Category;
 import com.example.cm2601_cw_javafx.model.User;
 import com.example.cm2601_cw_javafx.model.UserSession;
@@ -45,14 +45,14 @@ public class UpdateProfileController {
     @FXML
     private CheckBox categoryEducation;
 
-    private final UserDBManager userDBManager = new UserDBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(userDBManager);
+    private final DBManager DBManager = new DBManager();
+    private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
     User currentUser = (User) UserSession.getInstance().getLoggedInUser();
 
     public void initialize(){
         usernameField.setText(currentUser.getUsername());
         try {
-            List<Category> userCategories = userDBManager.getUserPreferences(currentUser.getUserID());
+            List<Category> userCategories = DBManager.getUserPreferences(currentUser.getUserID());
             setSelectedCategories(userCategories);
             System.out.println(userCategories);
         } catch (SQLException e) {
@@ -97,7 +97,7 @@ public class UpdateProfileController {
             return;
         }
 
-        userDBManager.updateUserPreferences(currentUser.getUserID(), selectedCategories);
+        DBManager.updateUserPreferences(currentUser.getUserID(), selectedCategories);
         showSuccess("Interests updated successfully!");
     }
 
@@ -124,7 +124,7 @@ public class UpdateProfileController {
         String confirmPassword = confirmPasswordField.getText();
 
         try {
-            if (!userDBManager.validateCurrentPassword(currentUser.getUsername(), currentPassword)) {
+            if (!DBManager.validateCurrentPassword(currentUser.getUsername(), currentPassword)) {
                 showError("Current password is incorrect.");
                 return;
             }
@@ -139,7 +139,7 @@ public class UpdateProfileController {
                 return;
             }
 
-            userDBManager.updatePassword(currentUser.getUserID(), newPassword);
+            DBManager.updatePassword(currentUser.getUserID(), newPassword);
             showSuccess("Password updated successfully!");
             currentPasswordField.clear();
             newPasswordField.clear();

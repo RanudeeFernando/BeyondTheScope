@@ -1,10 +1,10 @@
 package com.example.cm2601_cw_javafx.model;
 
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 
 public class Admin extends SystemUser {
     // private final ArticleService articleService;
-    private final UserDBManager userDBManager = new UserDBManager();
+    private final DBManager DBManager = new DBManager();
 
     public Admin(int userID, String username, String password) {
         super(userID, username, password);
@@ -29,7 +29,7 @@ public class Admin extends SystemUser {
 
         try {
             int articleIDInt = Integer.parseInt(articleID.trim());
-            return userDBManager.deleteArticleByID(articleIDInt);
+            return DBManager.deleteArticleByID(articleIDInt);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid Article ID. Please enter a numeric value.");
         }

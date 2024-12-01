@@ -1,6 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.Category;
 import com.example.cm2601_cw_javafx.service.ArticleCategorizer;
@@ -81,9 +81,9 @@ public class CategorizeArticlesController {
 
             // ArticleService articleService = new ArticleService();
 
-            UserDBManager userDBManager = new UserDBManager();
+            DBManager DBManager = new DBManager();
 
-            List<Article> unknownArticles = userDBManager.getArticlesWithUnknownCategory();
+            List<Article> unknownArticles = DBManager.getArticlesWithUnknownCategory();
 
             if (unknownArticles.isEmpty()) {
                 appendLog("No articles with 'UNKNOWN' category to categorize.");
@@ -108,7 +108,7 @@ public class CategorizeArticlesController {
                     }
 
                     article.setCategory(predictedCategory);
-                    userDBManager.updateArticleCategoryInDatabase(article);
+                    DBManager.updateArticleCategoryInDatabase(article);
 
                 } catch (Exception e) {
                     appendLog("Error processing article: \"" + article.getTitle() + "\" - " + e.getMessage());

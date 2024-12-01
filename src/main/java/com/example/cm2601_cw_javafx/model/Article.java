@@ -25,6 +25,12 @@ public class Article {
         this.publishedDate = publishedDate;
     }
 
+    public Article(int articleID, String title, String source){
+        this.articleID = articleID;
+        this.title = title;
+        this.source = source;
+    }
+
     // Getters and setters
     public int getArticleID() {
         return articleID;

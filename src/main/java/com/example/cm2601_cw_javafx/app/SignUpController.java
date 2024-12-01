@@ -1,8 +1,8 @@
 package com.example.cm2601_cw_javafx.app;
 
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Category;
 import com.example.cm2601_cw_javafx.service.SystemUserManager;
-import com.example.cm2601_cw_javafx.db.UserDBManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,8 +28,8 @@ public class SignUpController extends BaseController {
     // When using database - MySQL
    // private final RegularUserManager regularUserManager = new RegularUserManager();
 
-    private final UserDBManager userDBManager = new UserDBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(userDBManager);
+    private final DBManager DBManager = new DBManager();
+    private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
 
 
     @FXML

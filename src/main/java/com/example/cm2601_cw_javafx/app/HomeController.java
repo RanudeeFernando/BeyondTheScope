@@ -1,6 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
 import com.example.cm2601_cw_javafx.model.UserSession;
@@ -36,11 +36,11 @@ public class HomeController extends BaseController {
 
     // private HistoryService historyService; // HistoryService instance
 
-    private final UserDBManager userDBManager = new UserDBManager();
+    private final DBManager DBManager = new DBManager();
 
     //Connection connection = MySQLConnection.connectToDatabase();
 
-    Connection connection = UserDBManager.connectToDatabase();
+    Connection connection = DBManager.connectToDatabase();
 
     User user = (User) UserSession.getInstance().getLoggedInUser();
 
@@ -66,7 +66,7 @@ public class HomeController extends BaseController {
                 String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
                 if (selectedTitle != null) {
                     // Find the Article object corresponding to the selected title
-                    Article selectedArticle = userDBManager.getAllArticles(userID)
+                    Article selectedArticle = DBManager.getAllArticles(userID)
                             .stream()
                             .filter(article -> article.getTitle().equals(selectedTitle))
                             .findFirst()
@@ -85,7 +85,7 @@ public class HomeController extends BaseController {
 
     private void loadArticles() {
         int userID = user.getUserID();
-        List<Article> articles = userDBManager.getAllArticles(userID);
+        List<Article> articles = DBManager.getAllArticles(userID);
         List<String> titles = articles.stream()
                 .map(Article::getTitle) // Extracting the title for display
                 .collect(Collectors.toList());
@@ -114,7 +114,7 @@ public class HomeController extends BaseController {
     public void addArticleToViewedHistory(Article article) {
         if (connection != null) {
             int userId = user.getUserID();
-            userDBManager.addViewedArticle(userId, article.getArticleID());
+            DBManager.addViewedArticle(userId, article.getArticleID());
         } else {
             System.out.println("Cannot add to viewed history. HistoryService is not initialized.");
         }
