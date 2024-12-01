@@ -1,16 +1,19 @@
-package com.example.cm2601_cw_javafx;
+package com.example.cm2601_cw_javafx.model;
 
-public class Admin extends SystemUser{
-    private final ArticleService articleService;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+
+public class Admin extends SystemUser {
+    // private final ArticleService articleService;
+    private final UserDBManager userDBManager = new UserDBManager();
 
     public Admin(int userID, String username, String password) {
         super(userID, username, password);
-        this.articleService = new ArticleService();
+        //this.articleService = new ArticleService();
     }
 
     public Admin(int userID, String username){
         super(userID, username);
-        this.articleService = new ArticleService();
+        //this.articleService = new ArticleService();
 
     }
 
@@ -26,7 +29,7 @@ public class Admin extends SystemUser{
 
         try {
             int articleIDInt = Integer.parseInt(articleID.trim());
-            return articleService.deleteArticleByID(articleIDInt);
+            return userDBManager.deleteArticleByID(articleIDInt);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid Article ID. Please enter a numeric value.");
         }

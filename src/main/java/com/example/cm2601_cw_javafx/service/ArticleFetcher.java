@@ -1,25 +1,23 @@
-package com.example.cm2601_cw_javafx;
+package com.example.cm2601_cw_javafx.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
+import com.example.cm2601_cw_javafx.model.Category;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.Article;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ArticleFetcher {
     private static final String API_KEY = "829613513f4a4c9794a7ecfc44a91b0c";
     private static final String API_URL = "https://newsapi.org/v2/top-headlines?language=en&pageSize=20&apiKey=" + API_KEY;
+    private final UserDBManager userDBManager = new UserDBManager();
 
     public static List<Article> fetchArticles() {
         List<Article> articles = new ArrayList<>();
@@ -52,7 +50,7 @@ public class ArticleFetcher {
                     String urlField = articleJson.optString("url", null);
                     String publishedDate = articleJson.optString("publishedAt", null);
 
-                    if (isValidArticle(title, sourceName, author, content, urlField) && !isDuplicateArticle(urlField)) {
+                    if (isValidArticle(title, sourceName, author, content, urlField) && !UserDBManager.isDuplicateArticle(urlField)) {
                         Timestamp publishedDateTimestamp = parsePublishedDate(publishedDate);
                         Category category = Category.UNKNOWN;
 
@@ -73,7 +71,7 @@ public class ArticleFetcher {
     public static void saveArticles(List<Article> articles) {
         for (Article article : articles) {
             try {
-                addArticleToDatabase(article);
+                UserDBManager.addArticleToDatabase(article);
             } catch (Exception e) {
                 System.err.println("Failed to save article: " + article.getTitle());
                 e.printStackTrace();
@@ -121,67 +119,67 @@ public class ArticleFetcher {
 //        }
 //    }
 
-    private static void addArticleToDatabase(Article article) {
-        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, categoryID) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-             PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-
-            statement.setString(1, article.getTitle());
-            statement.setString(2, article.getSource());
-            statement.setString(3, article.getAuthor());
-            statement.setString(4, article.getContent());
-            statement.setString(5, article.getUrl());
-            statement.setTimestamp(6, article.getPublishedDate());
-
-            int categoryID = getCategoryID(article.getCategory().name(), dbConnection);
-            statement.setInt(7, categoryID);
-
-            int rowsUpdated = statement.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                ResultSet generatedKeys = statement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int generatedArticleID = generatedKeys.getInt(1);
-                    article.setArticleID(generatedArticleID);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private static int getCategoryID(String categoryName, Connection dbConnection) throws Exception {
-        String sql = "SELECT categoryID FROM Category WHERE categoryName = ?";
-        try (PreparedStatement statement = dbConnection.prepareStatement(sql)) {
-            statement.setString(1, categoryName);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt("categoryID");
-            } else {
-                throw new Exception("Category not found: " + categoryName);
-            }
-        }
-    }
+//    private static void addArticleToDatabase(Article article) {
+//        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, categoryID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//
+//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+//             PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+//
+//            statement.setString(1, article.getTitle());
+//            statement.setString(2, article.getSource());
+//            statement.setString(3, article.getAuthor());
+//            statement.setString(4, article.getContent());
+//            statement.setString(5, article.getUrl());
+//            statement.setTimestamp(6, article.getPublishedDate());
+//
+//            int categoryID = getCategoryID(article.getCategory().name(), dbConnection);
+//            statement.setInt(7, categoryID);
+//
+//            int rowsUpdated = statement.executeUpdate();
+//
+//            if (rowsUpdated > 0) {
+//                ResultSet generatedKeys = statement.getGeneratedKeys();
+//                if (generatedKeys.next()) {
+//                    int generatedArticleID = generatedKeys.getInt(1);
+//                    article.setArticleID(generatedArticleID);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
-    private static boolean isDuplicateArticle(String url) {
-        String sql = "SELECT COUNT(*) FROM article WHERE url = ?";
-        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+//    private static int getCategoryID(String categoryName, Connection dbConnection) throws Exception {
+//        String sql = "SELECT categoryID FROM Category WHERE categoryName = ?";
+//        try (PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+//            statement.setString(1, categoryName);
+//            ResultSet resultSet = statement.executeQuery();
+//            if (resultSet.next()) {
+//                return resultSet.getInt("categoryID");
+//            } else {
+//                throw new Exception("Category not found: " + categoryName);
+//            }
+//        }
+//    }
 
-            statement.setString(1, url);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1) > 0;
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+//    private static boolean isDuplicateArticle(String url) {
+//        String sql = "SELECT COUNT(*) FROM article WHERE url = ?";
+//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
+//             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+//
+//            statement.setString(1, url);
+//            ResultSet resultSet = statement.executeQuery();
+//            if (resultSet.next()) {
+//                return resultSet.getInt(1) > 0;
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
     private static Timestamp parsePublishedDate(String publishedDate) {
         try {

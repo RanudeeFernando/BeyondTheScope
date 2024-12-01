@@ -1,16 +1,17 @@
-package com.example.cm2601_cw_javafx;
+package com.example.cm2601_cw_javafx.model;
 
 import java.sql.Timestamp;
 
 public class Article {
-    private int articleID; // Unique identifier for the article
-    private String title;     // Title of the article
-    private String content;   // Full content of the article
-    private Category category; // Category determined by NLP
-    private String author;    // Author of the article
-    private String source;    // Source from which the article was fetched
-    private String url;       // URL of the article
-    private Timestamp publishedDate; // Published date of the article
+    private int articleID;
+    private String title;
+    private String content;
+    private Category category;
+    private String author;
+    private String source;
+    private String url;
+    private Timestamp publishedDate;
+    private Timestamp viewedAt;
 
     // Constructor
     public Article(int articleID, String title, String content, Category category, String author, String source, String url, Timestamp publishedDate) {

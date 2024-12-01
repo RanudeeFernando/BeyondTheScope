@@ -1,6 +1,10 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.*;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.Article;
+import com.example.cm2601_cw_javafx.model.User;
+import com.example.cm2601_cw_javafx.model.UserSession;
+import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,8 +30,8 @@ public class ViewSkippedArticlesController extends BaseController {
 
     //private final RegularUserManager regularUserManager = new RegularUserManager();
 
-    private final UserDAO userDAO = new UserDAO();
-    private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
+    private final UserDBManager userDBManager = new UserDBManager();
+    private final SystemUserManager systemUserManager = new SystemUserManager(userDBManager);
 
     public void initialize() {
         loadSkippedArticles();

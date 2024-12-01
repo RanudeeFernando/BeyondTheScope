@@ -1,6 +1,9 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.*;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.Article;
+import com.example.cm2601_cw_javafx.model.User;
+import com.example.cm2601_cw_javafx.model.UserSession;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,8 +32,15 @@ public class HomeController extends BaseController {
     @FXML
     private ListView<String> articleListView; // Add ListView
 
-    private final ArticleService articleService = new ArticleService();
-    private HistoryService historyService; // HistoryService instance
+    // private final ArticleService articleService = new ArticleService();
+
+    // private HistoryService historyService; // HistoryService instance
+
+    private final UserDBManager userDBManager = new UserDBManager();
+
+    //Connection connection = MySQLConnection.connectToDatabase();
+
+    Connection connection = UserDBManager.connectToDatabase();
 
     User user = (User) UserSession.getInstance().getLoggedInUser();
 
@@ -38,12 +48,13 @@ public class HomeController extends BaseController {
 
         loadArticles();
 
-        Connection connection = MySQLConnection.connectToDatabase();
-        if (connection != null) {
-            historyService = new HistoryService(connection);
-        } else {
-            System.out.println("Failed to connect to the database, history tracking won't work.");
-        }
+//        Connection connection = MySQLConnection.connectToDatabase();
+//        if (connection != null) {
+//            historyService = new HistoryService(connection);
+//        } else {
+//            System.out.println("Failed to connect to the database, history tracking won't work.");
+//        }
+
 
         int userID = user.getUserID();
         String name = user.getUsername();
@@ -55,7 +66,7 @@ public class HomeController extends BaseController {
                 String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
                 if (selectedTitle != null) {
                     // Find the Article object corresponding to the selected title
-                    Article selectedArticle = articleService.getAllArticles(userID)
+                    Article selectedArticle = userDBManager.getAllArticles(userID)
                             .stream()
                             .filter(article -> article.getTitle().equals(selectedTitle))
                             .findFirst()
@@ -74,7 +85,7 @@ public class HomeController extends BaseController {
 
     private void loadArticles() {
         int userID = user.getUserID();
-        List<Article> articles = articleService.getAllArticles(userID);
+        List<Article> articles = userDBManager.getAllArticles(userID);
         List<String> titles = articles.stream()
                 .map(Article::getTitle) // Extracting the title for display
                 .collect(Collectors.toList());
@@ -101,9 +112,9 @@ public class HomeController extends BaseController {
     }
 
     public void addArticleToViewedHistory(Article article) {
-        if (historyService != null) {
+        if (connection != null) {
             int userId = user.getUserID();
-            historyService.addViewedArticle(userId, article.getArticleID());
+            userDBManager.addViewedArticle(userId, article.getArticleID());
         } else {
             System.out.println("Cannot add to viewed history. HistoryService is not initialized.");
         }

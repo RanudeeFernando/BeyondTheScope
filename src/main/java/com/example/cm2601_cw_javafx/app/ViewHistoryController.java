@@ -1,8 +1,8 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.HistoryService;
-import com.example.cm2601_cw_javafx.MySQLConnection;
-import com.example.cm2601_cw_javafx.UserViewedArticle;
+
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.UserViewedArticle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -26,23 +26,21 @@ public class ViewHistoryController extends BaseController {
     private ImageView imageViewLogo;
     @FXML
     private ListView<String> articleListView;
-    private HistoryService historyService;
 
-
-    public void initialize() {
-
-    }
+    // private HistoryService historyService;
 
 
     public void initializeUserViewHistory(int userId) {
-        Connection connection = MySQLConnection.connectToDatabase();
+        Connection connection = UserDBManager.connectToDatabase();
 
         if (connection != null) {
             // Create a HistoryService instance with the database connection
-            historyService = new HistoryService(connection);
+            // historyService = new HistoryService(connection);
+
+            UserDBManager userDBManager = new UserDBManager();
 
             // Retrieve the viewed articles for the given user ID
-            List<UserViewedArticle> viewedArticles = historyService.getViewedArticles(userId);
+            List<UserViewedArticle> viewedArticles = userDBManager.getViewedArticles(userId);
 
             // Convert UserViewedArticle objects to their ListView representation
             ObservableList<String> listViewItems = FXCollections.observableArrayList(

@@ -1,4 +1,4 @@
-package com.example.cm2601_cw_javafx;
+package com.example.cm2601_cw_javafx.model;
 
 public abstract class SystemUser {
     protected int userID;

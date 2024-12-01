@@ -1,9 +1,9 @@
-package com.example.cm2601_cw_javafx;
+package com.example.cm2601_cw_javafx.service;
 
+import com.example.cm2601_cw_javafx.db.UserDBManager;
 import net.librec.conf.Configuration;
 import net.librec.data.DataModel;
 import net.librec.data.model.TextDataModel;
-import net.librec.filter.GenericRecommendedFilter;
 import net.librec.recommender.Recommender;
 import net.librec.recommender.RecommenderContext;
 import net.librec.recommender.cf.UserKNNRecommender;
@@ -63,7 +63,7 @@ public class RecommendationModel {
     GROUP BY v.userID, v.articleID;
     """;
 
-        try (Connection conn = MySQLConnection.connectToDatabase();
+        try (Connection conn = UserDBManager.connectToDatabase();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query);
              FileWriter csvWriter = new FileWriter(CSV_FILE_PATH)) {

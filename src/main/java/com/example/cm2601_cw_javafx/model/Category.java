@@ -1,6 +1,4 @@
-package com.example.cm2601_cw_javafx;
-
-import org.jetbrains.annotations.NotNull;
+package com.example.cm2601_cw_javafx.model;
 
 public enum Category {
     ENTERTAINMENT,

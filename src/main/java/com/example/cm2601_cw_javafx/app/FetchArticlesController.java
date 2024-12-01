@@ -1,7 +1,7 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.Article;
-import com.example.cm2601_cw_javafx.ArticleFetcher;
+import com.example.cm2601_cw_javafx.model.Article;
+import com.example.cm2601_cw_javafx.service.ArticleFetcher;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

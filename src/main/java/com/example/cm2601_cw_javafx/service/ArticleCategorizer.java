@@ -1,14 +1,14 @@
-package com.example.cm2601_cw_javafx;
+package com.example.cm2601_cw_javafx.service;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 
+import com.example.cm2601_cw_javafx.model.Category;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.Article;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -125,9 +125,11 @@ public class ArticleCategorizer {
                 Category predictedCategory = classifyArticle(article.getContent());
                 article.setCategory(predictedCategory);  // Set the category as the enum
 
-                ArticleService articleService = new ArticleService();
+                //ArticleService articleService = new ArticleService();
 
-                articleService.updateArticleCategoryInDatabase(article);
+                UserDBManager userDBManager = new UserDBManager();
+                userDBManager.updateArticleCategoryInDatabase(article);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -174,8 +176,10 @@ public class ArticleCategorizer {
 
 
     public void categorizeUnknownArticles() {
-        ArticleService articleService = new ArticleService();
-        List<Article> unknownArticles = articleService.getArticlesWithUnknownCategory();
+        UserDBManager userDBManager = new UserDBManager();
+        //ArticleService articleService = new ArticleService();
+
+        List<Article> unknownArticles = userDBManager.getArticlesWithUnknownCategory();
 
         if (unknownArticles.isEmpty()) {
             System.out.println("No articles with 'UNKNOWN' category to categorize.");
@@ -186,7 +190,7 @@ public class ArticleCategorizer {
             try {
                 Category predictedCategory = classifyArticle(article.getContent());
                 article.setCategory(predictedCategory);
-                articleService.updateArticleCategoryInDatabase(article);
+                userDBManager.updateArticleCategoryInDatabase(article);
 
             } catch (Exception e) {
                 e.printStackTrace();

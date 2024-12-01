@@ -1,9 +1,9 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.Admin;
-import com.example.cm2601_cw_javafx.Article;
-import com.example.cm2601_cw_javafx.ArticleService;
-import com.example.cm2601_cw_javafx.UserSession;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.Admin;
+import com.example.cm2601_cw_javafx.model.Article;
+import com.example.cm2601_cw_javafx.model.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +23,9 @@ public class DeleteArticlesController {
     private ListView<String> articleListView;
     @FXML
     private TextField articleIDTextField;
-    private final ArticleService articleService = new ArticleService();
+
+    // private final ArticleService articleService = new ArticleService();
+    private final UserDBManager userDBManager = new UserDBManager();
 
     public void initialize() {
         loadArticles();
@@ -34,7 +36,7 @@ public class DeleteArticlesController {
         try {
 
             articleListView.getItems().clear();
-            List<Article> articles = articleService.getAllArticles();
+            List<Article> articles = userDBManager.getAllArticles();
 
             if (articles.isEmpty()) {
                 showAlert("No articles found in the database.");

@@ -1,9 +1,9 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.Article;
-import com.example.cm2601_cw_javafx.ArticleCategorizer;
-import com.example.cm2601_cw_javafx.ArticleService;
-import com.example.cm2601_cw_javafx.Category;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.Article;
+import com.example.cm2601_cw_javafx.model.Category;
+import com.example.cm2601_cw_javafx.service.ArticleCategorizer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -78,9 +78,12 @@ public class CategorizeArticlesController {
 
         new Thread(() -> {
             ArticleCategorizer categorizer = new ArticleCategorizer();
-            ArticleService articleService = new ArticleService();
 
-            List<Article> unknownArticles = articleService.getArticlesWithUnknownCategory();
+            // ArticleService articleService = new ArticleService();
+
+            UserDBManager userDBManager = new UserDBManager();
+
+            List<Article> unknownArticles = userDBManager.getArticlesWithUnknownCategory();
 
             if (unknownArticles.isEmpty()) {
                 appendLog("No articles with 'UNKNOWN' category to categorize.");
@@ -105,7 +108,7 @@ public class CategorizeArticlesController {
                     }
 
                     article.setCategory(predictedCategory);
-                    articleService.updateArticleCategoryInDatabase(article);
+                    userDBManager.updateArticleCategoryInDatabase(article);
 
                 } catch (Exception e) {
                     appendLog("Error processing article: \"" + article.getTitle() + "\" - " + e.getMessage());

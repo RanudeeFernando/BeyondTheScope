@@ -1,8 +1,8 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.Article;
-import com.example.cm2601_cw_javafx.SystemUserManager;
-import com.example.cm2601_cw_javafx.UserDAO;
+import com.example.cm2601_cw_javafx.model.Article;
+import com.example.cm2601_cw_javafx.service.SystemUserManager;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,8 +26,8 @@ public class ViewLikedArticlesController extends BaseController {
 
     // private final RegularUserManager regularUserManager = new RegularUserManager();
 
-    private final UserDAO userDAO = new UserDAO();
-    private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
+    private final UserDBManager userDBManager = new UserDBManager();
+    private final SystemUserManager systemUserManager = new SystemUserManager(userDBManager);
 
 
 
@@ -64,7 +64,7 @@ public class ViewLikedArticlesController extends BaseController {
 
     private void openArticleDetails(Article article) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("view-full-article.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-full-article.fxml"));
             Parent root = loader.load();
 
             ViewFullArticleController controller = loader.getController();

@@ -1,6 +1,10 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.*;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.Category;
+import com.example.cm2601_cw_javafx.model.User;
+import com.example.cm2601_cw_javafx.model.UserSession;
+import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -41,14 +45,14 @@ public class UpdateProfileController {
     @FXML
     private CheckBox categoryEducation;
 
-    private final UserDAO userDAO = new UserDAO();
-    private final SystemUserManager systemUserManager = new SystemUserManager(userDAO);
+    private final UserDBManager userDBManager = new UserDBManager();
+    private final SystemUserManager systemUserManager = new SystemUserManager(userDBManager);
     User currentUser = (User) UserSession.getInstance().getLoggedInUser();
 
     public void initialize(){
         usernameField.setText(currentUser.getUsername());
         try {
-            List<Category> userCategories = userDAO.getUserPreferences(currentUser.getUserID());
+            List<Category> userCategories = userDBManager.getUserPreferences(currentUser.getUserID());
             setSelectedCategories(userCategories);
             System.out.println(userCategories);
         } catch (SQLException e) {
@@ -93,7 +97,7 @@ public class UpdateProfileController {
             return;
         }
 
-        userDAO.updateUserPreferences(currentUser.getUserID(), selectedCategories);
+        userDBManager.updateUserPreferences(currentUser.getUserID(), selectedCategories);
         showSuccess("Interests updated successfully!");
     }
 
@@ -120,7 +124,7 @@ public class UpdateProfileController {
         String confirmPassword = confirmPasswordField.getText();
 
         try {
-            if (!userDAO.validateCurrentPassword(currentUser.getUsername(), currentPassword)) {
+            if (!userDBManager.validateCurrentPassword(currentUser.getUsername(), currentPassword)) {
                 showError("Current password is incorrect.");
                 return;
             }
@@ -135,7 +139,7 @@ public class UpdateProfileController {
                 return;
             }
 
-            userDAO.updatePassword(currentUser.getUserID(), newPassword);
+            userDBManager.updatePassword(currentUser.getUserID(), newPassword);
             showSuccess("Password updated successfully!");
             currentPasswordField.clear();
             newPasswordField.clear();

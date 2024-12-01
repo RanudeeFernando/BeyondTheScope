@@ -1,8 +1,9 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.Article;
-import com.example.cm2601_cw_javafx.ArticleService;
-import com.example.cm2601_cw_javafx.Category;
+import com.example.cm2601_cw_javafx.model.Article;
+//import com.example.cm2601_cw_javafx.ArticleService;
+import com.example.cm2601_cw_javafx.model.Category;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,6 +27,8 @@ public class UpdateArticleCategoryController {
     @FXML
     private TextArea logArea;
 
+    UserDBManager userDBManager = new UserDBManager();
+
     @FXML
     private void initialize() {
         loadArticles();
@@ -37,8 +40,9 @@ public class UpdateArticleCategoryController {
     }
 
     private void loadArticles() {
-        ArticleService articleService = new ArticleService();
-        List<Article> articles = articleService.getAllArticles();
+        // ArticleService articleService = new ArticleService();
+
+        List<Article> articles = userDBManager.getAllArticles();
 
         articleListView.getItems().clear();
         for (Article article : articles) {
@@ -57,8 +61,9 @@ public class UpdateArticleCategoryController {
                 return;
             }
 
-            ArticleService articleService = new ArticleService();
-            Article article = articleService.getArticleByID(articleID);
+            //ArticleService articleService = new ArticleService();
+
+            Article article = userDBManager.getArticleByID(articleID);
 
             if (article == null) {
                 showAlert("Article ID " + articleID + " not found.");
@@ -66,7 +71,7 @@ public class UpdateArticleCategoryController {
             }
 
             article.setCategory(selectedCategory);
-            articleService.updateArticleCategoryInDatabase(article);
+            userDBManager.updateArticleCategoryInDatabase(article);
 
             showAlert("Article ID " + articleID + " updated to category " + selectedCategory + ".");
             articleIdField.clear();

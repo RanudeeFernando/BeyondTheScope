@@ -1,9 +1,9 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.ArticleService;
-import com.example.cm2601_cw_javafx.RecommendationModel;
-import com.example.cm2601_cw_javafx.User;
-import com.example.cm2601_cw_javafx.UserSession;
+import com.example.cm2601_cw_javafx.db.UserDBManager;
+import com.example.cm2601_cw_javafx.model.User;
+import com.example.cm2601_cw_javafx.model.UserSession;
+import com.example.cm2601_cw_javafx.service.RecommendationModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,7 +34,9 @@ public class GetRecommendationsController {
 
         for (RecommendedItem recommendation : recommendations) {
             if (recommendation.getUserId().equals(String.valueOf(loggedInUserId))) {
-                String articleName = ArticleService.getArticleNameById(recommendation.getItemId());
+                //String articleName = ArticleService.getArticleNameById(recommendation.getItemId());
+
+                String articleName = UserDBManager.getArticleNameById(recommendation.getItemId());
 
                 String displayText = "Article: " + articleName +
                         ", Score: " + recommendation.getValue();
