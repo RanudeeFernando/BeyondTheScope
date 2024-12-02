@@ -3,12 +3,13 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
-import com.example.cm2601_cw_javafx.model.UserSession;
+
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -16,7 +17,6 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,30 +34,82 @@ public class HomeController extends BaseController {
 
     private final DBManager DBManager = new DBManager();
 
-    User user = (User) UserSession.getInstance().getLoggedInUser();
+    //User loggedInUser = (User) SessionService.getInstance().getLoggedInUser();
 
-//    private User loggedInUser;
+    User loggedInUser;
+
+    @Override
+    public void setUser(User user) {
+        super.setUser(user);
+        this.loggedInUser = user;
+        initializeUserSpecificData();
+    }
+
+    private void initializeUserSpecificData() {
+        if (loggedInUser != null) {
+            System.out.println("User set in HomeController: " + loggedInUser.getUsername());
+            loadArticles();
+        } else {
+            System.err.println("Error: User is null in HomeController.");
+        }
+    }
+
+
+//    public void initialize() {
 //
-//    public void setUser(User user) {
-//        this.loggedInUser = user;
+//        loadArticles();
 //
+//        int userID = loggedInUser.getUserID();
+//        String name = loggedInUser.getUsername();
+//
+//        System.out.println(name);
+//
+//
+//        // Set up double-click event for ListView items
+//        articleListView.setOnMouseClicked(event -> {
+//            if (event.getClickCount() == 2) {
+//                String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
+//                if (selectedTitle != null) {
+//
+//                    Article selectedArticle = DBManager.getAllArticles(userID)
+//                            .stream()
+//                            .filter(article -> article.getTitle().equals(selectedTitle))
+//                            .findFirst()
+//                            .orElse(null);
+//
+//                    if (selectedArticle != null) {
+//                        viewFullArticle(selectedArticle);
+//                    }
+//
+//                    // Add the article to the user's viewed history
+//                    addArticleToViewedHistory(selectedArticle);
+//                }
+//            }
+//        });
 //    }
+
+//    private void loadArticles() {
+//        int userID = loggedInUser.getUserID();
+//        List<Article> articles = DBManager.getAllArticles(userID);
+//        List<String> titles = articles.stream()
+//                .map(Article::getTitle)
+//                .collect(Collectors.toList());
+//        articleListView.setItems(FXCollections.observableArrayList(titles));
+//    }
+
+
 
     public void initialize() {
 
         loadArticles();
 
-        int userID = user.getUserID();
-        String name = user.getUsername();
 
-
-        // Set up double-click event for ListView items
         articleListView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) { // Detect double-click
+            if (event.getClickCount() == 2) {
                 String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
                 if (selectedTitle != null) {
-                    // Find the Article object corresponding to the selected title
-                    Article selectedArticle = DBManager.getAllArticles(userID)
+
+                    Article selectedArticle = DBManager.getAllArticles()
                             .stream()
                             .filter(article -> article.getTitle().equals(selectedTitle))
                             .findFirst()
@@ -67,7 +119,6 @@ public class HomeController extends BaseController {
                         viewFullArticle(selectedArticle);
                     }
 
-                    // Add the article to the user's viewed history
                     addArticleToViewedHistory(selectedArticle);
                 }
             }
@@ -75,23 +126,29 @@ public class HomeController extends BaseController {
     }
 
     private void loadArticles() {
-        int userID = user.getUserID();
-        List<Article> articles = DBManager.getAllArticles(userID);
+        List<Article> articles = DBManager.getAllArticles();
         List<String> titles = articles.stream()
-                .map(Article::getTitle) // Extracting the title for display
+                .map(Article::getTitle)
                 .collect(Collectors.toList());
         articleListView.setItems(FXCollections.observableArrayList(titles));
     }
+
+    public void addArticleToViewedHistory(Article article) {
+        int userId = loggedInUser.getUserID();
+        DBManager.addViewedArticle(userId, article.getArticleID());
+
+    }
+
 
     private void viewFullArticle(Article article) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-full-article.fxml"));
             Parent root = loader.load();
 
-            // Get the controller and pass the article data
+
             ViewFullArticleController controller = loader.getController();
+            controller.setUser(loggedInUser);
             controller.setArticleDetails(article);
-            // controller.setLikeButtonStatus();
 
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
@@ -102,14 +159,6 @@ public class HomeController extends BaseController {
         }
     }
 
-    public void addArticleToViewedHistory(Article article) {
-        int userId = user.getUserID();
-        DBManager.addViewedArticle(userId, article.getArticleID());
-
-    }
-
-
-    // Event handler for "View History" menu item
     @FXML
     private void onViewHistoryMenuItemClicked() {
         try {
@@ -119,9 +168,8 @@ public class HomeController extends BaseController {
 
             ViewHistoryController controller = loader.getController();
 
-            int userId = user.getUserID();
-
-            controller.initializeUserViewHistory(userId);
+            controller.setUser(loggedInUser);
+            controller.initializeUserViewHistory(loggedInUser.getUserID());
 
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
@@ -140,10 +188,9 @@ public class HomeController extends BaseController {
             Parent root = loader.load();
 
             ViewLikedArticlesController controller = loader.getController();
+            controller.setUser(loggedInUser);
 
-            int userId = user.getUserID();
-
-            controller.initializeUserLikedArticles(userId);
+            controller.initializeUserLikedArticles(loggedInUser.getUserID());
 
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
@@ -161,6 +208,10 @@ public class HomeController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-skipped-articles.fxml"));
             Parent root = loader.load();
 
+            ViewSkippedArticlesController controller = loader.getController();
+            controller.setUser(loggedInUser);
+            controller.initializeSkippedArticles(loggedInUser.getUserID());
+
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
 
@@ -174,13 +225,13 @@ public class HomeController extends BaseController {
     @FXML
     private void handleLogout() {
         // Clear the session
-        UserSession.getInstance().clearSession();
+        //SessionService.getInstance().clearSession();
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/main.fxml"));
             Parent root = loader.load();
 
-            // Set the new root for the current scene
+
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
 
@@ -196,7 +247,9 @@ public class HomeController extends BaseController {
         Parent root = loader.load();
 
         GetRecommendationsController controller = loader.getController();
-        controller.setLoggedInUserId(user.getUserID());
+        //controller.setLoggedInUserId(loggedInUser.getUserID());
+        controller.setUser(loggedInUser);
+        controller.initializeRecommendedArticles();
 
         Stage stage = (Stage) articleListView.getScene().getWindow();
         stage.setScene(new Scene(root));
@@ -210,6 +263,10 @@ public class HomeController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/update-profile.fxml"));
             Parent root = loader.load();
 
+            UpdateProfileController controller = loader.getController();
+            controller.setUser(loggedInUser);
+            controller.initializeUserDetails();
+
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
 
@@ -218,6 +275,75 @@ public class HomeController extends BaseController {
             e.printStackTrace();
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //private User loggedInUser;
+
+//    public void setUser(User user) {
+//        if (user == null) {
+//            System.err.println("Error: Attempted to set a null user in HomeController.");
+//        } else {
+//            this.loggedInUser = user;
+//            System.out.println("User set in HomeController: " + user.getUsername());
+//        }
+//        postInitialize();
+//    }
+
+
+    // ---------------------------------------------
+
+//    public void postInitialize() {
+//        if (loggedInUser == null) {
+//            System.err.println("Error: Logged-in user is null in postInitialize.");
+//            System.out.println("An error occurred. Please log in again.");
+//            return;
+//        }
+//
+//        loadArticles();
+//
+//        int userID = loggedInUser.getUserID();
+//        String name = loggedInUser.getUsername();
+//
+//        System.out.println("User in postInitialize: " + name);
+//
+//        // Set up double-click event for ListView items
+//        articleListView.setOnMouseClicked(event -> {
+//            if (event.getClickCount() == 2) { // Detect double-click
+//                String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
+//                if (selectedTitle != null) {
+//                    // Find the Article object corresponding to the selected title
+//                    Article selectedArticle = DBManager.getAllArticles(userID)
+//                            .stream()
+//                            .filter(article -> article.getTitle().equals(selectedTitle))
+//                            .findFirst()
+//                            .orElse(null);
+//
+//                    if (selectedArticle != null) {
+//                        viewFullArticle(selectedArticle);
+//                    }
+//
+//                    // Add the article to the user's viewed history
+//                    addArticleToViewedHistory(selectedArticle);
+//                }
+//            }
+//        });
+//    }
 
 
 

@@ -3,7 +3,7 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
-import com.example.cm2601_cw_javafx.model.UserSession;
+
 import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,63 +24,81 @@ public class ViewSkippedArticlesController extends BaseController {
     @FXML
     private ListView<String> skippedArticlesListView;
 
-    //private final UserSession userSession = UserSession.getInstance();
 
-    User user = (User) UserSession.getInstance().getLoggedInUser();
+    //User user = (User) SessionService.getInstance().getLoggedInUser();
 
-    //private final RegularUserManager regularUserManager = new RegularUserManager();
+    User user;
 
-    private final DBManager DBManager = new DBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
 
-    public void initialize() {
-        loadSkippedArticles();
+    private final DBManager dbManager = new DBManager();
+    private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    private void loadSkippedArticles() {
-        int currentUserId = user.getUserID();
-        List<Article> skippedArticles = systemUserManager.getSkippedArticles(currentUserId);
+//    public void initialize() {
+//        loadSkippedArticles();
+//    }
+//
+//    private void loadSkippedArticles() {
+//        int currentUserId = user.getUserID();
+//        List<Article> skippedArticles = systemUserManager.getSkippedArticles(currentUserId);
+//
+//        for (Article article : skippedArticles) {
+//            skippedArticlesListView.getItems().add(article.getTitle());
+//        }
+//
+//        skippedArticlesListView.setOnMouseClicked((MouseEvent event) -> {
+//            String selectedTitle = skippedArticlesListView.getSelectionModel().getSelectedItem();
+//            Article selectedArticle = skippedArticles.stream()
+//                    .filter(article -> article.getTitle().equals(selectedTitle))
+//                    .findFirst()
+//                    .orElse(null);
+//
+//            if (selectedArticle != null) {
+//                openArticleDetails(selectedArticle);
+//            }
+//
+//        });
+//
+//    }
+
+    public void initializeSkippedArticles(int userID) {
+
+        List<Article> skippedArticles = systemUserManager.getSkippedArticles(userID);
 
         for (Article article : skippedArticles) {
             skippedArticlesListView.getItems().add(article.getTitle());
         }
 
-        skippedArticlesListView.setOnMouseClicked((MouseEvent event) -> {
-            String selectedTitle = skippedArticlesListView.getSelectionModel().getSelectedItem();
-            Article selectedArticle = skippedArticles.stream()
-                    .filter(article -> article.getTitle().equals(selectedTitle))
-                    .findFirst()
-                    .orElse(null);
 
-            if (selectedArticle != null) {
-                openArticleDetails(selectedArticle);
-            }
-
-            HomeController homeController = new HomeController();
-            homeController.addArticleToViewedHistory(selectedArticle);
-        });
     }
 
-    private void openArticleDetails(Article article) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-full-article.fxml"));
-            Parent root = loader.load();
-
-            ViewFullArticleController controller = loader.getController();
-            controller.setArticleDetails(article);
-
-            Scene currentScene = skippedArticlesListView.getScene();
-            currentScene.setRoot(root);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void openArticleDetails(Article article) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-full-article.fxml"));
+//            Parent root = loader.load();
+//
+//            ViewFullArticleController controller = loader.getController();
+//            controller.setArticleDetails(article);
+//
+//            Scene currentScene = skippedArticlesListView.getScene();
+//            currentScene.setRoot(root);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void goBackToHome() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
+
+            HomeController controller = loader.getController();
+            controller.setUser(user);
 
             Scene currentScene = skippedArticlesListView.getScene();
             currentScene.setRoot(root);

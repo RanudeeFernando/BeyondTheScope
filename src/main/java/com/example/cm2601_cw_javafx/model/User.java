@@ -26,7 +26,7 @@ public class User extends SystemUser {
 
     @Override
     public String getRole() {
-        return "User";
+        return "USER";
     }
 
     public String getSelectedCategoriesAsString() {

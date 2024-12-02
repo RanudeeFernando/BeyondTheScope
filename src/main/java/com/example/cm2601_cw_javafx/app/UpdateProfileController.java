@@ -3,7 +3,7 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Category;
 import com.example.cm2601_cw_javafx.model.User;
-import com.example.cm2601_cw_javafx.model.UserSession;
+
 import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateProfileController {
+public class UpdateProfileController extends BaseController{
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -47,9 +47,28 @@ public class UpdateProfileController {
 
     private final DBManager DBManager = new DBManager();
     private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
-    User currentUser = (User) UserSession.getInstance().getLoggedInUser();
+    //User currentUser = (User) SessionService.getInstance().getLoggedInUser();
 
-    public void initialize(){
+    User currentUser;
+
+    @Override
+    public void setUser(User user) {
+        this.currentUser = user;
+    }
+
+//    public void initialize(){
+//        usernameField.setText(currentUser.getUsername());
+//        try {
+//            List<Category> userCategories = DBManager.getUserPreferences(currentUser.getUserID());
+//            setSelectedCategories(userCategories);
+//            System.out.println(userCategories);
+//        } catch (SQLException e) {
+//            showError("Error loading user preferences: " + e.getMessage());
+//        }
+//
+//    }
+
+    public void initializeUserDetails(){
         usernameField.setText(currentUser.getUsername());
         try {
             List<Category> userCategories = DBManager.getUserPreferences(currentUser.getUserID());
@@ -155,6 +174,9 @@ public class UpdateProfileController {
             // Load the home page FXML file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
+
+            HomeController controller = loader.getController();
+            controller.setUser(currentUser);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

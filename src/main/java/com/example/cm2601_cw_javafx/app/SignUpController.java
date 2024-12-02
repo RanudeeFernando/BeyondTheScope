@@ -93,13 +93,6 @@ public class SignUpController extends BaseController {
     }
 
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     private void clearFields() {
         // Clear text fields
         usernameField.clear();

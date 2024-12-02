@@ -3,7 +3,7 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
-import com.example.cm2601_cw_javafx.model.UserSession;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,9 +23,14 @@ public class DeleteArticlesController {
     private ListView<String> articleListView;
     @FXML
     private TextField articleIDTextField;
-
-    // private final ArticleService articleService = new ArticleService();
     private final DBManager DBManager = new DBManager();
+
+    Admin admin;
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+
+    }
 
     public void initialize() {
         loadArticles();
@@ -61,7 +66,7 @@ public class DeleteArticlesController {
                 return;
             }
 
-            Admin admin = (Admin) UserSession.getInstance().getLoggedInUser();
+            //Admin admin = (Admin) SessionService.getInstance().getLoggedInUser();
 
             boolean isDeleted = admin.deleteArticleByID(articleIDText);
 
@@ -98,6 +103,9 @@ public class DeleteArticlesController {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/admin-dashboard.fxml"));
             Parent root = loader.load();
+
+            AdminDashboardController controller = loader.getController();
+            controller.setAdmin(admin);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

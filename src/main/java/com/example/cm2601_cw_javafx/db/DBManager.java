@@ -1,9 +1,8 @@
 package com.example.cm2601_cw_javafx.db;
 
-import com.example.cm2601_cw_javafx.model.Category;
+import com.example.cm2601_cw_javafx.model.*;
 import com.example.cm2601_cw_javafx.service.SystemUserManager;
-import com.example.cm2601_cw_javafx.model.UserViewedArticle;
-import com.example.cm2601_cw_javafx.model.Article;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,25 @@ public class DBManager {
         return false;
     }
 
-    public Object[] getUserInfo(String username) throws SQLException {
+//    public Object[] getUserInfo(String username) throws SQLException {
+//        String sql = "SELECT userID, password, role FROM user WHERE username = ?";
+//        try (Connection connection = connectToDatabase();
+//             PreparedStatement statement = connection.prepareStatement(sql)) {
+//
+//            statement.setString(1, username);
+//            ResultSet resultSet = statement.executeQuery();
+//
+//            if (resultSet.next()) {
+//                int userID = resultSet.getInt("userID");
+//                String password = resultSet.getString("password");
+//                String role = resultSet.getString("role");
+//                return new Object[]{userID, password, role};
+//            }
+//        }
+//        return null;
+//    }
+
+    public SystemUser getUser(String username) throws SQLException {
         String sql = "SELECT userID, password, role FROM user WHERE username = ?";
         try (Connection connection = connectToDatabase();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -71,7 +88,15 @@ public class DBManager {
                 int userID = resultSet.getInt("userID");
                 String password = resultSet.getString("password");
                 String role = resultSet.getString("role");
-                return new Object[]{userID, password, role};
+
+                // Create the appropriate object based on the role
+                if ("ADMIN".equalsIgnoreCase(role)) {
+                    return new Admin(userID, username, password); // Assuming Admin extends SystemUser
+                } else if ("USER".equalsIgnoreCase(role)) {
+                    return new User(userID, username, password); // Assuming User extends SystemUser
+                } else {
+                    throw new IllegalArgumentException("Unknown role: " + role);
+                }
             }
         }
         return null;
@@ -127,7 +152,6 @@ public class DBManager {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             for (Category category : categories) {
-                // Fetch categoryID based on category name
                 int categoryID = getCategoryID(category.name());
 
                 statement.setInt(1, userId);
@@ -210,6 +234,7 @@ public class DBManager {
             statement.executeUpdate();
         }
     }
+
     public boolean hasInteraction(int userId, int articleId, String interactionType) throws SQLException {
         String sql = "SELECT COUNT(*) FROM user_article_interaction WHERE userID = ? AND articleID = ? AND interactionType = ?";
         try (Connection connection = connectToDatabase();
@@ -293,40 +318,38 @@ public class DBManager {
 
 
     // Method to retrieve all articles from the database, excluding skipped articles
-    public List<Article> getAllArticles(int userId) {
-        List<Article> articles = new ArrayList<>();
-        String sql = "SELECT * FROM article";
-
-        try (Connection dbConnection = connectToDatabase();
-             PreparedStatement statement = dbConnection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                int articleId = resultSet.getInt("articleID");
-                String title = resultSet.getString("title");
-                String source = resultSet.getString("source");
-                String author = resultSet.getString("author");
-                String content = resultSet.getString("content");
-                String url = resultSet.getString("url");
-                Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
-
-                // RegularUserManager regularUserManager = new RegularUserManager();
-
-                DBManager DBManager = new DBManager();
-                SystemUserManager systemUserManager = new SystemUserManager(DBManager);
-
-                // Check if the user has skipped this article
-                if (!systemUserManager.hasSkippedArticle(userId, articleId)) {
-                    Article article = new Article(articleId, title, content, null, author, source, url, publishedDate);
-                    articles.add(article);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return articles;
-    }
+//    public List<Article> getAllArticles(int userId) {
+//        List<Article> articles = new ArrayList<>();
+//        String sql = "SELECT * FROM article";
+//
+//        try (Connection dbConnection = connectToDatabase();
+//             PreparedStatement statement = dbConnection.prepareStatement(sql);
+//             ResultSet resultSet = statement.executeQuery()) {
+//
+//            while (resultSet.next()) {
+//                int articleId = resultSet.getInt("articleID");
+//                String title = resultSet.getString("title");
+//                String source = resultSet.getString("source");
+//                String author = resultSet.getString("author");
+//                String content = resultSet.getString("content");
+//                String url = resultSet.getString("url");
+//                Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
+//
+//                DBManager DBManager = new DBManager();
+//                SystemUserManager systemUserManager = new SystemUserManager(DBManager);
+//
+//                // Check if the user has skipped this article
+//                if (!systemUserManager.hasSkippedArticle(userId, articleId)) {
+//                    Article article = new Article(articleId, title, content, null, author, source, url, publishedDate);
+//                    articles.add(article);
+//                }
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return articles;
+//    }
 
     public boolean deleteArticleByID(int articleID) {
         String sql = "DELETE FROM article WHERE articleID = ?";
@@ -336,8 +359,8 @@ public class DBManager {
 
             statement.setInt(1, articleID);
 
-            int rowsAffected = statement.executeUpdate(); // Execute the delete operation
-            return rowsAffected > 0; // Return true if at least one row was deleted
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -347,7 +370,7 @@ public class DBManager {
 
     public String getCategoryName(int categoryID) {
         String sql = "SELECT categoryName FROM Category WHERE categoryID = ?";
-        String categoryName = "UNKNOWN"; // Default value in case the category is not found
+        String categoryName = "UNKNOWN";
 
         try (Connection connection = connectToDatabase();
              PreparedStatement statement = connection.prepareStatement(sql)) {

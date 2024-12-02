@@ -1,7 +1,7 @@
 package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.model.Admin;
-import com.example.cm2601_cw_javafx.model.UserSession;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,19 +25,24 @@ public class AdminDashboardController {
     @FXML
     private Button logoutButton;
 
-//    private Admin loggedInAdmin;
-//
-//    public void setAdmin(Admin admin) {
-//        this.loggedInAdmin = admin;
-//
-//    }
+    private Admin loggedInAdmin;
 
+    public void setAdmin(Admin admin) {
+        this.loggedInAdmin = admin;
+
+    }
 
     @FXML
     private void handleFetchArticlesButton() {
+
+        System.out.println("Admin " + loggedInAdmin.getUsername() + " is selected the fetch articles option.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/fetch-articles.fxml"));
             Parent root = loader.load();
+
+            FetchArticlesController controller = loader.getController();
+            controller.setAdmin(loggedInAdmin);
+
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
 
@@ -49,9 +54,14 @@ public class AdminDashboardController {
 
     @FXML
     private void handleCategorizeArticles() {
+        System.out.println("Admin " + loggedInAdmin.getUsername() + " is selected the categorize article option.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/categorize-articles.fxml"));
             Parent root = loader.load();
+
+            CategorizeArticlesController controller = loader.getController();
+            controller.setAdmin(loggedInAdmin);
+
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
         } catch (IOException e) {
@@ -62,9 +72,14 @@ public class AdminDashboardController {
 
     @FXML
     private void handleUpdateCategory() {
+        System.out.println("Admin " + loggedInAdmin.getUsername() + " is selected the update category option.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/update-category.fxml"));
             Parent root = loader.load();
+
+            UpdateArticleCategoryController controller = loader.getController();
+            controller.setAdmin(loggedInAdmin);
+
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
         } catch (IOException e) {
@@ -75,9 +90,14 @@ public class AdminDashboardController {
 
     @FXML
     private void handleDeleteArticles() {
+        System.out.println("Admin " + loggedInAdmin.getUsername() + " is selected delete article option.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/delete-articles.fxml"));
             Parent root = loader.load();
+
+            DeleteArticlesController controller = loader.getController();
+            controller.setAdmin(loggedInAdmin);
+
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
         } catch (IOException e) {
@@ -88,8 +108,8 @@ public class AdminDashboardController {
 
     @FXML
     private void handleLogout() {
-        // Clear the session
-        UserSession.getInstance().clearSession();
+
+        //SessionService.getInstance().clearSession();
 
         try {
             showAlert("Logout successful! You will be directed to the Main page soon.");

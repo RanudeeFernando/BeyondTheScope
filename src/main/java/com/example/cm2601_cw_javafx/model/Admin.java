@@ -18,7 +18,7 @@ public class Admin extends SystemUser {
 
     @Override
     public String getRole() {
-        return "Admin";
+        return "ADMIN";
     }
 
     public boolean deleteArticleByID(String articleID) {

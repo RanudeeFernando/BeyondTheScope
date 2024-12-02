@@ -2,6 +2,7 @@ package com.example.cm2601_cw_javafx.app;
 
 
 import com.example.cm2601_cw_javafx.db.DBManager;
+import com.example.cm2601_cw_javafx.model.User;
 import com.example.cm2601_cw_javafx.model.UserViewedArticle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,20 +30,25 @@ public class ViewHistoryController extends BaseController {
 
     // private HistoryService historyService;
 
+    User user;
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+
+
 
     public void initializeUserViewHistory(int userId) {
         Connection connection = DBManager.connectToDatabase();
 
         if (connection != null) {
-            // Create a HistoryService instance with the database connection
-            // historyService = new HistoryService(connection);
 
             DBManager DBManager = new DBManager();
 
-            // Retrieve the viewed articles for the given user ID
             List<UserViewedArticle> viewedArticles = DBManager.getViewedArticles(userId);
 
-            // Convert UserViewedArticle objects to their ListView representation
             ObservableList<String> listViewItems = FXCollections.observableArrayList(
                     viewedArticles.stream().map(UserViewedArticle::toListViewString).collect(Collectors.toList())
             );
@@ -61,6 +67,9 @@ public class ViewHistoryController extends BaseController {
             // Load the home page FXML file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
+
+            HomeController controller = loader.getController();
+            controller.setUser(user);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

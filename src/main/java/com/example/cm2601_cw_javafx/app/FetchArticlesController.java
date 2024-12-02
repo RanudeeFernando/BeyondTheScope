@@ -1,5 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
+import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.service.ArticleFetcher;
 import javafx.application.Platform;
@@ -25,6 +26,11 @@ public class FetchArticlesController {
     @FXML
     private Button fetchArticlesButton;
 
+    Admin admin;
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+
+    }
     @FXML
     private void initialize() {
 
@@ -78,6 +84,9 @@ public class FetchArticlesController {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/admin-dashboard.fxml"));
             Parent root = loader.load();
+
+            AdminDashboardController controller = loader.getController();
+            controller.setAdmin(admin);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

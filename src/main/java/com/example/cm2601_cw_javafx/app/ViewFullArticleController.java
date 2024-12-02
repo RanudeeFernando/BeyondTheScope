@@ -3,7 +3,7 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
-import com.example.cm2601_cw_javafx.model.UserSession;
+
 import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,19 +40,20 @@ public class ViewFullArticleController extends BaseController {
     @FXML
     private Button skipButton;
 
-    // private final UserSession userSession = UserSession.getInstance();
-    User user = (User) UserSession.getInstance().getLoggedInUser();
+    // private final SessionService userSession = SessionService.getInstance();
+    //User user = (User) SessionService.getInstance().getLoggedInUser();
+
+
+    User user;
 
     private int currentArticleId;
-
-    // private final RegularUserManager regularUserManager = new RegularUserManager();
 
     private final DBManager DBManager = new DBManager();
     private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
 
-    public void initialize() {
-
-
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
 
 
@@ -81,24 +82,6 @@ public class ViewFullArticleController extends BaseController {
 
         setButtonStates();
 
-
-    }
-
-
-    // Method to return to the home view
-    public void goBackToHome() {
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
-            Parent root = loader.load();
-
-            Scene currentScene = rootPane.getScene();
-            currentScene.setRoot(root);
-
-        } catch (IOException e) {
-            System.out.println("An error occurred while redirecting to Home page.");
-            e.printStackTrace();
-        }
     }
 
     private void setButtonStates() {
@@ -126,12 +109,10 @@ public class ViewFullArticleController extends BaseController {
 
         if (isLiked) {
             systemUserManager.unlikeArticle(currentUserId, currentArticleId);
-            // likeButton.setText("Like");
             showAlert("Article unliked successfully! Your recommendations will be updated accordingly.");
         } else {
 
             systemUserManager.likeArticle(currentUserId, currentArticleId);
-            // likeButton.setText("Liked");
             showAlert("Article liked successfully! Your recommendations will be updated accordingly.");
         }
 
@@ -144,8 +125,8 @@ public class ViewFullArticleController extends BaseController {
 
         if (!isSkipped) {
             systemUserManager.skipArticle(currentUserId, currentArticleId);
-            showAlert("Article skipped successfully! You'll be redirected to the home page shortly.");
-            goBackToHome();
+            showAlert("Article skipped successfully!");
+            //goBackToHome();
         }
         else {
             systemUserManager.unskipArticle(currentUserId, currentArticleId);
@@ -155,12 +136,26 @@ public class ViewFullArticleController extends BaseController {
         setButtonStates();
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    // Method to return to the home view
+    public void goBackToHome() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
+            Parent root = loader.load();
+
+            HomeController homeController = loader.getController();
+            homeController.setUser(user);
+
+            Scene currentScene = rootPane.getScene();
+            currentScene.setRoot(root);
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while redirecting to Home page.");
+            e.printStackTrace();
+        }
     }
+
+
 
 
 

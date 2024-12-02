@@ -55,12 +55,15 @@ public class SystemUserManager {
 
     public String authenticateUser(String username, String password) {
         try {
-            Object[] userInfo = DBManager.getUserInfo(username);
-            if (userInfo == null) {
+            //Object[] userInfo = DBManager.getUserInfo(username);
+
+            SystemUser systemUser = DBManager.getUser(username);
+
+            if (systemUser == null) {
                 return "Username not found.";
             }
 
-            String storedPassword = (String) userInfo[1];
+            String storedPassword = systemUser.getPassword();
 
             if (!password.equals(storedPassword)) {
                 return "Invalid password.";
@@ -72,29 +75,38 @@ public class SystemUserManager {
         }
     }
 
-    public SystemUser getUserByRole(String username) {
+//    public SystemUser getUserByUsername(String username) {
+//        try {
+//            Object[] userInfo = DBManager.getUserInfo(username);
+//            if (userInfo == null) {
+//                return null;
+//            }
+//
+//            int userID = (int) userInfo[0];
+//            String password = (String) userInfo[1];
+//            String role = (String) userInfo[2];
+//
+//            if ("ADMIN".equalsIgnoreCase(role)) {
+//                return new Admin(userID, username, password);
+//            }
+//            else if ("USER".equalsIgnoreCase(role)) {
+//                return new User(userID, username, password);
+//            }
+//            else {
+//                System.out.println("Unknown role: " + role);
+//                return null;
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Error retrieving user by role: " + e.getMessage());
+//            return null;
+//        }
+//    }
+
+    public SystemUser getUser(String username) {
         try {
-            Object[] userInfo = DBManager.getUserInfo(username);
-            if (userInfo == null) {
-                return null;
-            }
-
-            int userID = (int) userInfo[0];
-            String password = (String) userInfo[1];
-            String role = (String) userInfo[2];
-
-            if ("ADMIN".equalsIgnoreCase(role)) {
-                return new Admin(userID, username, password);
-            }
-            else if ("USER".equalsIgnoreCase(role)) {
-                return new User(userID, username, password);
-            }
-            else {
-                System.out.println("Unknown role: " + role);
-                return null;
-            }
+            return DBManager.getUser(username);
         } catch (SQLException e) {
-            System.out.println("Error retrieving user by role: " + e.getMessage());
+            System.out.println("Error retrieving user by username: " + e.getMessage());
             return null;
         }
     }
@@ -108,37 +120,37 @@ public class SystemUserManager {
         }
     }
 
-    public SystemUser loginUser(String username, String password) {
-        try {
-            Object[] userInfo = DBManager.getUserInfo(username);
-            if (userInfo == null) {
-                System.out.println("Username not found.");
-                return null;
-            }
-
-            int userID = (int) userInfo[0];
-            String storedPassword = (String) userInfo[1];
-            String role = (String) userInfo[2];
-
-            if (!password.equals(storedPassword)) {
-                System.out.println("Invalid password.");
-                return null;
-            }
-
-            // Return the correct SystemUser type
-            if ("ADMIN".equalsIgnoreCase(role)) {
-                return new Admin(userID, username, password);
-            } else if ("USER".equalsIgnoreCase(role)) {
-                return new User(userID, username, password);
-            } else {
-                System.out.println("Unknown role: " + role);
-                return null;
-            }
-        } catch (SQLException e) {
-            System.out.println("Login failed due to database error: " + e.getMessage());
-            return null;
-        }
-    }
+//    public SystemUser loginUser(String username, String password) {
+//        try {
+//            Object[] userInfo = DBManager.getUserInfo(username);
+//            if (userInfo == null) {
+//                System.out.println("Username not found.");
+//                return null;
+//            }
+//
+//            int userID = (int) userInfo[0];
+//            String storedPassword = (String) userInfo[1];
+//            String role = (String) userInfo[2];
+//
+//            if (!password.equals(storedPassword)) {
+//                System.out.println("Invalid password.");
+//                return null;
+//            }
+//
+//            // Return the correct SystemUser type
+//            if ("ADMIN".equalsIgnoreCase(role)) {
+//                return new Admin(userID, username, password);
+//            } else if ("USER".equalsIgnoreCase(role)) {
+//                return new User(userID, username, password);
+//            } else {
+//                System.out.println("Unknown role: " + role);
+//                return null;
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Login failed due to database error: " + e.getMessage());
+//            return null;
+//        }
+//    }
 
 
     public boolean validateUsername(String username) {

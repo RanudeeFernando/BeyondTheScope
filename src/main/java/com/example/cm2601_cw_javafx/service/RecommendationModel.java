@@ -159,56 +159,56 @@ public class RecommendationModel {
         return recommendations;
     }
 
-    public static void main(String[] args) {
-        try {
-            // Generate CSV file
-            generateCSV();
-
-            // Configuration
-            Configuration conf = new Configuration();
-            conf.set("dfs.data.dir", ".");
-            conf.set("data.model.splitter", "ratio");
-            conf.set("data.splitter.trainset.ratio", "0.7");
-            conf.set("data.column.format", "UIR");
-            conf.set("data.model.format", "text");
-            conf.set("data.input.path", CSV_FILE_PATH);
-
-            // Add required configuration for UserKNNRecommender
-            conf.set("rec.neighbors.knn.number", "10");
-            conf.set("rec.similarity.class", "cosine"); // Similarity metric
-
-            // Data Model
-            DataModel dataModel = new TextDataModel(conf);
-            dataModel.buildDataModel();
-
-            // Initialize similarity metric
-            RecommenderSimilarity similarity = new PCCSimilarity();
-            similarity.buildSimilarityMatrix(dataModel);
-
-            // Create the RecommenderContext
-            RecommenderContext context = new RecommenderContext(conf, dataModel);
-            context.setSimilarity(similarity); // Set the similarity object
-
-            // Initialize the recommender
-            Recommender recommender = new UserKNNRecommender();
-            recommender.setContext(context);
-
-            // Train and generate recommendations
-            recommender.recommend(context);
-
-            // Retrieve recommendations
-            List<RecommendedItem> recommendations = recommender.getRecommendedList();
-            for (RecommendedItem recommendation : recommendations) {
-                System.out.println("User: " + recommendation.getUserId() +
-                        ", Item: " + recommendation.getItemId() +
-                        ", Score: " + recommendation.getValue());
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-
-    }
+//    public static void main(String[] args) {
+//        try {
+//            // Generate CSV file
+//            generateCSV();
+//
+//            // Configuration
+//            Configuration conf = new Configuration();
+//            conf.set("dfs.data.dir", ".");
+//            conf.set("data.model.splitter", "ratio");
+//            conf.set("data.splitter.trainset.ratio", "0.7");
+//            conf.set("data.column.format", "UIR");
+//            conf.set("data.model.format", "text");
+//            conf.set("data.input.path", CSV_FILE_PATH);
+//
+//            // Add required configuration for UserKNNRecommender
+//            conf.set("rec.neighbors.knn.number", "10");
+//            conf.set("rec.similarity.class", "cosine"); // Similarity metric
+//
+//            // Data Model
+//            DataModel dataModel = new TextDataModel(conf);
+//            dataModel.buildDataModel();
+//
+//            // Initialize similarity metric
+//            RecommenderSimilarity similarity = new PCCSimilarity();
+//            similarity.buildSimilarityMatrix(dataModel);
+//
+//            // Create the RecommenderContext
+//            RecommenderContext context = new RecommenderContext(conf, dataModel);
+//            context.setSimilarity(similarity); // Set the similarity object
+//
+//            // Initialize the recommender
+//            Recommender recommender = new UserKNNRecommender();
+//            recommender.setContext(context);
+//
+//            // Train and generate recommendations
+//            recommender.recommend(context);
+//
+//            // Retrieve recommendations
+//            List<RecommendedItem> recommendations = recommender.getRecommendedList();
+//            for (RecommendedItem recommendation : recommendations) {
+//                System.out.println("User: " + recommendation.getUserId() +
+//                        ", Item: " + recommendation.getItemId() +
+//                        ", Score: " + recommendation.getValue());
+//            }
+//
+//        } catch (Exception e) {
+//            System.err.println("Error: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 }

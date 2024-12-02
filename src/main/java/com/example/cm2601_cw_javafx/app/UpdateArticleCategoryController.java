@@ -1,6 +1,7 @@
 package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.db.DBManager;
+import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
 //import com.example.cm2601_cw_javafx.ArticleService;
 import com.example.cm2601_cw_javafx.model.Category;
@@ -28,6 +29,12 @@ public class UpdateArticleCategoryController {
     private TextArea logArea;
 
     DBManager DBManager = new DBManager();
+
+    Admin admin;
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+
+    }
 
     @FXML
     private void initialize() {
@@ -102,6 +109,9 @@ public class UpdateArticleCategoryController {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/admin-dashboard.fxml"));
             Parent root = loader.load();
+
+            AdminDashboardController controller = loader.getController();
+            controller.setAdmin(admin);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

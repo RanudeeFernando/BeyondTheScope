@@ -1,6 +1,7 @@
 package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.db.DBManager;
+import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.Category;
 import com.example.cm2601_cw_javafx.service.ArticleCategorizer;
@@ -23,6 +24,13 @@ public class CategorizeArticlesController {
     private AnchorPane rootPane;
     @FXML
     private Button categorizeArticlesButton;
+
+    Admin admin;
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+
+    }
 
 
 //    public void startCategorization() {
@@ -136,6 +144,9 @@ public class CategorizeArticlesController {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/admin-dashboard.fxml"));
             Parent root = loader.load();
+
+            AdminDashboardController controller = loader.getController();
+            controller.setAdmin(admin);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
