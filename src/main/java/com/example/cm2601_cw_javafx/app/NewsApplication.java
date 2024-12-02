@@ -97,6 +97,7 @@ public class NewsApplication extends Application {
         }
 
         System.out.println("\nApplication stopped, and schedulers shut down.");
+        System.out.println();
     }
 
 
