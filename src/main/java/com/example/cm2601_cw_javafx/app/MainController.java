@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 
-public class WelcomePageController extends BaseController {
+public class MainController extends BaseController {
     @FXML
     public Button signUpButton;
 

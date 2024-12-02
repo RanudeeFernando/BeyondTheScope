@@ -1,6 +1,7 @@
 package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.model.Article;
+import com.example.cm2601_cw_javafx.service.ArticleCategorizer;
 import com.example.cm2601_cw_javafx.service.ArticleFetcher;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class NewsApplication extends Application {
-    private static ScheduledExecutorService scheduler;
+    private static ScheduledExecutorService fetchScheduler;
+    private static ScheduledExecutorService categorizeScheduler;
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -37,42 +39,66 @@ public class NewsApplication extends Application {
         // Displaying the stage
         stage.show();
 
-        // Start the background article fetch scheduler
         startArticleFetchScheduler();
+        startCategorizationScheduler();
 
     }
 
     private static void startArticleFetchScheduler() {
-        scheduler = Executors.newScheduledThreadPool(1);
+        fetchScheduler = Executors.newScheduledThreadPool(1);
 
-        scheduler.scheduleAtFixedRate(() -> {
-            List<Article> articles = ArticleFetcher.fetchArticles();
-            ArticleFetcher.saveArticles(articles);
-            articles.forEach(System.out::println);
-        }, 0, 6, TimeUnit.HOURS);
+        fetchScheduler.scheduleAtFixedRate(() -> {
+            try {
+                System.out.println("\nFetching new articles...");
+                List<Article> fetchedArticles = ArticleFetcher.fetchArticles();
 
-        System.out.println("Article fetch scheduler started.");
+                if (fetchedArticles.isEmpty()) {
+                    System.out.println("No new articles were fetched.");
+                } else {
+                    fetchedArticles.forEach(System.out::println);
+                    ArticleFetcher.saveArticles(fetchedArticles);
+                    System.out.println("\nFetched and saved new articles.");
+                }
+
+            } catch (Exception e) {
+                System.out.println("\nError during article fetching: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }, 0, 6, TimeUnit.HOURS); // Fetch every 6 hours
     }
+
+    private static void startCategorizationScheduler() {
+        categorizeScheduler = Executors.newScheduledThreadPool(1);
+
+        categorizeScheduler.scheduleAtFixedRate(() -> {
+            try {
+                System.out.println("\nStarting categorization...");
+                ArticleCategorizer categorizer = new ArticleCategorizer();
+                categorizer.categorizeUnknownArticles();
+                System.out.println("\nCategorization complete.");
+            } catch (Exception e) {
+                System.err.println("\nError during article categorization: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }, 15, 60 * 60, TimeUnit.SECONDS); // Categorize every hour
+    }
+
 
     @Override
     public void stop() throws Exception {
         super.stop();
 
-        if (scheduler != null && !scheduler.isShutdown()) {
-            scheduler.shutdown();
-            try {
-                if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
-                    System.out.println("Forcing scheduler shutdown...");
-                    scheduler.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                System.out.println("Scheduler shutdown interrupted. Forcing shutdown...");
-                scheduler.shutdownNow();
-            }
+        if (fetchScheduler != null && !fetchScheduler.isShutdown()) {
+            fetchScheduler.shutdownNow();
         }
 
-        System.out.println("Application stopped and scheduler shut down.");
+        if (categorizeScheduler != null && !categorizeScheduler.isShutdown()) {
+            categorizeScheduler.shutdownNow();
+        }
+
+        System.out.println("\nApplication stopped, and schedulers shut down.");
     }
+
 
     public static void main(String[] args) {
         launch();

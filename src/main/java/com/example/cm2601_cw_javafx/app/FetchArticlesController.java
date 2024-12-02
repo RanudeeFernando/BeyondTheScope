@@ -18,8 +18,6 @@ import java.util.List;
 
 public class FetchArticlesController {
     @FXML
-    private ListView<String> articleListView;
-    @FXML
     private AnchorPane rootPane;
     @FXML
     private TextArea logArea;
@@ -29,10 +27,6 @@ public class FetchArticlesController {
     Admin admin;
     public void setAdmin(Admin admin) {
         this.admin = admin;
-
-    }
-    @FXML
-    private void initialize() {
 
     }
 
@@ -52,11 +46,9 @@ public class FetchArticlesController {
                     appendLog("Fetched " + articles.size() + " articles. Saving to database...");
 
                     Platform.runLater(() -> {
-                        articleListView.getItems().clear();
                         for (Article article : articles) {
                             String logMessage = "Title: " + article.getTitle() + " | Published Date: " + article.getPublishedDate();
-                            articleListView.getItems().add(logMessage);
-                            // appendLog("Saved: " + logMessage);
+                            appendLog("Saved: " + logMessage);
                         }
                     });
 

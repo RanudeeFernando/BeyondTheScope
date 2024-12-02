@@ -14,8 +14,6 @@ import org.json.JSONObject;
 
 public class ArticleCategorizer {
     private static final String API_KEY = "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";
-//    private static final String MODEL_URL = "https://api-inference.huggingface.co/models/ranudee/news-category-classifier";
-
     private static final String MODEL_URL = "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-topic-latest";
 
 
@@ -29,7 +27,7 @@ public class ArticleCategorizer {
         String responseBody = response.body();
 
         // Print the raw response
-        System.out.println("Raw API Response: " + responseBody);
+        System.out.println("\nRaw API Response: " + responseBody);
 
         try {
             JSONArray jsonResponseArray = new JSONArray(responseBody);
@@ -56,26 +54,11 @@ public class ArticleCategorizer {
 
         } catch (Exception e) {
             // Handle the case where the response is not valid JSON
-            System.out.println("Error parsing JSON response: " + e.getMessage() + "\n");
+            System.out.println("\nError parsing JSON response: " + e.getMessage() + "\n");
             return Category.UNKNOWN;
         }
     }
 
-
-//    private Category mapStringToCategory(String category) {
-//        switch (category) {
-//            case "LABEL_0":
-//                return Category.WORLD;
-//            case "LABEL_1":
-//                return Category.SPORTS;
-//            case "LABEL_2":
-//                return Category.BUSINESS;
-//            case "LABEL_3":
-//                return Category.SCIENCE;
-//            default:
-//                return Category.UNKNOWN;
-//        }
-//    }
 
     private Category mapStringToCategory(String label) {
         switch (label.toLowerCase()) {
@@ -85,7 +68,7 @@ public class ArticleCategorizer {
             case "celebrity_&_pop_culture":
             case "fashion_&_style":
             case "gaming":
-                return Category.ENTERTAINMENT; // Includes arts and cultural topics
+                return Category.ENTERTAINMENT;
 
             case "business_&_entrepreneurs":
                 return Category.BUSINESS;
@@ -94,7 +77,6 @@ public class ArticleCategorizer {
             case "youth_&_student_life":
                 return Category.EDUCATION;
 
-            // Combine health, lifestyle, and travel under one category
             case "food_&_dining":
             case "fitness_&_health":
             case "family":
@@ -119,22 +101,20 @@ public class ArticleCategorizer {
     }
 
     // Method to update the articles in the database with their predicted categories
-    public void categorizeArticles(List<Article> articles) {
-        for (Article article : articles) {
-            try {
-                Category predictedCategory = classifyArticle(article.getContent());
-                article.setCategory(predictedCategory);  // Set the category as the enum
-
-                //ArticleService articleService = new ArticleService();
-
-                DBManager DBManager = new DBManager();
-                DBManager.updateArticleCategoryInDatabase(article);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    public void categorizeArticles(List<Article> articles) {
+//        for (Article article : articles) {
+//            try {
+//                Category predictedCategory = classifyArticle(article.getContent());
+//                article.setCategory(predictedCategory);  // Set the category as the enum
+//
+//                DBManager DBManager = new DBManager();
+//                DBManager.updateArticleCategoryInDatabase(article);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
 
     private HttpResponse<String> sendRequestToHuggingFace(JSONObject jsonRequest) throws Exception {
@@ -151,51 +131,57 @@ public class ArticleCategorizer {
     }
 
 
-//    private void updateArticleCategoryInDatabase(Article article) {
-//        String sql = "UPDATE article SET category = ? WHERE articleID = ?";
+
+//    public void categorizeUnknownArticles1() {
+//        DBManager DBManager = new DBManager();
 //
-//        try (Connection dbConnection = MySQLConnection.connectToDatabase();
-//             PreparedStatement statement = dbConnection.prepareStatement(sql)) {
+//        List<Article> unknownArticles = DBManager.getArticlesWithUnknownCategory();
 //
-//            statement.setString(1, article.getCategory().name());
-//            statement.setInt(2, article.getArticleID());
+//        if (unknownArticles.isEmpty()) {
+//            System.out.println("No articles with 'UNKNOWN' category to categorize.");
+//            return;
+//        }
 //
-//            int rowsUpdated = statement.executeUpdate();
+//        for (Article article : unknownArticles) {
+//            try {
+//                Category predictedCategory = classifyArticle(article.getContent());
+//                article.setCategory(predictedCategory);
+//                DBManager.updateArticleCategoryInDatabase(article);
 //
-//            // Check if the update was successful
-//            if (rowsUpdated > 0) {
-//                System.out.println("Article category updated successfully.\n");
-//            } else {
-//                System.out.println("No article found with the given ID.");
+//            } catch (Exception e) {
+//                e.printStackTrace();
 //            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
 //        }
 //    }
 
-
     public void categorizeUnknownArticles() {
         DBManager DBManager = new DBManager();
-        //ArticleService articleService = new ArticleService();
+        List<Article> unknownArticles;
 
-        List<Article> unknownArticles = DBManager.getArticlesWithUnknownCategory();
+        do {
+            unknownArticles = DBManager.getArticlesWithUnknownCategory();
 
-        if (unknownArticles.isEmpty()) {
-            System.out.println("No articles with 'UNKNOWN' category to categorize.");
-            return;
-        }
-
-        for (Article article : unknownArticles) {
-            try {
-                Category predictedCategory = classifyArticle(article.getContent());
-                article.setCategory(predictedCategory);
-                DBManager.updateArticleCategoryInDatabase(article);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (unknownArticles.isEmpty()) {
+                System.out.println("\nNo articles with 'UNKNOWN' category to categorize.");
+                break;
             }
-        }
+
+            for (Article article : unknownArticles) {
+                try {
+                    Category predictedCategory = classifyArticle(article.getContent());
+                    article.setCategory(predictedCategory);
+
+                    // Update the article in the database
+                    DBManager.updateArticleCategoryInDatabase(article);
+                    System.out.println("Article \"" + article.getTitle() + "\" categorized as " + predictedCategory);
+
+                } catch (Exception e) {
+                    System.err.println("Error processing article \"" + article.getTitle() + "\": " + e.getMessage());
+                }
+            }
+        } while (!unknownArticles.isEmpty()); // Loop until no unknown articles remain
+
+        System.out.println("Categorization complete. All articles have been processed.");
     }
 
 

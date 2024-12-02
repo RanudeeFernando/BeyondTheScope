@@ -32,62 +32,11 @@ public class CategorizeArticlesController {
 
     }
 
-
-//    public void startCategorization() {
-//
-//        new Thread(() -> {
-//            ArticleCategorizer categorizer = new ArticleCategorizer();
-//            ArticleService articleService = new ArticleService();
-//
-//            List<Article> unknownArticles = articleService.getArticlesWithUnknownCategory();
-//
-//            if (unknownArticles.isEmpty()) {
-//                appendLog("No articles with 'UNKNOWN' category to categorize.");
-//                return;
-//            }
-//
-//            int processedCount = 0;
-//            int errorCount = 0;
-//            int defaultedToUnknownCount = 0;
-//
-//            for (Article article : unknownArticles) {
-//                try {
-//                    // Categorize article
-//                    Category predictedCategory = categorizer.classifyArticle(article.getContent());
-//
-//                    // Check if the category is UNKNOWN
-//                    if (predictedCategory == Category.UNKNOWN) {
-//                        appendLog("Article \"" + article.getTitle() + "\" defaulted to UNKNOWN.");
-//                        defaultedToUnknownCount++;
-//                    } else {
-//                        appendLog("Successfully categorized: \"" + article.getTitle() + "\" as " + predictedCategory + ".");
-//                        processedCount++;
-//                    }
-//
-//                    // Update the article in the database regardless of the outcome
-//                    article.setCategory(predictedCategory);
-//                    articleService.updateArticleCategoryInDatabase(article);
-//
-//                } catch (Exception e) {
-//                    // Log any errors
-//                    appendLog("Error processing article: \"" + article.getTitle() + "\" - " + e.getMessage());
-//                    errorCount++;
-//                }
-//            }
-//
-//            // Log completion summary
-//            appendLog("Categorization complete. Successfully categorized: " + processedCount +
-//                    ", Defaulted to UNKNOWN: " + defaultedToUnknownCount + ", Errors: " + errorCount);
-//        }).start();
-//    }
-
     public void startCategorization() {
         categorizeArticlesButton.setDisable(true); // Disable the button at the start
 
         new Thread(() -> {
             ArticleCategorizer categorizer = new ArticleCategorizer();
-
-            // ArticleService articleService = new ArticleService();
 
             DBManager DBManager = new DBManager();
 
@@ -127,7 +76,7 @@ public class CategorizeArticlesController {
             appendLog("Categorization complete. Successfully categorized: " + processedCount +
                     ", Defaulted to UNKNOWN: " + defaultedToUnknownCount + ", Errors: " + errorCount);
 
-            // Re-enable the button after completion
+
             Platform.runLater(() -> categorizeArticlesButton.setDisable(false));
 
         }).start();
