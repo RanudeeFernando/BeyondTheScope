@@ -20,17 +20,10 @@
          </image></ImageView>
       <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
          <menus>
-            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home ">
+            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Go Back">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goBackToHome" text="Go Back" />
+                  <MenuItem mnemonicParsing="false" onAction="#goBackToHome" text="Home" />
                </items></Menu>
-            <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="View History" />
-                  <MenuItem mnemonicParsing="false" text="Manage Preferences" />
-                  <MenuItem mnemonicParsing="false" text="Logout" />
-               </items>
-            </Menu>
          </menus>
       </MenuBar>
       <Label fx:id="titleLabel" layoutX="34.0" layoutY="175.0" prefHeight="28.0" prefWidth="1030.0" text="Label" wrapText="true">

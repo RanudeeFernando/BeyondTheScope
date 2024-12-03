@@ -18,32 +18,9 @@
          </image></ImageView>
       <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
          <menus>
-            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home ">
+            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Go Back">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goBackToHome" text="Go Back" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="For You" />
-            <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="View History" />
-                  <MenuItem mnemonicParsing="false" text="Liked Articles" />
-                  <MenuItem mnemonicParsing="false" text="Manage Preferences" />
-                  <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
-               </items>
-            </Menu>
-            <Menu fx:id="homeMenu1" mnemonicParsing="false" text="Categories">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Sports" />
-                  <MenuItem mnemonicParsing="false" text="Technology" />
-                  <MenuItem mnemonicParsing="false" text="AI" />
-                  <MenuItem mnemonicParsing="false" text="Health" />
-                  <MenuItem mnemonicParsing="false" text="Business" />
-                  <MenuItem mnemonicParsing="false" text="Nature" />
-                  <MenuItem mnemonicParsing="false" text="Politics" />
-                  <MenuItem mnemonicParsing="false" text="Science" />
-                  <MenuItem mnemonicParsing="false" text="Education" />
-                  <MenuItem mnemonicParsing="false" text="Entertainement" />
+                  <MenuItem mnemonicParsing="false" onAction="#goBackToHome" text="Home" />
                </items>
             </Menu>
          </menus>

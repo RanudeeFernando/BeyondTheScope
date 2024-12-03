@@ -22,14 +22,9 @@
       </ImageView>
       <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
          <menus>
-            <Menu fx:id="dashboardMenu" mnemonicParsing="false" text="Dashboard">
+            <Menu fx:id="dashboardMenu" mnemonicParsing="false" text="Go Back">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goBackToDashboard" text="Go Back" />
-               </items>
-            </Menu>
-            <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
-               <items>
-                  <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
+                  <MenuItem mnemonicParsing="false" onAction="#goBackToDashboard" text="Dashboard" />
                </items>
             </Menu>
          </menus>

@@ -26,12 +26,11 @@
       </ImageView>
       <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
          <menus>
-            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home ">
+            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Go Back">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goBackToHome" text="Go Back" />
+                  <MenuItem mnemonicParsing="false" onAction="#goBackToHome" text="Home" />
                </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="For You" />
          </menus>
       </MenuBar>
       <Label fx:id="titleLabel" layoutX="71.0" layoutY="188.0" prefHeight="28.0" prefWidth="985.0" text="Update Profile " wrapText="true">

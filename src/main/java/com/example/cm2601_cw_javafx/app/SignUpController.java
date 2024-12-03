@@ -7,33 +7,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SignUpController extends BaseController {
-
-    // When using csv change instance variable to manageUser
-    // private final ManageUser manageUser = new ManageUser();
-
-    // When using database - SQLite
-    // private final UserDatabaseManager userDatabaseManager = new UserDatabaseManager();
-
-    // When using database - MySQL
-   // private final RegularUserManager regularUserManager = new RegularUserManager();
-
     private final DBManager DBManager = new DBManager();
     private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
 
-
-    @FXML
-    private ImageView imageViewLogo;
     @FXML
     private TextField usernameField;
     @FXML
@@ -72,7 +57,7 @@ public class SignUpController extends BaseController {
         String result = systemUserManager.registerUser(username, password, confirmPassword, selectedCategories);
         showAlert(result);
 
-        // Clear fields if registration is successful
+
         if (result.equals("User successfully registered!")) {
             clearFields();
             navigateToLoginPage();
@@ -109,6 +94,7 @@ public class SignUpController extends BaseController {
         categoryEntertainment.setSelected(false);
     }
 
+
     private void navigateToLoginPage() {
 
         try {
@@ -121,6 +107,21 @@ public class SignUpController extends BaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to login page.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goBackToMain(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/main.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = signUpButton.getScene();
+            scene.setRoot(root);
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while redirecting to Main page.");
             e.printStackTrace();
         }
     }

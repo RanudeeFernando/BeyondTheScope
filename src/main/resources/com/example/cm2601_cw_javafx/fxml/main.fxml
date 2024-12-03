@@ -15,17 +15,17 @@
             <Image url="@../images/logo5.png" />
          </image></ImageView>
    
-                 <Label fx:id="welcomeText" layoutX="243.0" layoutY="150.0" prefHeight="136.0" prefWidth="614.0" text="Welcome to Our Personalized News Recommendation System!" textAlignment="CENTER" wrapText="true">
+                 <Label fx:id="welcomeText" layoutX="249.0" layoutY="196.0" prefHeight="136.0" prefWidth="614.0" text="Welcome to Our Personalized News Recommendation System!" textAlignment="CENTER" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-     <Button fx:id="signUpButton" layoutX="425.0" layoutY="340.0" onAction="#onSignUpButtonClick" prefHeight="70.0" prefWidth="250.0" text="Sign Up">
+     <Button fx:id="signUpButton" layoutX="425.0" layoutY="369.0" onAction="#onSignUpButtonClick" prefHeight="70.0" prefWidth="250.0" text="Sign Up">
          <font>
             <Font size="24.0" />
          </font>
       </Button>
-      <Button layoutX="425.0" layoutY="450.0" onAction="#onLoginButtonClick" prefHeight="70.0" prefWidth="250.0" text="Login">
+      <Button layoutX="425.0" layoutY="476.0" onAction="#onLoginButtonClick" prefHeight="70.0" prefWidth="250.0" text="Login">
          <font>
             <Font size="24.0" />
          </font>

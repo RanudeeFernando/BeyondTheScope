@@ -19,19 +19,24 @@
       <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
         <menus>
           <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home " />
-            <Menu mnemonicParsing="false" text="For You">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleViewRecommendations" text="Get Recommendations" />
-               </items></Menu>
           <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
             <items>
                 <MenuItem mnemonicParsing="false" onAction="#onUpdateProfileMenuItemClicked" text="Update Profile" />
               <MenuItem fx:id="viewHistoryMenuItem" mnemonicParsing="false" onAction="#onViewHistoryMenuItemClicked" text="View History" />
-                  <MenuItem mnemonicParsing="false" onAction="#onViewLikedArticlesMenuItemClicked" text="View Liked Articles" />
-                  <MenuItem mnemonicParsing="false" onAction="#onViewSkippedArticlesMenuItemClicked" text="View Skipped Articles" />
                   <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Rated">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onViewLikedArticlesMenuItemClicked" text="Liked Articles" />
+                  <MenuItem mnemonicParsing="false" onAction="#onViewSkippedArticlesMenuItemClicked" text="Skipped Articles" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="For You">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleViewRecommendations" text="Get Recommendations" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
       <ImageView fitHeight="585.0" fitWidth="1100.0" layoutY="165.0" pickOnBounds="true" />

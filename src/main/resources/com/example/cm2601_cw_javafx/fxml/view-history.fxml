@@ -18,16 +18,9 @@
          </image></ImageView>
       <MenuBar layoutY="122.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
          <menus>
-            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home ">
+            <Menu fx:id="homeMenu" mnemonicParsing="false" text="Go Back">
                <items>
-                  <MenuItem fx:id="goBackMenuItem" mnemonicParsing="false" onAction="#goBackToHome" text="Go Back" />
-               </items>
-            </Menu>
-            <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="View History" />
-                  <MenuItem mnemonicParsing="false" text="Manage Preferences" />
-                  <MenuItem mnemonicParsing="false" text="Logout" />
+                  <MenuItem fx:id="goBackMenuItem" mnemonicParsing="false" onAction="#goBackToHome" text="Home" />
                </items>
             </Menu>
          </menus>
