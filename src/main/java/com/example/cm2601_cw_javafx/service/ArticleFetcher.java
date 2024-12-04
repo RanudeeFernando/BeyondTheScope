@@ -49,7 +49,7 @@ public class ArticleFetcher {
                     String urlField = articleJson.optString("url", null);
                     String publishedDate = articleJson.optString("publishedAt", null);
 
-                    if (isValidArticle(title, sourceName, author, content, urlField) && !DBManager.isDuplicateArticle(urlField)) {
+                    if (isValidArticle(title, sourceName, author, content, urlField) && !DBManager.isDuplicateArticleQuery(urlField)) {
                         Timestamp publishedDateTimestamp = parsePublishedDate(publishedDate);
                         Category category = Category.UNKNOWN;
 
@@ -70,7 +70,7 @@ public class ArticleFetcher {
     public static void saveArticles(List<Article> articles) {
         for (Article article : articles) {
             try {
-                DBManager.addArticleToDatabase(article);
+                DBManager.insertArticleQuery(article);
             } catch (Exception e) {
                 System.err.println("Failed to save article: " + article.getTitle());
                 e.printStackTrace();

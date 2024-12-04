@@ -46,7 +46,7 @@ public class UpdateArticleCategoryController {
     }
 
     private void loadArticles() {
-       List<Article> articles = DBManager.getAllArticles();
+       List<Article> articles = DBManager.getAllArticlesQuery();
 
         articleListView.getItems().clear();
         for (Article article : articles) {
@@ -65,7 +65,7 @@ public class UpdateArticleCategoryController {
                 return;
             }
 
-            Article article = DBManager.getArticleByID(articleID);
+            Article article = DBManager.getArticleByIDQuery(articleID);
 
             if (article == null) {
                 showAlert("Article ID " + articleID + " not found.");

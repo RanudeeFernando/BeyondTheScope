@@ -44,7 +44,7 @@ public class ViewFullArticleController extends BaseController {
     private int currentArticleId;
 
     private final DBManager dbManager = new DBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
+    //private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
 
 
     @Override

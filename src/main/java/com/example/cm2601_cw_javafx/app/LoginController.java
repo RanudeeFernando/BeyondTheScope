@@ -28,8 +28,7 @@ public class LoginController extends BaseController {
     @FXML
     private Button loginButton;
 
-    private final DBManager dBManager = new DBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(dBManager);
+    private final SystemUserManager systemUserManager = new SystemUserManager();
 
 
 //    @FXML
@@ -136,7 +135,6 @@ public class LoginController extends BaseController {
                 showAlert("An error occurred while retrieving user information.");
             }
         } else {
-
             showAlert(authResult);
         }
 
@@ -154,7 +152,6 @@ public class LoginController extends BaseController {
             Scene currentScene = usernameField.getScene();
             currentScene.setRoot(root);
         } catch (IOException e) {
-            e.printStackTrace();
             showAlert("An error occurred while navigating to the Admin Dashboard.");
         }
     }
@@ -170,7 +167,6 @@ public class LoginController extends BaseController {
             Scene currentScene = usernameField.getScene();
             currentScene.setRoot(root);
         } catch (IOException e) {
-            e.printStackTrace();
             showAlert("An error occurred while navigating to the Home page.");
         }
     }

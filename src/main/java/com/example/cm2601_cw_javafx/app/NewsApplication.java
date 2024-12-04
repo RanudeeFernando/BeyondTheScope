@@ -65,7 +65,7 @@ public class NewsApplication extends Application {
 
                     for (Article article : fetchedArticles) {
                         try {
-                            DBManager.addArticleToDatabase(article);
+                            DBManager.insertArticleQuery(article);
                         } catch (Exception e) {
                             System.out.println("Failed to save article: " + article.getTitle());
                             e.printStackTrace();

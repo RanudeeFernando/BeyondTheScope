@@ -158,7 +158,7 @@ public class ArticleCategorizer {
         List<Article> unknownArticles;
 
         do {
-            unknownArticles = DBManager.getArticlesWithUnknownCategory();
+            unknownArticles = DBManager.getArticlesWithUnknownCategoryQuery();
 
             if (unknownArticles.isEmpty()) {
                 System.out.println("\nNo articles with 'UNKNOWN' category to categorize.");
@@ -171,7 +171,7 @@ public class ArticleCategorizer {
                     article.setCategory(predictedCategory);
 
                     // Update the article in the database
-                    DBManager.updateArticleCategoryInDatabase(article);
+                    DBManager.updateArticleCategoryQuery(article);
                     System.out.println("Article \"" + article.getTitle() + "\" categorized as " + predictedCategory);
 
                 } catch (Exception e) {

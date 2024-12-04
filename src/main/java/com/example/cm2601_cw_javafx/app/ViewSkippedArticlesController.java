@@ -23,8 +23,9 @@ public class ViewSkippedArticlesController extends BaseController {
     private ListView<String> skippedArticlesListView;
 
     User user;
-    private final DBManager dbManager = new DBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
+
+    //private final DBManager dbManager = new DBManager();
+    //private final SystemUserManager systemUserManager = new SystemUserManager();
 
     @Override
     public void setUser(User user) {

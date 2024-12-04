@@ -17,7 +17,7 @@ import java.util.List;
 
 public class SignUpController extends BaseController {
     private final DBManager DBManager = new DBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
+    private final SystemUserManager systemUserManager = new SystemUserManager();
 
     @FXML
     private TextField usernameField;
@@ -58,7 +58,7 @@ public class SignUpController extends BaseController {
         showAlert(result);
 
 
-        if (result.equals("User successfully registered!")) {
+        if (result.equals("User successfully registered as: " + username)) {
             clearFields();
             navigateToLoginPage();
         }

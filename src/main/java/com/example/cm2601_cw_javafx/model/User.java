@@ -27,10 +27,7 @@ public class User extends SystemUser {
         this.selectedCategories = selectedCategories;
     }
 
-    @Override
-    public String getRole() {
-        return "USER";
-    }
+
 
 
 
@@ -58,19 +55,20 @@ public class User extends SystemUser {
 
     // ----------------------------
 
-    public List<Article> getLikedArticles(int userId) throws SQLException {
-        likedArticles = DBManager.getArticlesByInteraction(userId, "LIKE");
+    public List<Article> getLikedArticles(int userID) throws SQLException {
+        likedArticles = DBManager.getArticlesByInteractionQuery(userID, "LIKE");
         return likedArticles;
     }
 
+
     public List<Article> getSkippedArticles(int userID) throws SQLException {
-        skippedArticles = DBManager.getArticlesByInteraction(userID, "SKIP");
+        skippedArticles = DBManager.getArticlesByInteractionQuery(userID, "SKIP");
         return skippedArticles;
     }
 
 
     public List<ViewedArticle> getViewedArticles(int userId) {
-        viewedArticles = DBManager.getViewedArticles(userId);
+        viewedArticles = DBManager.getViewedArticlesQuery(userId);
         return viewedArticles;
     }
 
@@ -199,7 +197,7 @@ public class User extends SystemUser {
         }
 
         // Check the database for past interactions if not found in the list
-        return DBManager.hasInteraction(getUserID(), article.getArticleID(), "LIKE");
+        return DBManager.findInteractionQuery(getUserID(), article.getArticleID(), "LIKE");
 
     }
 
@@ -212,7 +210,7 @@ public class User extends SystemUser {
         }
 
         // Check the database for past interactions if not found in the list
-        return DBManager.hasInteraction(getUserID(), article.getArticleID(), "SKIP");
+        return DBManager.findInteractionQuery(getUserID(), article.getArticleID(), "SKIP");
 
     }
 
@@ -229,7 +227,7 @@ public class User extends SystemUser {
 
         if (!isInLikedList) {
             likedArticles.add(article);
-            DBManager.addInteraction(getUserID(), article.getArticleID(), "LIKE");
+            DBManager.addInteractionQuery(getUserID(), article.getArticleID(), "LIKE");
         }
     }
 
@@ -241,7 +239,7 @@ public class User extends SystemUser {
             }
         }
 
-        DBManager.removeInteraction(getUserID(), article.getArticleID());
+        DBManager.removeInteractionQuery(getUserID(), article.getArticleID());
     }
 
     public void skipArticle(Article article) {
@@ -256,7 +254,7 @@ public class User extends SystemUser {
         if (!isInSkippedList) {
             skippedArticles.add(article);
 
-            DBManager.addInteraction(getUserID(), article.getArticleID(), "SKIP");
+            DBManager.addInteractionQuery(getUserID(), article.getArticleID(), "SKIP");
         }
     }
 
@@ -268,7 +266,45 @@ public class User extends SystemUser {
             }
         }
 
-        DBManager.removeInteraction(getUserID(), article.getArticleID());
+        DBManager.removeInteractionQuery(getUserID(), article.getArticleID());
+    }
+
+    public List<Category> getSelectedCategories(int userID) {
+        try {
+            selectedCategories = DBManager.getUserCategoriesQuery(userID);
+        } catch (SQLException e) {
+            System.out.println("Error retrieving selected categories for user: " + getUsername());
+
+        }
+        return selectedCategories;
+    }
+
+    public void updateSelectedCategories(int userID, List<Category> newCategories) {
+        try {
+            DBManager.updateUserCategoriesQuery(userID, newCategories);
+
+            selectedCategories.clear();
+            selectedCategories.addAll(newCategories);
+
+            System.out.println("Selected categories updated successfully for user: " + getUsername());
+        } catch (SQLException e) {
+            System.out.println("Error updating selected categories for user: " + getUsername());
+
+        }
+    }
+
+    public void updatePassword(int userID, String newPassword) {
+        try {
+            // Update the password in the database
+            DBManager.updatePasswordQuery(userID, newPassword);
+            // Update the password in memory
+            setPassword(newPassword);
+
+            System.out.println("Password updated successfully for user: " + getUsername());
+        } catch (SQLException e) {
+            System.out.println("Error updating password for user: " + getUsername());
+            e.printStackTrace();
+        }
     }
 
 

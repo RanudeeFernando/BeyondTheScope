@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Control;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -51,7 +50,7 @@ public class HomeController extends BaseController {
                 String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
                 if (selectedTitle != null) {
 
-                    Article selectedArticle = DBManager.getAllArticles()
+                    Article selectedArticle = DBManager.getAllArticlesQuery()
                             .stream()
                             .filter(article -> article.getTitle().equals(selectedTitle))
                             .findFirst()
@@ -68,7 +67,7 @@ public class HomeController extends BaseController {
     }
 
     private void loadArticles() {
-        List<Article> articles = DBManager.getAllArticles();
+        List<Article> articles = DBManager.getAllArticlesQuery();
         List<String> titles = articles.stream()
                 .map(Article::getTitle)
                 .collect(Collectors.toList());
@@ -77,7 +76,7 @@ public class HomeController extends BaseController {
 
     public void addArticleToViewedHistory(Article article) {
         int userId = loggedInUser.getUserID();
-        DBManager.addViewedArticle(userId, article.getArticleID());
+        DBManager.insertViewedArticleQuery(userId, article.getArticleID());
 
     }
 

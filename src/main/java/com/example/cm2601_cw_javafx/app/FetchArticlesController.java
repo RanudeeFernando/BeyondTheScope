@@ -3,14 +3,12 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
-import com.example.cm2601_cw_javafx.service.ArticleFetcher;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 
@@ -46,7 +44,7 @@ public class FetchArticlesController {
                     //ArticleFetcher.saveArticles(articles);
                     for (Article article : articles) {
                         try {
-                            DBManager.addArticleToDatabase(article);
+                            DBManager.insertArticleQuery(article);
                         } catch (Exception e) {
                             System.err.println("Failed to save article: " + article.getTitle());
                             e.printStackTrace();

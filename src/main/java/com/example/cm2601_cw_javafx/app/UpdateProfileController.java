@@ -45,8 +45,7 @@ public class UpdateProfileController extends BaseController{
     @FXML
     private CheckBox categoryEducation;
 
-    private final DBManager dbManager = new DBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
+    private final SystemUserManager systemUserManager = new SystemUserManager();
     //User currentUser = (User) SessionService.getInstance().getLoggedInUser();
 
     User currentUser;
@@ -70,13 +69,13 @@ public class UpdateProfileController extends BaseController{
 
     public void initializeUserDetails(){
         usernameField.setText(currentUser.getUsername());
-        try {
-            List<Category> userCategories = DBManager.getUserCategories(currentUser.getUserID());
-            setSelectedCategories(userCategories);
-            System.out.println(userCategories);
-        } catch (SQLException e) {
-            showError("Error loading user preferences: " + e.getMessage());
-        }
+
+        //List<Category> userCategories = DBManager.getUserCategories(currentUser.getUserID());
+        List<Category> userCategories = currentUser.getSelectedCategories(currentUser.getUserID());
+
+        setSelectedCategories(userCategories);
+        System.out.println(userCategories);
+
 
     }
 
@@ -101,7 +100,7 @@ public class UpdateProfileController extends BaseController{
     }
 
     @FXML
-    private void updateInterests() throws SQLException {
+    private void updateInterests() {
         List<Category> selectedCategories = new ArrayList<>();
         if (categorySports.isSelected()) selectedCategories.add(Category.SPORTS);
         if (categoryBusiness.isSelected()) selectedCategories.add(Category.BUSINESS);
@@ -116,7 +115,8 @@ public class UpdateProfileController extends BaseController{
             return;
         }
 
-        DBManager.updateUserPreferences(currentUser.getUserID(), selectedCategories);
+        //DBManager.updateUserCategories(currentUser.getUserID(), selectedCategories);
+        currentUser.updateSelectedCategories(currentUser.getUserID(), selectedCategories);
         showSuccess("Interests updated successfully!");
     }
 
@@ -143,7 +143,7 @@ public class UpdateProfileController extends BaseController{
         String confirmPassword = confirmPasswordField.getText();
 
         try {
-            if (!DBManager.validateCurrentPassword(currentUser.getUsername(), currentPassword)) {
+            if (!DBManager.equalsCurrentPasswordQuery(currentUser.getUsername(), currentPassword)) {
                 showError("Current password is incorrect.");
                 return;
             }
@@ -153,16 +153,24 @@ public class UpdateProfileController extends BaseController{
                 return;
             }
 
-            if (!newPassword.equals(confirmPassword)) {
-                showError("Passwords do not match.");
+            if (currentPassword.equals(newPassword)){
+                showError("New password must not be the same as current password.");
                 return;
             }
 
-            DBManager.updatePassword(currentUser.getUserID(), newPassword);
+            if (!newPassword.equals(confirmPassword)) {
+                showError("New password and Confirm password does not match.");
+                return;
+            }
+
+            //DBManager.updatePassword(currentUser.getUserID(), newPassword);
+
+            currentUser.updatePassword(currentUser.getUserID(), newPassword);
+
             showSuccess("Password updated successfully!");
             currentPasswordField.clear();
             newPasswordField.clear();
-            currentPasswordField.clear();
+            confirmPasswordField.clear();
 
         } catch (SQLException e) {
             showError("Error updating password: " + e.getMessage());

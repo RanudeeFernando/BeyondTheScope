@@ -3,7 +3,6 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.User;
 import com.example.cm2601_cw_javafx.service.RecommendationModel;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,7 +37,7 @@ public class GetRecommendationsController extends BaseController{
             if (recommendation.getUserId().equals(String.valueOf(user.getUserID()))) {
                 hasRecommendations = true;
 
-                String articleName = DBManager.getArticleNameById(recommendation.getItemId());
+                String articleName = DBManager.getArticleNameByIdQuery(recommendation.getItemId());
 
                 String displayText = "Article: " + articleName + ", Score: " + recommendation.getValue();
 

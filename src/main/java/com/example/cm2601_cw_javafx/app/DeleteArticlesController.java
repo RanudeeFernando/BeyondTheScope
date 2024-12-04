@@ -41,7 +41,7 @@ public class DeleteArticlesController {
         try {
 
             articleListView.getItems().clear();
-            List<Article> articles = DBManager.getAllArticles();
+            List<Article> articles = DBManager.getAllArticlesQuery();
 
             if (articles.isEmpty()) {
                 showAlert("No articles found in the database.");
@@ -56,6 +56,40 @@ public class DeleteArticlesController {
         }
     }
 
+//    @FXML
+//    private void deleteArticle() {
+//        try {
+//            String articleIDText = articleIDTextField.getText().trim();
+//
+//            if (articleIDText.isEmpty()) {
+//                showAlert("Please enter a valid Article ID.");
+//                return;
+//            }
+//
+//            //Admin admin = (Admin) SessionService.getInstance().getLoggedInUser();
+//
+//            boolean isDeleted = admin.deleteArticle(articleIDText);
+//
+//            if (isDeleted) {
+//                showAlert("Article with ID " + articleIDText + " has been successfully deleted.");
+//                loadArticles();
+//                articleIDTextField.clear();
+//            } else {
+//                showAlert("No article found with the given ID: " + articleIDText);
+//                articleIDTextField.clear();
+//            }
+//
+//        } catch (NumberFormatException e) {
+//            showAlert("Invalid Article ID. Please enter a numeric value.");
+//
+//        } catch (IllegalArgumentException e) {
+//            showAlert(e.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            showAlert("An error occurred while deleting the article. Please try again later.");
+//        }
+//    }
+
     @FXML
     private void deleteArticle() {
         try {
@@ -66,26 +100,33 @@ public class DeleteArticlesController {
                 return;
             }
 
-            //Admin admin = (Admin) SessionService.getInstance().getLoggedInUser();
+            int articleID = Integer.parseInt(articleIDText);
 
-            boolean isDeleted = admin.deleteArticle(articleIDText);
+            // Fetch the Article object based on the articleID
+            Article article = DBManager.getArticleByIDQuery(articleID); // Assume this method fetches an Article by ID.
 
-            if (isDeleted) {
-                showAlert("Article with ID " + articleIDText + " has been successfully deleted.");
-                loadArticles();
-                articleIDTextField.clear();
-            } else {
+            if (article == null) {
                 showAlert("No article found with the given ID: " + articleIDText);
                 articleIDTextField.clear();
+                return;
+            }
+
+            // Admin admin = (Admin) SessionService.getInstance().getLoggedInUser();
+            boolean isDeleted = admin.deleteArticle(article); // Use the updated deleteArticle method.
+
+            if (isDeleted) {
+                showAlert("Article \"" + article.getTitle() + "\" has been successfully deleted.");
+                loadArticles(); // Refresh the list of articles.
+                articleIDTextField.clear();
+            } else {
+                showAlert("Failed to delete the article. Please try again.");
             }
 
         } catch (NumberFormatException e) {
             showAlert("Invalid Article ID. Please enter a numeric value.");
-
         } catch (IllegalArgumentException e) {
             showAlert(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             showAlert("An error occurred while deleting the article. Please try again later.");
         }
     }

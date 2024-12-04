@@ -75,8 +75,8 @@ public class Article {
         this.url = url;
     }
 
-    public void setPublishedDate(Timestamp publishedDate) {
-        this.publishedDate = publishedDate;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     // Optionally, override toString() for better display
