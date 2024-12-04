@@ -3,7 +3,6 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
-//import com.example.cm2601_cw_javafx.ArticleService;
 import com.example.cm2601_cw_javafx.model.Category;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,9 +27,9 @@ public class UpdateArticleCategoryController {
     @FXML
     private TextArea logArea;
 
-    DBManager DBManager = new DBManager();
 
     Admin admin;
+
     public void setAdmin(Admin admin) {
         this.admin = admin;
 
@@ -47,9 +46,7 @@ public class UpdateArticleCategoryController {
     }
 
     private void loadArticles() {
-        // ArticleService articleService = new ArticleService();
-
-        List<Article> articles = DBManager.getAllArticles();
+       List<Article> articles = DBManager.getAllArticles();
 
         articleListView.getItems().clear();
         for (Article article : articles) {
@@ -68,8 +65,6 @@ public class UpdateArticleCategoryController {
                 return;
             }
 
-            //ArticleService articleService = new ArticleService();
-
             Article article = DBManager.getArticleByID(articleID);
 
             if (article == null) {
@@ -78,7 +73,7 @@ public class UpdateArticleCategoryController {
             }
 
             article.setCategory(selectedCategory);
-            DBManager.updateArticleCategoryInDatabase(article);
+            admin.updateArticleCategory(article);
 
             showAlert("Article ID " + articleID + " updated to category " + selectedCategory + ".");
             articleIdField.clear();

@@ -34,75 +34,17 @@ public class HomeController extends BaseController {
 
     private final DBManager DBManager = new DBManager();
 
-    //User loggedInUser = (User) SessionService.getInstance().getLoggedInUser();
-
     User loggedInUser;
 
     @Override
     public void setUser(User user) {
         super.setUser(user);
         this.loggedInUser = user;
-        initializeUserSpecificData();
     }
-
-    private void initializeUserSpecificData() {
-        if (loggedInUser != null) {
-            System.out.println("User set in HomeController: " + loggedInUser.getUsername());
-            loadArticles();
-        } else {
-            System.err.println("Error: User is null in HomeController.");
-        }
-    }
-
-
-//    public void initialize() {
-//
-//        loadArticles();
-//
-//        int userID = loggedInUser.getUserID();
-//        String name = loggedInUser.getUsername();
-//
-//        System.out.println(name);
-//
-//
-//        // Set up double-click event for ListView items
-//        articleListView.setOnMouseClicked(event -> {
-//            if (event.getClickCount() == 2) {
-//                String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
-//                if (selectedTitle != null) {
-//
-//                    Article selectedArticle = DBManager.getAllArticles(userID)
-//                            .stream()
-//                            .filter(article -> article.getTitle().equals(selectedTitle))
-//                            .findFirst()
-//                            .orElse(null);
-//
-//                    if (selectedArticle != null) {
-//                        viewFullArticle(selectedArticle);
-//                    }
-//
-//                    // Add the article to the user's viewed history
-//                    addArticleToViewedHistory(selectedArticle);
-//                }
-//            }
-//        });
-//    }
-
-//    private void loadArticles() {
-//        int userID = loggedInUser.getUserID();
-//        List<Article> articles = DBManager.getAllArticles(userID);
-//        List<String> titles = articles.stream()
-//                .map(Article::getTitle)
-//                .collect(Collectors.toList());
-//        articleListView.setItems(FXCollections.observableArrayList(titles));
-//    }
-
-
 
     public void initialize() {
 
         loadArticles();
-
 
         articleListView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
@@ -224,8 +166,6 @@ public class HomeController extends BaseController {
     // Event handler for "Logout" menu item
     @FXML
     private void handleLogout() {
-        // Clear the session
-        //SessionService.getInstance().clearSession();
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/main.fxml"));
@@ -247,7 +187,7 @@ public class HomeController extends BaseController {
         Parent root = loader.load();
 
         GetRecommendationsController controller = loader.getController();
-        //controller.setLoggedInUserId(loggedInUser.getUserID());
+
         controller.setUser(loggedInUser);
         controller.initializeRecommendedArticles();
 

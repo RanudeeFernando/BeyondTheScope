@@ -45,8 +45,8 @@ public class UpdateProfileController extends BaseController{
     @FXML
     private CheckBox categoryEducation;
 
-    private final DBManager DBManager = new DBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(DBManager);
+    private final DBManager dbManager = new DBManager();
+    private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
     //User currentUser = (User) SessionService.getInstance().getLoggedInUser();
 
     User currentUser;
@@ -71,7 +71,7 @@ public class UpdateProfileController extends BaseController{
     public void initializeUserDetails(){
         usernameField.setText(currentUser.getUsername());
         try {
-            List<Category> userCategories = DBManager.getUserPreferences(currentUser.getUserID());
+            List<Category> userCategories = DBManager.getUserCategories(currentUser.getUserID());
             setSelectedCategories(userCategories);
             System.out.println(userCategories);
         } catch (SQLException e) {

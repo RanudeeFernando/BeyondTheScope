@@ -4,14 +4,13 @@ import java.sql.Timestamp;
 
 public class Article {
     private int articleID;
-    private String title;
+    private final String title;
     private String content;
     private Category category;
     private String author;
     private String source;
     private String url;
     private Timestamp publishedDate;
-    private Timestamp viewedAt;
 
     // Constructor
     public Article(int articleID, String title, String content, Category category, String author, String source, String url, Timestamp publishedDate) {
@@ -25,10 +24,10 @@ public class Article {
         this.publishedDate = publishedDate;
     }
 
-    public Article(int articleID, String title, String source){
+
+    public Article(int articleID, String title){
         this.articleID = articleID;
         this.title = title;
-        this.source = source;
     }
 
     // Getters and setters

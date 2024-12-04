@@ -14,11 +14,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ViewLikedArticlesController extends BaseController {
-    @FXML
-    private ImageView imageViewLogo;
+
     @FXML
     private AnchorPane rootPane;
 
@@ -26,7 +26,8 @@ public class ViewLikedArticlesController extends BaseController {
     private ListView<String> likedArticleListView;
 
     private final DBManager dbManager = new DBManager();
-    private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
+
+    //private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
 
     User user;
 
@@ -39,44 +40,19 @@ public class ViewLikedArticlesController extends BaseController {
     // Method to initialize and load liked articles
     public void initializeUserLikedArticles(int userId) {
 
-        List<Article> likedArticles = systemUserManager.getLikedArticles(userId);
+        List<Article> likedArticles;
+        try {
+            likedArticles = user.getLikedArticles(userId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         for (Article article : likedArticles) {
             likedArticleListView.getItems().add(article.getTitle());
         }
 
-//        likedArticleListView.setOnMouseClicked((MouseEvent event) -> {
-//            String selectedTitle = likedArticleListView.getSelectionModel().getSelectedItem();
-//            Article selectedArticle = likedArticles.stream()
-//                    .filter(article -> article.getTitle().equals(selectedTitle))
-//                    .findFirst()
-//                    .orElse(null);
-//
-//            if (selectedArticle != null) {
-//                openArticleDetails(selectedArticle);
-//            }
-//
-//        });
-
-
-
     }
 
-//    private void openArticleDetails(Article article) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-full-article.fxml"));
-//            Parent root = loader.load();
-//
-//            ViewFullArticleController controller = loader.getController();
-//            controller.setArticleDetails(article);
-//
-//            Scene currentScene = likedArticleListView.getScene();
-//            currentScene.setRoot(root);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void goBackToHome() {
         try {

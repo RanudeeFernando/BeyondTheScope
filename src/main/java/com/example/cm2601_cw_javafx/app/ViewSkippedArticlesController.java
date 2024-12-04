@@ -14,22 +14,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ViewSkippedArticlesController extends BaseController {
 
     @FXML
-    private ImageView imageViewLogo;
-
-    @FXML
     private ListView<String> skippedArticlesListView;
 
-
-    //User user = (User) SessionService.getInstance().getLoggedInUser();
-
     User user;
-
-
     private final DBManager dbManager = new DBManager();
     private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
 
@@ -38,36 +31,14 @@ public class ViewSkippedArticlesController extends BaseController {
         this.user = user;
     }
 
-//    public void initialize() {
-//        loadSkippedArticles();
-//    }
-//
-//    private void loadSkippedArticles() {
-//        int currentUserId = user.getUserID();
-//        List<Article> skippedArticles = systemUserManager.getSkippedArticles(currentUserId);
-//
-//        for (Article article : skippedArticles) {
-//            skippedArticlesListView.getItems().add(article.getTitle());
-//        }
-//
-//        skippedArticlesListView.setOnMouseClicked((MouseEvent event) -> {
-//            String selectedTitle = skippedArticlesListView.getSelectionModel().getSelectedItem();
-//            Article selectedArticle = skippedArticles.stream()
-//                    .filter(article -> article.getTitle().equals(selectedTitle))
-//                    .findFirst()
-//                    .orElse(null);
-//
-//            if (selectedArticle != null) {
-//                openArticleDetails(selectedArticle);
-//            }
-//
-//        });
-//
-//    }
-
     public void initializeSkippedArticles(int userID) {
 
-        List<Article> skippedArticles = systemUserManager.getSkippedArticles(userID);
+        List<Article> skippedArticles;
+        try {
+            skippedArticles = user.getSkippedArticles(userID);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         for (Article article : skippedArticles) {
             skippedArticlesListView.getItems().add(article.getTitle());
@@ -75,22 +46,6 @@ public class ViewSkippedArticlesController extends BaseController {
 
 
     }
-
-//    private void openArticleDetails(Article article) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-full-article.fxml"));
-//            Parent root = loader.load();
-//
-//            ViewFullArticleController controller = loader.getController();
-//            controller.setArticleDetails(article);
-//
-//            Scene currentScene = skippedArticlesListView.getScene();
-//            currentScene.setRoot(root);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void goBackToHome() {
         try {

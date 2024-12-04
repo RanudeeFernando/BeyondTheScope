@@ -1,5 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.service.ArticleCategorizer;
 import com.example.cm2601_cw_javafx.service.ArticleFetcher;
@@ -8,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class NewsApplication extends Application {
     private static ScheduledExecutorService fetchScheduler;
     private static ScheduledExecutorService categorizeScheduler;
+
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -39,7 +43,7 @@ public class NewsApplication extends Application {
         // Displaying the stage
         stage.show();
 
-        startArticleFetchScheduler();
+        //startArticleFetchScheduler();
         startCategorizationScheduler();
 
     }
@@ -56,13 +60,24 @@ public class NewsApplication extends Application {
                     System.out.println("No new articles were fetched.");
                 } else {
                     fetchedArticles.forEach(System.out::println);
-                    ArticleFetcher.saveArticles(fetchedArticles);
+
+                    //ArticleFetcher.saveArticles(fetchedArticles);
+
+                    for (Article article : fetchedArticles) {
+                        try {
+                            DBManager.addArticleToDatabase(article);
+                        } catch (Exception e) {
+                            System.out.println("Failed to save article: " + article.getTitle());
+                            e.printStackTrace();
+                        }
+                    }
+
                     System.out.println("\nFetched and saved new articles.");
                 }
 
             } catch (Exception e) {
                 System.out.println("\nError during article fetching: " + e.getMessage());
-                e.printStackTrace();
+
             }
         }, 0, 6, TimeUnit.HOURS); // Fetch every 6 hours
     }
@@ -77,12 +92,11 @@ public class NewsApplication extends Application {
                 categorizer.categorizeUnknownArticles();
                 System.out.println("\nCategorization complete.");
             } catch (Exception e) {
-                System.err.println("\nError during article categorization: " + e.getMessage());
-                e.printStackTrace();
+                System.out.println("\nError during article categorization: " + e.getMessage());
+
             }
         }, 15, 60 * 60, TimeUnit.SECONDS); // Categorize every hour
     }
-
 
     @Override
     public void stop() throws Exception {

@@ -23,7 +23,7 @@ public class DeleteArticlesController {
     private ListView<String> articleListView;
     @FXML
     private TextField articleIDTextField;
-    private final DBManager DBManager = new DBManager();
+
 
     Admin admin;
 
@@ -68,7 +68,7 @@ public class DeleteArticlesController {
 
             //Admin admin = (Admin) SessionService.getInstance().getLoggedInUser();
 
-            boolean isDeleted = admin.deleteArticleByID(articleIDText);
+            boolean isDeleted = admin.deleteArticle(articleIDText);
 
             if (isDeleted) {
                 showAlert("Article with ID " + articleIDText + " has been successfully deleted.");

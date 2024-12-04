@@ -24,7 +24,7 @@ import java.util.List;
 public class RecommendationModel {
     private static final String CSV_FILE_PATH = "user_interactions.csv";
 
-    public static void generateCSV() {
+    public static void generateUserPreferenceCSV() {
         String query = """
         SELECT
             v.userID,
@@ -45,40 +45,6 @@ public class RecommendationModel {
         GROUP BY v.userID, v.articleID;
     """;
 
-//        String query = """
-//    SELECT
-//        v.userID,
-//        v.articleID,
-//        (COUNT(DISTINCT v.viewedAt) * 1.0 +
-//         COALESCE(i.like_count, 0) * 3.0) AS full_weight
-//    FROM user_viewed_article v
-//    LEFT JOIN (
-//        SELECT
-//            userID,
-//            articleID,
-//            SUM(CASE WHEN interactionType = 'LIKE' THEN 1 ELSE 0 END) AS like_count
-//        FROM user_article_interaction
-//        GROUP BY userID, articleID
-//    ) i ON v.userID = i.userID AND v.articleID = i.articleID
-//    GROUP BY v.userID, v.articleID;
-//    """;
-
-//        String query = """
-//    SELECT
-//        userID,
-//        articleID,
-//        (COALESCE(like_count, 0) * 1.0 +
-//         COALESCE(skip_count, 0) * -1.0) AS full_weight
-//    FROM (
-//        SELECT
-//            userID,
-//            articleID,
-//            SUM(CASE WHEN interactionType = 'LIKE' THEN 1 ELSE 0 END) AS like_count,
-//            SUM(CASE WHEN interactionType = 'SKIP' THEN 1 ELSE 0 END) AS skip_count
-//        FROM user_article_interaction
-//        GROUP BY userID, articleID
-//    ) interaction_summary;
-//    """;
 
         try (Connection conn = DBManager.connectToDatabase();
              Statement stmt = conn.createStatement();
@@ -101,12 +67,12 @@ public class RecommendationModel {
         }
     }
 
+
     public static List<RecommendedItem> generateRecommendations() {
         List<RecommendedItem> recommendations = new ArrayList<>();
 
         try {
-            // Generate CSV file
-            generateCSV();
+            generateUserPreferenceCSV();
 
             // Configuration
             Configuration conf = new Configuration();
@@ -119,7 +85,6 @@ public class RecommendationModel {
 
             // Add required configuration for UserKNNRecommender
             conf.set("rec.neighbors.knn.number", "10");
-            // conf.set("rec.similarity.class", "cosine"); // Similarity metric
 
             // Data Model
             DataModel dataModel = new TextDataModel(conf);
@@ -140,16 +105,20 @@ public class RecommendationModel {
             recommender.recommend(context);
 
             // Retrieve recommendations
-            recommendations = recommender.getRecommendedList();
+            List<RecommendedItem> allRecommendations = recommender.getRecommendedList();
+
+            // Filter out negative scores
+            for (RecommendedItem recommendation : allRecommendations) {
+                if (recommendation.getValue() > 2) {
+                    recommendations.add(recommendation);
+                }
+            }
 
             for (RecommendedItem recommendation : recommendations) {
                 System.out.println("User: " + recommendation.getUserId() +
                         ", Item: " + recommendation.getItemId() +
                         ", Score: " + recommendation.getValue());
             }
-
-
-
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -159,56 +128,64 @@ public class RecommendationModel {
         return recommendations;
     }
 
-//    public static void main(String[] args) {
-//        try {
-//            // Generate CSV file
-//            generateCSV();
-//
-//            // Configuration
-//            Configuration conf = new Configuration();
-//            conf.set("dfs.data.dir", ".");
-//            conf.set("data.model.splitter", "ratio");
-//            conf.set("data.splitter.trainset.ratio", "0.7");
-//            conf.set("data.column.format", "UIR");
-//            conf.set("data.model.format", "text");
-//            conf.set("data.input.path", CSV_FILE_PATH);
-//
-//            // Add required configuration for UserKNNRecommender
-//            conf.set("rec.neighbors.knn.number", "10");
-//            conf.set("rec.similarity.class", "cosine"); // Similarity metric
-//
-//            // Data Model
-//            DataModel dataModel = new TextDataModel(conf);
-//            dataModel.buildDataModel();
-//
-//            // Initialize similarity metric
-//            RecommenderSimilarity similarity = new PCCSimilarity();
-//            similarity.buildSimilarityMatrix(dataModel);
-//
-//            // Create the RecommenderContext
-//            RecommenderContext context = new RecommenderContext(conf, dataModel);
-//            context.setSimilarity(similarity); // Set the similarity object
-//
-//            // Initialize the recommender
-//            Recommender recommender = new UserKNNRecommender();
-//            recommender.setContext(context);
-//
-//            // Train and generate recommendations
-//            recommender.recommend(context);
-//
-//            // Retrieve recommendations
-//            List<RecommendedItem> recommendations = recommender.getRecommendedList();
-//            for (RecommendedItem recommendation : recommendations) {
-//                System.out.println("User: " + recommendation.getUserId() +
-//                        ", Item: " + recommendation.getItemId() +
-//                        ", Score: " + recommendation.getValue());
-//            }
-//
-//        } catch (Exception e) {
-//            System.err.println("Error: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-//
-//    }
+    public static void main(String[] args) {
+        List<RecommendedItem> recommendations = new ArrayList<>();
+        try {
+            // Generate CSV file
+            generateUserPreferenceCSV();
+
+            // Configuration
+            Configuration conf = new Configuration();
+            conf.set("dfs.data.dir", ".");
+            conf.set("data.model.splitter", "ratio");
+            conf.set("data.splitter.trainset.ratio", "0.7");
+            conf.set("data.column.format", "UIR");
+            conf.set("data.model.format", "text");
+            conf.set("data.input.path", CSV_FILE_PATH);
+
+            // Add required configuration for UserKNNRecommender
+            conf.set("rec.neighbors.knn.number", "10");
+            conf.set("rec.similarity.class", "cosine"); // Similarity metric
+
+            // Data Model
+            DataModel dataModel = new TextDataModel(conf);
+            dataModel.buildDataModel();
+
+            // Initialize similarity metric
+            RecommenderSimilarity similarity = new PCCSimilarity();
+            similarity.buildSimilarityMatrix(dataModel);
+
+            // Create the RecommenderContext
+            RecommenderContext context = new RecommenderContext(conf, dataModel);
+            context.setSimilarity(similarity); // Set the similarity object
+
+            // Initialize the recommender
+            Recommender recommender = new UserKNNRecommender();
+            recommender.setContext(context);
+
+            // Train and generate recommendations
+            recommender.recommend(context);
+
+            // Retrieve recommendations
+            List<RecommendedItem> allRecommendations = recommender.getRecommendedList();
+
+            for (RecommendedItem recommendation : allRecommendations) {
+                if (recommendation.getValue() > 1) {
+                    recommendations.add(recommendation);
+                }
+            }
+
+            for (RecommendedItem recommendation : recommendations) {
+                System.out.println("User: " + recommendation.getUserId() +
+                        ", Item: " + recommendation.getItemId() +
+                        ", Score: " + recommendation.getValue());
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+    }
 }

@@ -29,8 +29,8 @@
 //    }
 //
 //    // Method to retrieve all viewed articles by a user
-//    public List<UserViewedArticle> getViewedArticles(int userId) {
-//        List<UserViewedArticle> viewedArticles = new ArrayList<>();
+//    public List<ViewedArticle> getViewedArticles(int userId) {
+//        List<ViewedArticle> viewedArticles = new ArrayList<>();
 //        String querySQL = "SELECT a.articleID, a.title, a.content, a.author, a.source, a.url, a.publishedDate, u.viewedAt " +
 //                "FROM user_viewed_article u " +
 //                "JOIN article a ON u.articleID = a.articleID " +
@@ -53,8 +53,8 @@
 //
 //                // Create the Article object
 //                // Article article = new Article(articleId, title, content, null, author, source, url, publishedDate);
-//                // Wrap it in a UserViewedArticle
-//                UserViewedArticle userViewedArticle = new UserViewedArticle(articleId, title, content, null, author, source, url, publishedDate, viewedAt);
+//                // Wrap it in a ViewedArticle
+//                ViewedArticle userViewedArticle = new ViewedArticle(articleId, title, content, null, author, source, url, publishedDate, viewedAt);
 //                viewedArticles.add(userViewedArticle);
 //            }
 //        } catch (SQLException e) {

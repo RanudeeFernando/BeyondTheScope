@@ -98,11 +98,11 @@ public class ArticleFetcher {
     }
 
 
-    public static void main(String[] args) {
-        List<Article> articles = fetchArticles();
-        saveArticles(articles);
-        articles.forEach(System.out::println);
-    }
+//    public static void main(String[] args) {
+//        List<Article> articles = fetchArticles();
+//        saveArticles(articles);
+//        articles.forEach(System.out::println);
+//    }
 
 }
 

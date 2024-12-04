@@ -1,5 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
+import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.service.ArticleFetcher;
@@ -37,13 +38,22 @@ public class FetchArticlesController {
         new Thread(() -> {
             try {
                 appendLog("Starting article fetching process...");
-                List<Article> articles = ArticleFetcher.fetchArticles();
+                List<Article> articles = admin.fetchArticlesManually();
 
                 if (articles.isEmpty()) {
                     appendLog("No new articles were fetched from the API.");
                 } else {
-                    ArticleFetcher.saveArticles(articles);
+                    //ArticleFetcher.saveArticles(articles);
+                    for (Article article : articles) {
+                        try {
+                            DBManager.addArticleToDatabase(article);
+                        } catch (Exception e) {
+                            System.err.println("Failed to save article: " + article.getTitle());
+                            e.printStackTrace();
+                        }
+                    }
                     appendLog("Fetched " + articles.size() + " articles. Saving to database...");
+
 
                     Platform.runLater(() -> {
                         for (Article article : articles) {
@@ -59,11 +69,12 @@ public class FetchArticlesController {
                 e.printStackTrace();
 
             } finally {
-
                 Platform.runLater(() -> fetchArticlesButton.setDisable(false));
             }
+
         }).start();
     }
+
 
     private void appendLog(String message) {
         Platform.runLater(() -> logArea.appendText(message + "\n"));

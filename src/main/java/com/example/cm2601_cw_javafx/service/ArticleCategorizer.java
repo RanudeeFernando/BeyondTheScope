@@ -54,7 +54,7 @@ public class ArticleCategorizer {
 
         } catch (Exception e) {
             // Handle the case where the response is not valid JSON
-            System.out.println("\nError parsing JSON response: " + e.getMessage() + "\n");
+            System.out.println("Error parsing JSON response: " + e.getMessage() + "\n");
             return Category.UNKNOWN;
         }
     }
@@ -155,7 +155,6 @@ public class ArticleCategorizer {
 //    }
 
     public void categorizeUnknownArticles() {
-        DBManager DBManager = new DBManager();
         List<Article> unknownArticles;
 
         do {
@@ -176,10 +175,10 @@ public class ArticleCategorizer {
                     System.out.println("Article \"" + article.getTitle() + "\" categorized as " + predictedCategory);
 
                 } catch (Exception e) {
-                    System.err.println("Error processing article \"" + article.getTitle() + "\": " + e.getMessage());
+                    System.out.println("Error processing article \"" + article.getTitle() + "\": " + e.getMessage());
                 }
             }
-        } while (!unknownArticles.isEmpty()); // Loop until no unknown articles remain
+        } while (!unknownArticles.isEmpty());
 
         System.out.println("Categorization complete. All articles have been processed.");
     }

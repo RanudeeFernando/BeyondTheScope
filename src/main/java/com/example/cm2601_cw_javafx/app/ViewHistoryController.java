@@ -3,7 +3,7 @@ package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.User;
-import com.example.cm2601_cw_javafx.model.UserViewedArticle;
+import com.example.cm2601_cw_javafx.model.ViewedArticle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,11 +11,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +24,8 @@ public class ViewHistoryController extends BaseController {
     @FXML
     private AnchorPane rootPane;
     @FXML
-    private ImageView imageViewLogo;
-    @FXML
     private ListView<String> articleListView;
 
-    // private HistoryService historyService;
 
     User user;
 
@@ -41,24 +38,26 @@ public class ViewHistoryController extends BaseController {
 
 
     public void initializeUserViewHistory(int userId) {
-        Connection connection = DBManager.connectToDatabase();
 
-        if (connection != null) {
+        try {
+            DBManager dbManager = new DBManager();
 
-            DBManager DBManager = new DBManager();
+            // Retrieve the viewed articles for the user
+            List<ViewedArticle> viewedArticles = user.getViewedArticles(userId);
 
-            List<UserViewedArticle> viewedArticles = DBManager.getViewedArticles(userId);
-
+            // Convert the list to an ObservableList for the ListView
             ObservableList<String> listViewItems = FXCollections.observableArrayList(
-                    viewedArticles.stream().map(UserViewedArticle::toListViewString).collect(Collectors.toList())
+                    viewedArticles.stream().map(ViewedArticle::toString).collect(Collectors.toList())
             );
 
             // Set the retrieved articles to the ListView
             articleListView.setItems(listViewItems);
 
-        } else {
-            System.out.println("Failed to initialize user view history due to database connection issues.");
+        } catch (Exception e) {
+            System.out.println("An unexpected error occurred while initializing the view history: " + e.getMessage());
+
         }
+
     }
 
     // Method to return to the home view

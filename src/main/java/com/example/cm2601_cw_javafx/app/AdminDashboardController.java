@@ -52,23 +52,23 @@ public class AdminDashboardController {
         }
     }
 
-    @FXML
-    private void handleCategorizeArticles() {
-        System.out.println("Admin " + loggedInAdmin.getUsername() + " is selected the categorize article option.");
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/categorize-articles.fxml"));
-            Parent root = loader.load();
-
-            CategorizeArticlesController controller = loader.getController();
-            controller.setAdmin(loggedInAdmin);
-
-            Scene currentScene = rootPane.getScene();
-            currentScene.setRoot(root);
-        } catch (IOException e) {
-            System.out.println("Error while navigating to the Categorize Articles page.");
-            e.printStackTrace();
-        }
-    }
+//    @FXML
+//    private void handleCategorizeArticles() {
+//        System.out.println("Admin " + loggedInAdmin.getUsername() + " is selected the categorize article option.");
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/categorize-articles.fxml"));
+//            Parent root = loader.load();
+//
+//            CategorizeArticlesController controller = loader.getController();
+//            controller.setAdmin(loggedInAdmin);
+//
+//            Scene currentScene = rootPane.getScene();
+//            currentScene.setRoot(root);
+//        } catch (IOException e) {
+//            System.out.println("Error while navigating to the Categorize Articles page.");
+//            e.printStackTrace();
+//        }
+//    }
 
     @FXML
     private void handleUpdateCategory() {

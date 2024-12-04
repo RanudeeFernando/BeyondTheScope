@@ -2,8 +2,8 @@ package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.User;
-
 import com.example.cm2601_cw_javafx.service.RecommendationModel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,64 +21,42 @@ public class GetRecommendationsController extends BaseController{
     @FXML
     private AnchorPane rootPane;
 
-    //User user = (User) SessionService.getInstance().getLoggedInUser();
-    //private int loggedInUserId = user.getUserID();
-
     User user;
-
-
-//    public void setLoggedInUserId(int userId) {
-//        this.loggedInUserId = userId;
-//    }
 
     @Override
     public void setUser(User user) {
         this.user = user;
-    }
 
-//    public void initialize() {
-//        List<RecommendedItem> recommendations = RecommendationModel.generateRecommendations();
-//
-//        for (RecommendedItem recommendation : recommendations) {
-//            if (recommendation.getUserId().equals(String.valueOf(loggedInUserId))) {
-//                //String articleName = ArticleService.getArticleNameById(recommendation.getItemId());
-//
-//                String articleName = DBManager.getArticleNameById(recommendation.getItemId());
-//
-//                String displayText = "Article: " + articleName +
-//                        ", Score: " + recommendation.getValue();
-//
-//                System.out.println("Article id: " + recommendation.getItemId());
-//
-//                recommendationListView.getItems().add(displayText);
-//            }
-//        }
-//    }
+    }
 
     public void initializeRecommendedArticles() {
         List<RecommendedItem> recommendations = RecommendationModel.generateRecommendations();
 
+        boolean hasRecommendations = false;
+
         for (RecommendedItem recommendation : recommendations) {
             if (recommendation.getUserId().equals(String.valueOf(user.getUserID()))) {
-
-                //String articleName = ArticleService.getArticleNameById(recommendation.getItemId());
+                hasRecommendations = true;
 
                 String articleName = DBManager.getArticleNameById(recommendation.getItemId());
 
-                String displayText = "Article: " + articleName +
-                        ", Score: " + recommendation.getValue();
-
-                System.out.println("Article id: " + recommendation.getItemId());
+                String displayText = "Article: " + articleName + ", Score: " + recommendation.getValue();
 
                 recommendationListView.getItems().add(displayText);
             }
         }
+
+        if (!hasRecommendations) {
+            showAlert("We couldn't generate recommendations for you. Please interact with articles so we can understand your preferences better!");
+
+        }
     }
+
+
 
 
     public void goBackToHome() {
         try {
-            // Load the home page FXML file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
