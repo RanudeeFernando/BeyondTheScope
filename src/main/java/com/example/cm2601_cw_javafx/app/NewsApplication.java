@@ -43,7 +43,7 @@ public class NewsApplication extends Application {
         // Displaying the stage
         stage.show();
 
-        //startArticleFetchScheduler();
+        startArticleFetchScheduler();
         startCategorizationScheduler();
 
     }
@@ -109,6 +109,8 @@ public class NewsApplication extends Application {
         if (categorizeScheduler != null && !categorizeScheduler.isShutdown()) {
             categorizeScheduler.shutdownNow();
         }
+
+        DBManager.shutdownExecutor();
 
         System.out.println("\nApplication stopped, and schedulers shut down.");
 

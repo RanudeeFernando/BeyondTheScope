@@ -5,12 +5,16 @@ import com.example.cm2601_cw_javafx.model.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DBManager {
 
     private static final String URL = "jdbc:mysql://localhost:3306/news_recommendation_system_db";
     private static final String USER = "root";
     private static final String PASSWORD = "ranu2004";
+
+    private static final ExecutorService executor = Executors.newFixedThreadPool(2);
 
 
     public static Connection connectToDatabase() {
@@ -24,21 +28,152 @@ public class DBManager {
         }
     }
 
-    public static int insertUserQuery(String username, String password) throws SQLException {
-        String sql = "INSERT INTO user (username, password) VALUES (?, ?)";
-        try (Connection connection = connectToDatabase();
-             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+    public static void addInteractionQuery(int userId, int articleId, String interactionType) {
+        executor.submit(() -> {
+            String sql = "INSERT INTO user_article_interaction (userID, articleID, interactionType) VALUES (?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE interactionType = ?";
+            try (Connection connection = connectToDatabase();
+                 PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, username);
-            statement.setString(2, password);
-            statement.executeUpdate();
-
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                return generatedKeys.getInt(1);
+                statement.setInt(1, userId);
+                statement.setInt(2, articleId);
+                statement.setString(3, interactionType);
+                statement.setString(4, interactionType); // Update if already exists
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                // Handle the SQLException
+                System.err.println("Error while adding interaction: " + e.getMessage());
+                e.printStackTrace();
             }
-            throw new SQLException("Failed to retrieve userID.");
-        }
+        });
+    }
+
+    public static void removeInteractionQuery(int userId, int articleId){
+        executor.submit(() -> {
+            String sql = "DELETE FROM user_article_interaction WHERE userID = ? AND articleID = ?";
+            try (Connection connection = connectToDatabase();
+                 PreparedStatement statement = connection.prepareStatement(sql)) {
+
+                statement.setInt(1, userId);
+                statement.setInt(2, articleId);
+                statement.executeUpdate();
+            }
+            catch (SQLException e) {
+                System.out.println("Error while removing interaction: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void updateArticleCategoryQuery(Article article) {
+        executor.submit(() -> {
+            String fetchCategoryIDSql = "SELECT categoryID FROM category WHERE categoryName = ?";
+            String updateArticleSql = "UPDATE article SET categoryID = ? WHERE articleID = ?";
+
+            try (Connection dbConnection = connectToDatabase();
+                 PreparedStatement fetchCategoryIDStmt = dbConnection.prepareStatement(fetchCategoryIDSql);
+                 PreparedStatement updateArticleStmt = dbConnection.prepareStatement(updateArticleSql)) {
+
+                // Fetch the categoryID using the predicted category name
+                fetchCategoryIDStmt.setString(1, article.getCategory().name());
+                ResultSet resultSet = fetchCategoryIDStmt.executeQuery();
+
+                if (resultSet.next()) {
+                    int categoryID = resultSet.getInt("categoryID");
+
+                    // Update the article with the new categoryID
+                    updateArticleStmt.setInt(1, categoryID);
+                    updateArticleStmt.setInt(2, article.getArticleID());
+                    int rowsUpdated = updateArticleStmt.executeUpdate();
+
+                    if (rowsUpdated > 0) {
+                        System.out.println("Article category updated successfully for: " + article.getTitle());
+                    } else {
+                        System.out.println("No article found with the given ID.");
+                    }
+                } else {
+                    System.out.println("Category not found in the database for: " + article.getTitle());
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void insertViewedArticleQuery(int userId, int articleId) {
+        executor.submit(() -> {
+            String insertSQL = "INSERT INTO user_viewed_article (userID, articleID, viewedAt) VALUES (?, ?, ?)";
+
+            try (Connection dbConnection = connectToDatabase();
+                 PreparedStatement preparedStatement = dbConnection.prepareStatement(insertSQL)) {
+                preparedStatement.setInt(1, userId);
+                preparedStatement.setInt(2, articleId);
+                preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Error while inserting viewed article: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void insertArticleQuery(Article article) {
+        executor.submit(() -> {
+            String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, categoryID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            try (Connection dbConnection = connectToDatabase();
+                 PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+                statement.setString(1, article.getTitle());
+                statement.setString(2, article.getSource());
+                statement.setString(3, article.getAuthor());
+                statement.setString(4, article.getContent());
+                statement.setString(5, article.getUrl());
+                statement.setTimestamp(6, article.getPublishedDate());
+
+                int categoryID = getCategoryIDQuery(article.getCategory().name());
+                statement.setInt(7, categoryID);
+
+                int rowsUpdated = statement.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    ResultSet generatedKeys = statement.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        int generatedArticleID = generatedKeys.getInt(1);
+                        article.setArticleID(generatedArticleID);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+
+
+    public static int insertUserQuery(String username, String password) {
+
+            String sql = "INSERT INTO user (username, password) VALUES (?, ?)";
+            try (Connection connection = connectToDatabase();
+                 PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+                statement.setString(1, username);
+                statement.setString(2, password);
+                statement.executeUpdate();
+
+                ResultSet generatedKeys = statement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+                else return -1;
+            }
+            catch (SQLException e) {
+                System.out.println("Error inserting user preferences: " + e.getMessage());
+                return -1;
+            }
+
     }
 
     public static boolean checkUsernameExistsQuery(String username) throws SQLException {
@@ -55,7 +190,7 @@ public class DBManager {
         return false;
     }
 
-    public static SystemUser getUserQuery(String username) throws SQLException {
+    public static SystemUser getUserQuery(String username){
         String sql = "SELECT userID, password, role FROM user WHERE username = ?";
         try (Connection connection = connectToDatabase();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -77,6 +212,8 @@ public class DBManager {
                     throw new IllegalArgumentException("Unknown role: " + role);
                 }
             }
+        } catch (SQLException e) {
+            System.out.println("Error inserting user preferences: " + e.getMessage());
         }
         return null;
     }
@@ -174,40 +311,6 @@ public class DBManager {
         return categories;
     }
 
-
-
-    public static void addInteractionQuery(int userId, int articleId, String interactionType) {
-        String sql = "INSERT INTO user_article_interaction (userID, articleID, interactionType) VALUES (?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE interactionType = ?";
-        try (Connection connection = connectToDatabase();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, userId);
-            statement.setInt(2, articleId);
-            statement.setString(3, interactionType);
-            statement.setString(4, interactionType); // Update if already exists
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            // Handle the SQLException
-            System.err.println("Error while adding interaction: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public static void removeInteractionQuery(int userId, int articleId){
-        String sql = "DELETE FROM user_article_interaction WHERE userID = ? AND articleID = ?";
-        try (Connection connection = connectToDatabase();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, userId);
-            statement.setInt(2, articleId);
-            statement.executeUpdate();
-        }
-        catch (SQLException e) {
-            System.out.println("Error while removing interaction: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
     public static boolean findInteractionQuery(int userId, int articleId, String interactionType) {
         String sql = "SELECT COUNT(*) FROM user_article_interaction WHERE userID = ? AND articleID = ? AND interactionType = ?";
@@ -347,39 +450,6 @@ public class DBManager {
         return articles;
     }
 
-    public static void updateArticleCategoryQuery(Article article) {
-        String fetchCategoryIDSql = "SELECT categoryID FROM category WHERE categoryName = ?";
-        String updateArticleSql = "UPDATE article SET categoryID = ? WHERE articleID = ?";
-
-        try (Connection dbConnection = connectToDatabase();
-             PreparedStatement fetchCategoryIDStmt = dbConnection.prepareStatement(fetchCategoryIDSql);
-             PreparedStatement updateArticleStmt = dbConnection.prepareStatement(updateArticleSql)) {
-
-            // Fetch the categoryID using the predicted category name
-            fetchCategoryIDStmt.setString(1, article.getCategory().name());
-            ResultSet resultSet = fetchCategoryIDStmt.executeQuery();
-
-            if (resultSet.next()) {
-                int categoryID = resultSet.getInt("categoryID");
-
-                // Update the article with the new categoryID
-                updateArticleStmt.setInt(1, categoryID);
-                updateArticleStmt.setInt(2, article.getArticleID());
-                int rowsUpdated = updateArticleStmt.executeUpdate();
-
-                if (rowsUpdated > 0) {
-                    System.out.println("Article category updated successfully for: " + article.getTitle());
-                } else {
-                    System.out.println("No article found with the given ID.");
-                }
-            } else {
-                System.out.println("Category not found in the database for: " + article.getTitle());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static Article getArticleByIDQuery(int articleId) {
         String sql = "SELECT a.*, c.categoryName FROM article a " +
@@ -435,21 +505,6 @@ public class DBManager {
         return articleName;
     }
 
-    public void insertViewedArticleQuery(int userId, int articleId) {
-        String insertSQL = "INSERT INTO user_viewed_article (userID, articleID, viewedAt) VALUES (?, ?, ?)";
-
-        try (Connection dbConnection = connectToDatabase();
-             PreparedStatement preparedStatement = dbConnection.prepareStatement(insertSQL)) {
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, articleId);
-            preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Error while inserting viewed article: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
     // Method to retrieve all viewed articles by a user
     public static List<ViewedArticle> getViewedArticlesQuery(int userId) {
@@ -482,36 +537,6 @@ public class DBManager {
     }
 
 
-    public static void insertArticleQuery(Article article) {
-        String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, categoryID) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection dbConnection = connectToDatabase();
-             PreparedStatement statement = dbConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-
-            statement.setString(1, article.getTitle());
-            statement.setString(2, article.getSource());
-            statement.setString(3, article.getAuthor());
-            statement.setString(4, article.getContent());
-            statement.setString(5, article.getUrl());
-            statement.setTimestamp(6, article.getPublishedDate());
-
-            int categoryID = getCategoryIDQuery(article.getCategory().name());
-            statement.setInt(7, categoryID);
-
-            int rowsUpdated = statement.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                ResultSet generatedKeys = statement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int generatedArticleID = generatedKeys.getInt(1);
-                    article.setArticleID(generatedArticleID);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private static int getCategoryIDQuery(String categoryName) throws SQLException {
         String sql = "SELECT categoryID FROM Category WHERE categoryName = ?";
         try (Connection connection = connectToDatabase();
@@ -542,6 +567,11 @@ public class DBManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void shutdownExecutor() {
+        executor.shutdown();
+        System.out.println("Executor service shut down.");
     }
 
     // ---------------------
