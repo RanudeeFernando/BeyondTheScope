@@ -24,9 +24,14 @@
             <Menu fx:id="dashboardMenu" mnemonicParsing="false" text="Dashboard" />
          </menus>
       </MenuBar>
-      <Text layoutX="278.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Admin Dashboard!" wrappingWidth="576.5367279052734">
+      <Text fx:id="welcomeLabel" layoutX="262.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="576.5367279052734">
          <font>
             <Font size="36.0" />
+         </font>
+      </Text>
+      <Text layoutX="315.0" layoutY="284.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Admin Dashboard!" textAlignment="CENTER" wrappingWidth="466.9368133544922">
+         <font>
+            <Font size="28.0" />
          </font>
       </Text>
       <GridPane layoutX="174.0" layoutY="315.0" prefHeight="283.0" prefWidth="749.0">

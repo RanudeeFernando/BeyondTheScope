@@ -4,11 +4,13 @@ import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -20,8 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class HomeController extends BaseController {
-
-    public MenuItem logoutMenuItem;
+    @FXML
+    private MenuItem logoutMenuItem;
     @FXML
     private ImageView imageViewLogo;
     @FXML
@@ -29,19 +31,23 @@ public class HomeController extends BaseController {
     @FXML
     private Menu profileMenu;
     @FXML
-    private ListView<String> articleListView; // Add ListView
+    private ListView<String> articleListView;
+    @FXML
+    private Label welcomeLabel;
 
-    private final DBManager DBManager = new DBManager();
+    //private final DBManager DBManager = new DBManager();
 
-    User loggedInUser;
+    User currentUser;
 
     @Override
-    public void setUser(User user) {
-        super.setUser(user);
-        this.loggedInUser = user;
+    public void setCurrentUser(User currentUser) {
+        super.setCurrentUser(currentUser);
+        this.currentUser = currentUser;
     }
 
     public void initialize() {
+
+        Platform.runLater(() -> welcomeLabel.setText("Hello, " + currentUser.getUsername() + "!"));
 
         loadArticles();
 
@@ -75,7 +81,7 @@ public class HomeController extends BaseController {
     }
 
     public void addArticleToViewedHistory(Article article) {
-        int userId = loggedInUser.getUserID();
+        int userId = currentUser.getUserID();
         DBManager.insertViewedArticleQuery(userId, article.getArticleID());
 
     }
@@ -88,7 +94,7 @@ public class HomeController extends BaseController {
 
 
             ViewFullArticleController controller = loader.getController();
-            controller.setUser(loggedInUser);
+            controller.setCurrentUser(currentUser);
             controller.setArticleDetails(article);
 
             Scene currentScene = articleListView.getScene();
@@ -109,8 +115,8 @@ public class HomeController extends BaseController {
 
             ViewHistoryController controller = loader.getController();
 
-            controller.setUser(loggedInUser);
-            controller.initializeUserViewHistory(loggedInUser.getUserID());
+            controller.setCurrentUser(currentUser);
+            controller.initializeUserViewHistory(currentUser.getUserID());
 
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
@@ -129,9 +135,9 @@ public class HomeController extends BaseController {
             Parent root = loader.load();
 
             ViewLikedArticlesController controller = loader.getController();
-            controller.setUser(loggedInUser);
+            controller.setCurrentUser(currentUser);
 
-            controller.initializeUserLikedArticles(loggedInUser.getUserID());
+            controller.initializeUserLikedArticles(currentUser.getUserID());
 
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
@@ -150,8 +156,8 @@ public class HomeController extends BaseController {
             Parent root = loader.load();
 
             ViewSkippedArticlesController controller = loader.getController();
-            controller.setUser(loggedInUser);
-            controller.initializeSkippedArticles(loggedInUser.getUserID());
+            controller.setCurrentUser(currentUser);
+            controller.initializeSkippedArticles(currentUser.getUserID());
 
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
@@ -162,14 +168,12 @@ public class HomeController extends BaseController {
         }
     }
 
-    // Event handler for "Logout" menu item
     @FXML
     private void handleLogout() {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/main.fxml"));
             Parent root = loader.load();
-
 
             Scene currentScene = articleListView.getScene();
             currentScene.setRoot(root);
@@ -187,7 +191,7 @@ public class HomeController extends BaseController {
 
         GetRecommendationsController controller = loader.getController();
 
-        controller.setUser(loggedInUser);
+        controller.setCurrentUser(currentUser);
         controller.initializeRecommendedArticles();
 
         Stage stage = (Stage) articleListView.getScene().getWindow();
@@ -203,7 +207,7 @@ public class HomeController extends BaseController {
             Parent root = loader.load();
 
             UpdateProfileController controller = loader.getController();
-            controller.setUser(loggedInUser);
+            controller.setCurrentUser(currentUser);
             controller.initializeUserDetails();
 
             Scene currentScene = articleListView.getScene();

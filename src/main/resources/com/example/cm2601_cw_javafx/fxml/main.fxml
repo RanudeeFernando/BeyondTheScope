@@ -20,12 +20,12 @@
             <Font size="36.0" />
          </font>
       </Label>
-     <Button fx:id="signUpButton" layoutX="425.0" layoutY="369.0" onAction="#onSignUpButtonClick" prefHeight="70.0" prefWidth="250.0" text="Sign Up">
+     <Button fx:id="signUpButton" layoutX="425.0" layoutY="369.0" onAction="#goToSignupPage" prefHeight="70.0" prefWidth="250.0" text="Sign Up">
          <font>
             <Font size="24.0" />
          </font>
       </Button>
-      <Button layoutX="425.0" layoutY="476.0" onAction="#onLoginButtonClick" prefHeight="70.0" prefWidth="250.0" text="Login">
+      <Button layoutX="425.0" layoutY="476.0" onAction="#goToLoginPage" prefHeight="70.0" prefWidth="250.0" text="Login">
          <font>
             <Font size="24.0" />
          </font>

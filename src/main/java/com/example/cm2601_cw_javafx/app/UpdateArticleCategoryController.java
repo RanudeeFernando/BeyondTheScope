@@ -28,10 +28,10 @@ public class UpdateArticleCategoryController {
     private TextArea logArea;
 
 
-    Admin admin;
+    Admin currentAdmin;
 
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
+    public void setCurrentAdmin(Admin currentAdmin) {
+        this.currentAdmin = currentAdmin;
 
     }
 
@@ -48,14 +48,18 @@ public class UpdateArticleCategoryController {
     private void loadArticles() {
        List<Article> articles = DBManager.getAllArticlesQuery();
 
-        articleListView.getItems().clear();
-        for (Article article : articles) {
-            articleListView.getItems().add("ID: " + article.getArticleID() + " | Title: " + article.getTitle() + " | Category: " + article.getCategory());
+        if (articles.isEmpty()) {
+            showAlert("No articles found in the database.");
+        } else {
+            articleListView.getItems().clear();
+            for (Article article : articles) {
+                articleListView.getItems().add("ID: " + article.getArticleID() + " | Title: " + article.getTitle() + " | Category: " + article.getCategory());
+            }
         }
     }
 
     @FXML
-    private void handleUpdateCategory() {
+    private void onUpdateCategoryButtonClick() {
         try {
             int articleID = Integer.parseInt(articleIdField.getText());
 
@@ -73,7 +77,7 @@ public class UpdateArticleCategoryController {
             }
 
             article.setCategory(selectedCategory);
-            admin.updateArticleCategory(article);
+            currentAdmin.updateArticleCategory(article);
 
             showAlert("Article ID " + articleID + " updated to category " + selectedCategory + ".");
             articleIdField.clear();
@@ -87,9 +91,6 @@ public class UpdateArticleCategoryController {
         }
     }
 
-    private void appendLog(String message) {
-        logArea.appendText(message + "\n");
-    }
 
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -106,7 +107,7 @@ public class UpdateArticleCategoryController {
             Parent root = loader.load();
 
             AdminDashboardController controller = loader.getController();
-            controller.setAdmin(admin);
+            controller.setAdmin(currentAdmin);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

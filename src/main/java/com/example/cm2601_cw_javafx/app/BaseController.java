@@ -6,8 +6,8 @@ import javafx.scene.control.Alert;
 public class BaseController {
     private User user;
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCurrentUser(User currentUser) {
+        this.user = currentUser;
     }
 
     protected User getUser() {

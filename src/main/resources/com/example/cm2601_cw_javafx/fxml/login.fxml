@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -15,7 +18,16 @@
          <image>
             <Image url="@../images/logo5.png" />
          </image></ImageView>
-      <Text layoutX="374.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back!" wrappingWidth="351.2033500671387">
+      <MenuBar layoutY="124.0" prefHeight="33.0" prefWidth="1100.0" stylesheets="@../css/menu_bar.css">
+         <menus>
+            <Menu fx:id="goBackMenu" mnemonicParsing="false" text="Go Back">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#goBackToMain" text="Main Page" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <Text layoutX="374.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back!" wrappingWidth="351.2033500671387">
          <font>
             <Font size="48.0" />
          </font>

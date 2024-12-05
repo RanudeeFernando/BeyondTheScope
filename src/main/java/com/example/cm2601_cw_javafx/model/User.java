@@ -67,8 +67,8 @@ public class User extends SystemUser {
     }
 
 
-    public List<ViewedArticle> getViewedArticles(int userId) {
-        viewedArticles = DBManager.getViewedArticlesQuery(userId);
+    public List<ViewedArticle> getViewedArticles(int userID) {
+        viewedArticles = DBManager.getViewedArticlesQuery(userID);
         return viewedArticles;
     }
 

@@ -40,10 +40,15 @@
         </menus>
       </MenuBar>
       <ImageView fitHeight="585.0" fitWidth="1100.0" layoutY="165.0" pickOnBounds="true" />
-      <ListView fx:id="articleListView" layoutX="42.0" layoutY="244.0" prefHeight="487.0" prefWidth="1016.0" stylesheets="@../css/menu_bar.css" />
-      <Label layoutX="42.0" layoutY="192.0" prefHeight="30.0" prefWidth="754.0" text="Catch the latest updates from Beyond the Scope – Home to the most critical news!">
+      <ListView fx:id="articleListView" layoutX="42.0" layoutY="289.0" prefHeight="442.0" prefWidth="1016.0" stylesheets="@../css/menu_bar.css" />
+      <Label layoutX="42.0" layoutY="241.0" prefHeight="30.0" prefWidth="754.0" text="Catch the latest updates from Beyond the Scope – Home to the most critical news!">
          <font>
             <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="welcomeLabel" layoutX="42.0" layoutY="181.0" prefHeight="30.0" prefWidth="754.0">
+         <font>
+            <Font size="36.0" />
          </font>
       </Label>
    </children>

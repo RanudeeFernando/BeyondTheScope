@@ -45,7 +45,7 @@
             <Font size="14.0" />
          </font>
       </TextField>
-      <Button layoutX="487.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleUpdateCategory" prefHeight="35.0" prefWidth="146.0" text="Update Category">
+      <Button layoutX="487.0" layoutY="270.0" mnemonicParsing="false" onAction="#onUpdateCategoryButtonClick" prefHeight="35.0" prefWidth="146.0" text="Update Category">
          <font>
             <Font size="14.0" />
          </font>

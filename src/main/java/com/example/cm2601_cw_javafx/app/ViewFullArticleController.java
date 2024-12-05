@@ -4,7 +4,6 @@ import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
 
-import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -48,8 +47,8 @@ public class ViewFullArticleController extends BaseController {
 
 
     @Override
-    public void setUser(User user) {
-        this.user = user;
+    public void setCurrentUser(User currentUser) {
+        this.user = currentUser;
     }
 
 
@@ -155,7 +154,7 @@ public class ViewFullArticleController extends BaseController {
             Parent root = loader.load();
 
             HomeController homeController = loader.getController();
-            homeController.setUser(user);
+            homeController.setCurrentUser(user);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

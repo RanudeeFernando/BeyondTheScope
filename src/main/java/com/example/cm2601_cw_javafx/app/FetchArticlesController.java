@@ -23,9 +23,9 @@ public class FetchArticlesController {
     @FXML
     private Button fetchArticlesButton;
 
-    Admin admin;
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
+    Admin currentAdmin;
+    public void setCurrentAdmin(Admin currentAdmin) {
+        this.currentAdmin = currentAdmin;
 
     }
 
@@ -36,7 +36,7 @@ public class FetchArticlesController {
         new Thread(() -> {
             try {
                 appendLog("Starting article fetching process...");
-                List<Article> articles = admin.fetchArticlesManually();
+                List<Article> articles = currentAdmin.fetchArticlesManually();
 
                 if (articles.isEmpty()) {
                     appendLog("No new articles were fetched from the API.");
@@ -46,7 +46,7 @@ public class FetchArticlesController {
                         try {
                             DBManager.insertArticleQuery(article);
                         } catch (Exception e) {
-                            System.err.println("Failed to save article: " + article.getTitle());
+                            System.out.println("Failed to save article: " + article.getTitle());
                             e.printStackTrace();
                         }
                     }
@@ -87,7 +87,7 @@ public class FetchArticlesController {
             Parent root = loader.load();
 
             AdminDashboardController controller = loader.getController();
-            controller.setAdmin(admin);
+            controller.setAdmin(currentAdmin);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

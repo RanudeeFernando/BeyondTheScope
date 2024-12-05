@@ -42,12 +42,9 @@ public class SignUpController extends BaseController {
     @FXML
     private Button signUpButton;
 
-    public void initialize() {
-
-    }
 
     @FXML
-    public void registerUser() {
+    public void onSignupButtonClick() {
         String username = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();

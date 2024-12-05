@@ -75,14 +75,11 @@ public class Article {
         this.url = url;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 
     // Optionally, override toString() for better display
     @Override
     public String toString() {
-        return "Article{articleID='" + articleID + '\'' +
+        return "Article {articleID='" + articleID + '\'' +
                 ", title='" + title + '\'' +
                 ", category=" + category +
                 ", author='" + author + '\'' +

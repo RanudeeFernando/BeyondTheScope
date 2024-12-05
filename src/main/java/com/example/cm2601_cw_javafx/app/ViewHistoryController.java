@@ -1,11 +1,9 @@
 package com.example.cm2601_cw_javafx.app;
 
 
-import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.User;
 import com.example.cm2601_cw_javafx.model.ViewedArticle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,10 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ViewHistoryController extends BaseController {
 
@@ -26,32 +21,30 @@ public class ViewHistoryController extends BaseController {
     @FXML
     private ListView<String> articleListView;
 
-
-    User user;
+    private User currentUser;
 
     @Override
-    public void setUser(User user) {
-        this.user = user;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        //initializeUserViewHistory(currentUser.getUserID());
     }
 
-
-
-
-    public void initializeUserViewHistory(int userId) {
+    public void initializeUserViewHistory(int userID) {
 
         try {
-            DBManager dbManager = new DBManager();
-
             // Retrieve the viewed articles for the user
-            List<ViewedArticle> viewedArticles = user.getViewedArticles(userId);
+            List<ViewedArticle> viewedArticles = currentUser.getViewedArticles(userID);
 
-            // Convert the list to an ObservableList for the ListView
-            ObservableList<String> listViewItems = FXCollections.observableArrayList(
-                    viewedArticles.stream().map(ViewedArticle::toString).collect(Collectors.toList())
-            );
+            if (viewedArticles.isEmpty()) {
+                // Show an alert if the view history is empty
+                Platform.runLater(() -> showAlert("It seems you haven't viewed any articles yet. Start exploring articles, and your view history will be updated here."));
+                return;
+            }
 
-            // Set the retrieved articles to the ListView
-            articleListView.setItems(listViewItems);
+            // Directly populate the ListView with article data
+            for (ViewedArticle article : viewedArticles) {
+                articleListView.getItems().add(article.toString());
+            }
 
         } catch (Exception e) {
             System.out.println("An unexpected error occurred while initializing the view history: " + e.getMessage());
@@ -60,7 +53,9 @@ public class ViewHistoryController extends BaseController {
 
     }
 
-    // Method to return to the home view
+
+
+    // Method to return to Home page
     public void goBackToHome() {
         try {
             // Load the home page FXML file
@@ -68,14 +63,14 @@ public class ViewHistoryController extends BaseController {
             Parent root = loader.load();
 
             HomeController controller = loader.getController();
-            controller.setUser(user);
+            controller.setCurrentUser(currentUser);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Home page.");
-            e.printStackTrace();
+
         }
     }
 

@@ -2,7 +2,6 @@ package com.example.cm2601_cw_javafx.app;
 
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Admin;
-import com.example.cm2601_cw_javafx.model.Category;
 import com.example.cm2601_cw_javafx.model.SystemUser;
 import com.example.cm2601_cw_javafx.model.User;
 
@@ -11,13 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 public class LoginController extends BaseController {
 
@@ -106,13 +102,15 @@ public class LoginController extends BaseController {
 
     @FXML
     public void onLoginButtonClick() {
-        String username = usernameField.getText();
+        String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
         String authResult = systemUserManager.authenticateUser(username, password);
 
         if ("Login successful!".equals(authResult)) {
-            SystemUser loggedInUser = systemUserManager.getUser(username);
+
+
+            SystemUser loggedInUser = DBManager.getUserQuery(username);
 
             if (loggedInUser != null) {
                 System.out.println("User authenticated: " + loggedInUser.getUsername());
@@ -153,7 +151,9 @@ public class LoginController extends BaseController {
             currentScene.setRoot(root);
         } catch (IOException e) {
             showAlert("An error occurred while navigating to the Admin Dashboard.");
+            e.printStackTrace();
         }
+
     }
 
     private void navigateToHomePage(User user) {
@@ -162,12 +162,28 @@ public class LoginController extends BaseController {
             Parent root = loader.load();
 
             HomeController homeController = loader.getController();
-            homeController.setUser(user);
+            homeController.setCurrentUser(user);
 
             Scene currentScene = usernameField.getScene();
             currentScene.setRoot(root);
         } catch (IOException e) {
             showAlert("An error occurred while navigating to the Home page.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goBackToMain(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/main.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = usernameField.getScene();
+            scene.setRoot(root);
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while redirecting to Main page.");
+            e.printStackTrace();
         }
     }
 

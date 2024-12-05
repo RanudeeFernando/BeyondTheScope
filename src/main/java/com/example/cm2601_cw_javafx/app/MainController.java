@@ -20,7 +20,7 @@ public class MainController extends BaseController {
 
     }
 
-    public void onSignUpButtonClick() {
+    public void goToSignupPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/sign-up.fxml"));
             Parent root = loader.load();
@@ -36,7 +36,7 @@ public class MainController extends BaseController {
         }
     }
 
-    public void onLoginButtonClick() {
+    public void goToLoginPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/login.fxml"));
             Parent root = loader.load();

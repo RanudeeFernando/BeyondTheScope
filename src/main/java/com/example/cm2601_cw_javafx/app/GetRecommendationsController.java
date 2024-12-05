@@ -3,6 +3,7 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.User;
 import com.example.cm2601_cw_javafx.service.RecommendationModel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,11 +21,11 @@ public class GetRecommendationsController extends BaseController{
     @FXML
     private AnchorPane rootPane;
 
-    User user;
+    User currentUser;
 
     @Override
-    public void setUser(User user) {
-        this.user = user;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
 
     }
 
@@ -32,9 +33,10 @@ public class GetRecommendationsController extends BaseController{
         List<RecommendedItem> recommendations = RecommendationModel.generateRecommendations();
 
         boolean hasRecommendations = false;
+        int currentUserID = currentUser.getUserID();
 
         for (RecommendedItem recommendation : recommendations) {
-            if (recommendation.getUserId().equals(String.valueOf(user.getUserID()))) {
+            if (recommendation.getUserId().equals(String.valueOf(currentUserID))) {
                 hasRecommendations = true;
 
                 String articleName = DBManager.getArticleNameByIdQuery(recommendation.getItemId());
@@ -46,7 +48,7 @@ public class GetRecommendationsController extends BaseController{
         }
 
         if (!hasRecommendations) {
-            showAlert("We couldn't generate recommendations for you. Please interact with articles so we can understand your preferences better!");
+            Platform.runLater(() -> showAlert("We couldn't generate recommendations for you. Please interact with articles so we can understand your preferences better!"));
 
         }
     }
@@ -60,7 +62,7 @@ public class GetRecommendationsController extends BaseController{
             Parent root = loader.load();
 
             HomeController controller = loader.getController();
-            controller.setUser(user);
+            controller.setCurrentUser(currentUser);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

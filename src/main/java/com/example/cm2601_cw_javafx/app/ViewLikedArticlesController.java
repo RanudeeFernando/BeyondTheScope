@@ -3,18 +3,15 @@ package com.example.cm2601_cw_javafx.app;
 import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
-import com.example.cm2601_cw_javafx.service.SystemUserManager;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 public class ViewLikedArticlesController extends BaseController {
@@ -32,25 +29,47 @@ public class ViewLikedArticlesController extends BaseController {
     User user;
 
     @Override
-    public void setUser(User user) {
-        this.user = user;
+    public void setCurrentUser(User currentUser) {
+        this.user = currentUser;
     }
 
 
     // Method to initialize and load liked articles
-    public void initializeUserLikedArticles(int userId) {
+//    public void initializeUserLikedArticles(int userID) {
+//
+//        List<Article> likedArticles;
+//        try {
+//            likedArticles = user.getLikedArticles(userID);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        for (Article article : likedArticles) {
+//            likedArticleListView.getItems().add(article.getTitle());
+//        }
+//
+//    }
 
-        List<Article> likedArticles;
+    public void initializeUserLikedArticles(int userID) {
+
         try {
-            likedArticles = user.getLikedArticles(userId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+            // Retrieve the liked articles for the user
+            List<Article> likedArticles = user.getLikedArticles(userID);
 
-        for (Article article : likedArticles) {
-            likedArticleListView.getItems().add(article.getTitle());
-        }
+            if (likedArticles.isEmpty()) {
+                // Show an alert if the liked articles list is empty
+                Platform.runLater(() -> showAlert("It seems you haven't liked any articles yet. Start liking articles, and they'll appear here!"));
+                return;
+            }
 
+            // Directly add each article title to the ListView
+            for (int i = 0; i < likedArticles.size(); i++) {
+                likedArticleListView.getItems().add(likedArticles.get(i).getTitle());
+            }
+
+        } catch (Exception e) {
+            System.out.println("An unexpected error occurred while initializing the liked articles: " + e.getMessage());
+        }
     }
 
 
@@ -61,7 +80,7 @@ public class ViewLikedArticlesController extends BaseController {
             Parent root = loader.load();
 
             HomeController homeController = loader.getController();
-            homeController.setUser(user);
+            homeController.setCurrentUser(user);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

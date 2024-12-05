@@ -51,8 +51,8 @@ public class UpdateProfileController extends BaseController{
     User currentUser;
 
     @Override
-    public void setUser(User user) {
-        this.currentUser = user;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 
 //    public void initialize(){
@@ -100,7 +100,7 @@ public class UpdateProfileController extends BaseController{
     }
 
     @FXML
-    private void updateInterests() {
+    private void onUpdateInterestsButtonClick() {
         List<Category> selectedCategories = new ArrayList<>();
         if (categorySports.isSelected()) selectedCategories.add(Category.SPORTS);
         if (categoryBusiness.isSelected()) selectedCategories.add(Category.BUSINESS);
@@ -137,7 +137,7 @@ public class UpdateProfileController extends BaseController{
     }
 
     @FXML
-    private void updatePassword() {
+    private void onUpdatePasswordButtonClick() {
         String currentPassword = currentPasswordField.getText();
         String newPassword = newPasswordField.getText();
         String confirmPassword = confirmPasswordField.getText();
@@ -184,7 +184,7 @@ public class UpdateProfileController extends BaseController{
             Parent root = loader.load();
 
             HomeController controller = loader.getController();
-            controller.setUser(currentUser);
+            controller.setCurrentUser(currentUser);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);

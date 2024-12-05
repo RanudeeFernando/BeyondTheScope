@@ -130,12 +130,12 @@
             </CheckBox>
          </children>
       </GridPane>
-      <Button layoutX="673.0" layoutY="652.0" mnemonicParsing="false" onAction="#updateInterests" prefHeight="35.0" prefWidth="176.0" text="Update Interests">
+      <Button layoutX="673.0" layoutY="652.0" mnemonicParsing="false" onAction="#onUpdateInterestsButtonClick" prefHeight="35.0" prefWidth="176.0" text="Update Interests">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="673.0" layoutY="391.0" mnemonicParsing="false" onAction="#updatePassword" prefHeight="35.0" prefWidth="176.0" text="Update Password">
+      <Button layoutX="673.0" layoutY="391.0" mnemonicParsing="false" onAction="#onUpdatePasswordButtonClick" prefHeight="35.0" prefWidth="176.0" text="Update Password">
          <font>
             <Font size="18.0" />
          </font>

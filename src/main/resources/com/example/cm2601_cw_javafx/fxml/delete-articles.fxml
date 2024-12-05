@@ -43,7 +43,7 @@
             <Font size="14.0" />
          </font>
       </TextField>
-      <Button fx:id="deleteArticleButton" layoutX="398.0" layoutY="273.0" mnemonicParsing="false" onAction="#deleteArticle" prefHeight="17.0" prefWidth="82.0" text="Delete">
+      <Button fx:id="deleteArticleButton" layoutX="398.0" layoutY="273.0" mnemonicParsing="false" onAction="#onDeleteArticleButtonClick" prefHeight="17.0" prefWidth="82.0" text="Delete">
          <font>
             <Font size="14.0" />
          </font>

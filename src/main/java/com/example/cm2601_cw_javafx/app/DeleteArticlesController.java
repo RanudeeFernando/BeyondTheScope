@@ -91,7 +91,7 @@ public class DeleteArticlesController {
 //    }
 
     @FXML
-    private void deleteArticle() {
+    private void onDeleteArticleButtonClick() {
         try {
             String articleIDText = articleIDTextField.getText().trim();
 
@@ -115,7 +115,7 @@ public class DeleteArticlesController {
             boolean isDeleted = admin.deleteArticle(article); // Use the updated deleteArticle method.
 
             if (isDeleted) {
-                showAlert("Article \"" + article.getTitle() + "\" has been successfully deleted.");
+                showAlert("Article with ID: " + article.getArticleID() + " has been successfully deleted.");
                 loadArticles(); // Refresh the list of articles.
                 articleIDTextField.clear();
             } else {
