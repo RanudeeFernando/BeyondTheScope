@@ -9,8 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +20,7 @@ public class NewsApplication extends Application {
     private static ScheduledExecutorService fetchScheduler;
     private static ScheduledExecutorService categorizeScheduler;
 
+    // Starts the main application window and initializes schedulers
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -29,7 +28,6 @@ public class NewsApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(NewsApplication.class.getResource("/com/example/cm2601_cw_javafx/fxml/main.fxml"));
         Scene scene = new Scene(fxmlLoader.load(),1100,750);
 
-        // Set application logo
         Image icon = new Image(Objects.requireNonNull(NewsApplication.class.getResourceAsStream("/com/example/cm2601_cw_javafx/images/logo1.png")));
         stage.getIcons().add(icon);
 
@@ -43,11 +41,13 @@ public class NewsApplication extends Application {
         // Displaying the stage
         stage.show();
 
+        // Start background tasks for fetching and categorizing articles
         startArticleFetchScheduler();
         startCategorizationScheduler();
 
     }
 
+    // Fetches new articles according to schedule
     private static void startArticleFetchScheduler() {
         fetchScheduler = Executors.newScheduledThreadPool(1);
 
@@ -58,10 +58,10 @@ public class NewsApplication extends Application {
 
                 if (fetchedArticles.isEmpty()) {
                     System.out.println("No new articles were fetched.");
-                } else {
+                }
+                else {
                     fetchedArticles.forEach(System.out::println);
 
-                    //ArticleFetcher.saveArticles(fetchedArticles);
 
                     for (Article article : fetchedArticles) {
                         try {
@@ -82,6 +82,7 @@ public class NewsApplication extends Application {
         }, 0, 6, TimeUnit.HOURS); // Fetch every 6 hours
     }
 
+    // CategorizeS uncategorized articles according to schedule
     private static void startCategorizationScheduler() {
         categorizeScheduler = Executors.newScheduledThreadPool(1);
 
@@ -89,8 +90,11 @@ public class NewsApplication extends Application {
             try {
                 System.out.println("\nStarting categorization...");
                 ArticleCategorizer categorizer = new ArticleCategorizer();
+
+                // Categorize uncategorized articles
                 categorizer.categorizeUnknownArticles();
                 System.out.println("\nCategorization complete.");
+
             } catch (Exception e) {
                 System.out.println("\nError during article categorization: " + e.getMessage());
 
@@ -102,6 +106,7 @@ public class NewsApplication extends Application {
     public void stop() throws Exception {
         super.stop();
 
+        // Stop background tasks
         if (fetchScheduler != null && !fetchScheduler.isShutdown()) {
             fetchScheduler.shutdownNow();
         }
@@ -110,6 +115,7 @@ public class NewsApplication extends Application {
             categorizeScheduler.shutdownNow();
         }
 
+        // Close database executor
         DBManager.shutdownExecutor();
 
         System.out.println("\nApplication stopped, and schedulers shut down.");
