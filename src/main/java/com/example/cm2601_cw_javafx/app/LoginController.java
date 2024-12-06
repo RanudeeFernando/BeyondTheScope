@@ -4,13 +4,11 @@ import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Admin;
 import com.example.cm2601_cw_javafx.model.SystemUser;
 import com.example.cm2601_cw_javafx.model.User;
-
 import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
@@ -21,169 +19,123 @@ public class LoginController extends BaseController {
     private TextField usernameField;
     @FXML
     private TextField passwordField;
-    @FXML
-    private Button loginButton;
 
     private final SystemUserManager systemUserManager = new SystemUserManager();
 
 
-//    @FXML
-//    public void handleLogin() {
-//        String username = usernameField.getText();
-//        String password = passwordField.getText();
-//
-//        String authResult = systemUserManager.authenticateUser(username, password);
-//
-//        if ("Login successful!".equals(authResult)) {
-//            SystemUser loggedInUser = systemUserManager.getUser(username);
-//
-//            if (loggedInUser != null) {
-//                SessionService.getInstance().setLoggedInUser(loggedInUser);
-//
-//                System.out.println("User set in session: " + loggedInUser.getUsername());
-//
-//                if (loggedInUser instanceof Admin) {
-//                    showAlert("Successfully logged in as Admin! You will be redirected to the Admin Dashboard shortly.");
-//                    navigateToAdminDashboard();
-//                } else if (loggedInUser instanceof User) {
-//                    showAlert("Login successful! You will be redirected to the Home page shortly.");
-//                    navigateToHomePage();
-//                } else {
-//                    showAlert("Unknown role. Login failed.");
-//                }
-//            } else {
-//                showAlert("An error occurred while retrieving user information.");
-//            }
-//        } else {
-//            showAlert(authResult);
-//        }
-//
-//        clearFields();
-//    }
-
-
-
-    private void clearFields() {
-        usernameField.clear();
-        passwordField.clear();
-    }
-
-//    private void navigateToHomePage() {
-//        try {
-//            // Load the home page FXML file
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
-//            Parent root = loader.load();
-//
-//
-//            Scene scene = loginButton.getScene();
-//            scene.setRoot(root);
-//
-//        } catch (IOException e) {
-//            System.out.println("An error occurred while redirecting to Home page.");
-//            e.printStackTrace();
-//
-//        }
-//    }
-//
-//    private void navigateToAdminDashboard() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/admin-dashboard.fxml"));
-//            Parent root = loader.load();
-//
-//            Scene scene = loginButton.getScene();
-//            scene.setRoot(root);
-//
-//        }
-//        catch (IOException e) {
-//            System.out.println("Error navigating to Admin Dashboard: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
-
+    // Handles login button click event
     @FXML
     public void onLoginButtonClick() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
+        // // Authenticate the user credentials
         String authResult = systemUserManager.authenticateUser(username, password);
 
         if ("Login successful!".equals(authResult)) {
 
-
+            // // Retrieve the user from the database
             SystemUser loggedInUser = DBManager.getUserQuery(username);
 
             if (loggedInUser != null) {
-                System.out.println("User authenticated: " + loggedInUser.getUsername());
+                // Navigate to Admin Dashboard if the user is an Admin
 
                 if (loggedInUser instanceof Admin) {
 
                     showAlert("Successfully logged in as Admin! You will be redirected to the Admin Dashboard shortly.");
+                    clearFields();
                     navigateToAdminDashboard((Admin) loggedInUser);
 
-                } else if (loggedInUser instanceof User) {
+
+                }
+                // Navigate to Home Page if the user is a regular User
+                else if (loggedInUser instanceof User) {
 
                     showAlert("Login successful! You will be redirected to the Home page shortly.");
+                    clearFields();
                     navigateToHomePage((User) loggedInUser);
 
-                } else {
-
-                    showAlert("Unknown role. Login failed.");
                 }
-            } else {
-                showAlert("An error occurred while retrieving user information.");
+                else {
+                    showError("Unknown role. Login failed.");
+                }
             }
-        } else {
-            showAlert(authResult);
+            else {
+                showError("An error occurred while retrieving user information.");
+            }
+        }
+        else {
+            // Show authentication error messages
+            showError(authResult);
         }
 
-        clearFields();
     }
 
-    private void navigateToAdminDashboard(Admin admin) {
+    // Clears input fields for username and password
+    @Override
+    public void clearFields() {
+        usernameField.clear();
+        passwordField.clear();
+    }
+
+    // Navigates to Admin dashboard
+    public void navigateToAdminDashboard(Admin admin) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/admin-dashboard.fxml"));
             Parent root = loader.load();
 
+            // Pass the admin user data to the AdminDashboardController
             AdminDashboardController adminController = loader.getController();
             adminController.setAdmin(admin);
 
+            // Change the current scene to the Admin dashboard
             Scene currentScene = usernameField.getScene();
             currentScene.setRoot(root);
+
         } catch (IOException e) {
+            // Log an error if navigation fails
             showAlert("An error occurred while navigating to the Admin Dashboard.");
-            e.printStackTrace();
+
         }
 
     }
 
-    private void navigateToHomePage(User user) {
+    // Navigates to home page
+    public void navigateToHomePage(User user) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
+            // Pass the user data to the HomeController
             HomeController homeController = loader.getController();
             homeController.setCurrentUser(user);
 
+            // Change the current scene to the Home Page
             Scene currentScene = usernameField.getScene();
             currentScene.setRoot(root);
+
         } catch (IOException e) {
+            // Log an error if navigation fails
             showAlert("An error occurred while navigating to the Home page.");
-            e.printStackTrace();
+
         }
     }
 
+    // Navigates back to the Main page.
     @FXML
     private void goBackToMain(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/main.fxml"));
             Parent root = loader.load();
 
+            // Change the current scene to the Main page
             Scene scene = usernameField.getScene();
             scene.setRoot(root);
 
         } catch (IOException e) {
+            // Log an error if navigation fails
             System.out.println("An error occurred while redirecting to Main page.");
-            e.printStackTrace();
+
         }
     }
 
