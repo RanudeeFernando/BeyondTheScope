@@ -167,6 +167,7 @@ public class HomeControllerUser extends UserBaseController {
     private void handleLogout() {
 
         try {
+            showAlert("Logout successful! You will be directed to the Main page soon.");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/main.fxml"));
             Parent root = loader.load();
 
@@ -215,77 +216,6 @@ public class HomeControllerUser extends UserBaseController {
 
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //private User loggedInUser;
-
-//    public void setUser(User user) {
-//        if (user == null) {
-//            System.err.println("Error: Attempted to set a null user in HomeControllerUser.");
-//        } else {
-//            this.loggedInUser = user;
-//            System.out.println("User set in HomeControllerUser: " + user.getUsername());
-//        }
-//        postInitialize();
-//    }
-
-
-    // ---------------------------------------------
-
-//    public void postInitialize() {
-//        if (loggedInUser == null) {
-//            System.err.println("Error: Logged-in user is null in postInitialize.");
-//            System.out.println("An error occurred. Please log in again.");
-//            return;
-//        }
-//
-//        loadArticles();
-//
-//        int userID = loggedInUser.getUserID();
-//        String name = loggedInUser.getUsername();
-//
-//        System.out.println("User in postInitialize: " + name);
-//
-//        // Set up double-click event for ListView items
-//        articleListView.setOnMouseClicked(event -> {
-//            if (event.getClickCount() == 2) { // Detect double-click
-//                String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
-//                if (selectedTitle != null) {
-//                    // Find the Article object corresponding to the selected title
-//                    Article selectedArticle = DBManager.getAllArticles(userID)
-//                            .stream()
-//                            .filter(article -> article.getTitle().equals(selectedTitle))
-//                            .findFirst()
-//                            .orElse(null);
-//
-//                    if (selectedArticle != null) {
-//                        viewFullArticle(selectedArticle);
-//                    }
-//
-//                    // Add the article to the user's viewed history
-//                    addArticleToViewedHistory(selectedArticle);
-//                }
-//            }
-//        });
-//    }
-
-
 
 
 

@@ -63,7 +63,6 @@ public class UpdateProfileControllerUser extends UserBaseController {
         List<Category> userCategories = currentUser.getSelectedCategories(currentUser.getUserID());
 
         setSelectedCategories(userCategories);
-        System.out.println(userCategories);
 
 
     }

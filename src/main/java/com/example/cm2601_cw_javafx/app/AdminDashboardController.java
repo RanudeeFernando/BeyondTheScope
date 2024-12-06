@@ -21,6 +21,7 @@ public class AdminDashboardController extends AdminBaseController{
 
     private Admin currentAdmin;
 
+    // Set the current admin method
     @Override
     public void setAdmin(Admin admin) {
         this.currentAdmin = admin;
@@ -28,13 +29,14 @@ public class AdminDashboardController extends AdminBaseController{
     }
 
     public void initialize() {
+        // Update the welcome label dynamically
         Platform.runLater(() -> welcomeLabel.setText("Hello, " + currentAdmin.getUsername() + "!"));
     }
 
+    // Navigate to Fetch Articles page
     @FXML
     private void handleFetchArticlesButton() {
 
-        System.out.println("Admin " + currentAdmin.getUsername() + " is selected the fetch articles option.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/fetch-articles.fxml"));
             Parent root = loader.load();
@@ -51,9 +53,9 @@ public class AdminDashboardController extends AdminBaseController{
         }
     }
 
+    // Navigate to Update Category page
     @FXML
     private void handleUpdateArticleCategoryButton() {
-        System.out.println("Admin " + currentAdmin.getUsername() + " is selected the update category option.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/update-category.fxml"));
             Parent root = loader.load();
@@ -69,9 +71,9 @@ public class AdminDashboardController extends AdminBaseController{
         }
     }
 
+    // Navigate to Delete Articles page
     @FXML
     private void handleDeleteArticles() {
-        System.out.println("Admin " + currentAdmin.getUsername() + " is selected delete article option.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/delete-articles.fxml"));
             Parent root = loader.load();
@@ -87,6 +89,7 @@ public class AdminDashboardController extends AdminBaseController{
         }
     }
 
+    // Log out and navigate to Main page
     @FXML
     private void handleLogout() {
 
