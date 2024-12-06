@@ -9,12 +9,15 @@ import java.util.List;
 
 public class SystemUserManager {
 
+    // Registers a new user
     public String registerUser(String username, String password, String confirmPassword, List<Category> selectedCategories) {
+        // Validate username
         if (!validateUsername(username)) {
             return "Username must be at least 4 characters and only contain letters.";
         }
 
         try {
+            // Check if the username already exists
             if (DBManager.checkUsernameExistsQuery(username)) {
                 return "Username already exists!";
             }
@@ -22,22 +25,28 @@ public class SystemUserManager {
             return "Database error during username check: " + e.getMessage();
         }
 
-        if (!validatePassword(password)) {
+        // Validate password
+        if (invalidPassword(password)) {
             return "Password must be at least 8 characters with letters and numbers.";
         }
 
+        // Ensure passwords match
         if (!password.equals(confirmPassword)) {
             return "Passwords do not match!";
         }
 
+        // Ensure at least two categories are selected
         if (selectedCategories.size() < 2) {
             return "Please select at least two categories.";
         }
 
         try {
+            // Insert the new user into the database
             int userId = DBManager.insertUserQuery(username, password);
+            // Insert user-selected categories into the database
             DBManager.insertUserCategoriesQuery(userId, selectedCategories);
 
+            // Create a new User object for confirmation
             User user = new User(userId, username, password, selectedCategories);
 
             return "User successfully registered as: " + user.getUsername();
@@ -47,6 +56,7 @@ public class SystemUserManager {
         }
     }
 
+    // Authenticates a user with given information
     public String authenticateUser(String username, String password) {
         SystemUser systemUser = DBManager.getUserQuery(username);
 
@@ -63,12 +73,14 @@ public class SystemUserManager {
         return "Login successful!";
     }
 
+    // Validates format of username
     public boolean validateUsername(String username) {
         return username.length() >= 4 && username.matches("[A-Za-z]+");
     }
 
-    public boolean validatePassword(String password) {
-        return password.length() >= 8 && password.matches(".*[A-Za-z].*") && password.matches(".*\\d.*");
+    // Validates format of password
+    public boolean invalidPassword(String password) {
+        return password.length() < 8 || !password.matches(".*[A-Za-z].*") || !password.matches(".*\\d.*");
     }
 
 
