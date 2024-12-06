@@ -44,21 +44,22 @@ public class UpdateProfileControllerUser extends UserBaseController {
     @FXML
     private CheckBox categoryEducation;
 
+    // Manages user actions
     private final SystemUserManager systemUserManager = new SystemUserManager();
-    //User currentUser = (User) SessionService.getInstance().getLoggedInUser();
 
-    User currentUser;
+    private User currentUser;
 
+    // Sets the current user
     @Override
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
 
 
+    // Initializes the user's details in update profile form
     public void initializeUserDetails(){
         usernameField.setText(currentUser.getUsername());
 
-        //List<Category> userCategories = DBManager.getUserCategories(currentUser.getUserID());
         List<Category> userCategories = currentUser.getSelectedCategories(currentUser.getUserID());
 
         setSelectedCategories(userCategories);
@@ -67,6 +68,7 @@ public class UpdateProfileControllerUser extends UserBaseController {
 
     }
 
+    // Marks checkboxes for the user's selected categories
     private void setSelectedCategories(List<Category> userCategories) {
         for (Category category : userCategories) {
             if (category == Category.SPORTS) {
@@ -87,6 +89,7 @@ public class UpdateProfileControllerUser extends UserBaseController {
         }
     }
 
+    // Handles the update of selected interests
     @FXML
     private void onUpdateInterestsButtonClick() {
         List<Category> selectedCategories = new ArrayList<>();
@@ -98,17 +101,19 @@ public class UpdateProfileControllerUser extends UserBaseController {
         if (categoryPolitics.isSelected()) selectedCategories.add(Category.POLITICS);
         if (categoryEducation.isSelected()) selectedCategories.add(Category.EDUCATION);
 
+        // Ensure at least two categories are selected
         if (selectedCategories.size() < 2) {
             showError("Please select at least two categories.");
             return;
         }
 
-        //DBManager.updateUserCategories(currentUser.getUserID(), selectedCategories);
+        // Update the user's selected categories in the database
         currentUser.updateSelectedCategories(currentUser.getUserID(), selectedCategories);
         showAlert("Interests updated successfully!");
     }
 
 
+    // Handles the update of user's password
     @FXML
     private void onUpdatePasswordButtonClick() {
         String currentPassword = currentPasswordField.getText();
@@ -136,20 +141,24 @@ public class UpdateProfileControllerUser extends UserBaseController {
                 return;
             }
 
-            //DBManager.updatePassword(currentUser.getUserID(), newPassword);
-
             currentUser.updatePassword(currentUser.getUserID(), newPassword);
 
             showAlert("Password updated successfully!");
-            currentPasswordField.clear();
-            newPasswordField.clear();
-            confirmPasswordField.clear();
+            clearFields();
 
         } catch (SQLException e) {
             showError("Error updating password: " + e.getMessage());
         }
     }
 
+    @Override
+    public void clearFields(){
+        currentPasswordField.clear();
+        newPasswordField.clear();
+        confirmPasswordField.clear();
+    }
+
+    // Navigates back to the Home page
     public void goBackToHome() {
         try {
             // Load the home page FXML file
@@ -164,7 +173,7 @@ public class UpdateProfileControllerUser extends UserBaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Home page.");
-            e.printStackTrace();
+
         }
     }
 }

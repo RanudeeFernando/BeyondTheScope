@@ -13,8 +13,8 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.List;
-//
-public class UpdateArticleCategoryController {
+
+public class UpdateArticleCategoryController extends AdminBaseController{
 
     @FXML
     private ListView<String> articleListView;
@@ -24,17 +24,17 @@ public class UpdateArticleCategoryController {
     private ComboBox<Category> categoryComboBox;
     @FXML
     private AnchorPane rootPane;
-    @FXML
-    private TextArea logArea;
 
 
-    Admin currentAdmin;
+    private Admin currentAdmin;
 
-    public void setCurrentAdmin(Admin currentAdmin) {
+    // Sets the current admin
+    public void setAdmin(Admin currentAdmin) {
         this.currentAdmin = currentAdmin;
 
     }
 
+    // Initializes the controller
     @FXML
     private void initialize() {
         loadArticles();
@@ -45,6 +45,7 @@ public class UpdateArticleCategoryController {
         }
     }
 
+    // Loads all articles from the database into the ListView
     private void loadArticles() {
        List<Article> articles = DBManager.getAllArticlesQuery();
 
@@ -58,6 +59,7 @@ public class UpdateArticleCategoryController {
         }
     }
 
+    // Handles the Update Category button click
     @FXML
     private void onUpdateCategoryButtonClick() {
         try {
@@ -65,14 +67,14 @@ public class UpdateArticleCategoryController {
 
             Category selectedCategory = categoryComboBox.getValue();
             if (selectedCategory == null) {
-                showAlert("Please select a category to update.");
+                showError("Please select a category to update.");
                 return;
             }
 
             Article article = DBManager.getArticleByIDQuery(articleID);
 
             if (article == null) {
-                showAlert("Article ID " + articleID + " not found.");
+                showError("Article ID " + articleID + " not found.");
                 return;
             }
 
@@ -85,20 +87,14 @@ public class UpdateArticleCategoryController {
             loadArticles();
 
         } catch (NumberFormatException e) {
-            showAlert("Invalid Article ID. Please enter a valid number.");
+            showError("Invalid Article ID. Please enter a valid number.");
         } catch (Exception e) {
-            showAlert("Error updating category: " + e.getMessage());
+            showError("Error updating category: " + e.getMessage());
         }
     }
 
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
+    // Navigates back to the admin dashboard
     @FXML
     private void goBackToDashboard() {
         try {
@@ -114,7 +110,6 @@ public class UpdateArticleCategoryController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Admin Dashboard.");
-            e.printStackTrace();
         }
     }
 

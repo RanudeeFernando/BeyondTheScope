@@ -1,6 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.db.DBManager;
+
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
 import javafx.application.Platform;
@@ -18,15 +18,11 @@ public class ViewLikedArticlesControllerUser extends UserBaseController {
 
     @FXML
     private AnchorPane rootPane;
-//
+
     @FXML
     private ListView<String> likedArticleListView;
 
-    private final DBManager dbManager = new DBManager();
-
-    //private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
-
-    User user;
+    private User user;
 
     @Override
     public void setCurrentUser(User currentUser) {
@@ -34,22 +30,7 @@ public class ViewLikedArticlesControllerUser extends UserBaseController {
     }
 
 
-    // Method to initialize and load liked articles
-//    public void initializeUserLikedArticles(int userID) {
-//
-//        List<Article> likedArticles;
-//        try {
-//            likedArticles = user.getLikedArticles(userID);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        for (Article article : likedArticles) {
-//            likedArticleListView.getItems().add(article.getTitle());
-//        }
-//
-//    }
-
+    // Initializes the list of liked articles for the user
     public void initializeUserLikedArticles(int userID) {
 
         try {
@@ -72,7 +53,7 @@ public class ViewLikedArticlesControllerUser extends UserBaseController {
         }
     }
 
-
+    // Navigates back to the Home page
     public void goBackToHome() {
         try {
             // Load the home page FXML file
@@ -87,7 +68,6 @@ public class ViewLikedArticlesControllerUser extends UserBaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Home page.");
-            e.printStackTrace();
         }
     }
 }

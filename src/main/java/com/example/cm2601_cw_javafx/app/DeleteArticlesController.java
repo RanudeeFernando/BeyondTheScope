@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -16,7 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
 
-public class DeleteArticlesController {
+public class DeleteArticlesController extends AdminBaseController{
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -25,18 +24,21 @@ public class DeleteArticlesController {
     private TextField articleIDTextField;
 
 
-    Admin admin;
+    Admin currentAdmin;
 
+    // Sets the current admin for this controller
+    @Override
     public void setAdmin(Admin admin) {
-        this.admin = admin;
+        this.currentAdmin = admin;
 
     }
 
+    // Initializes the controller by loading articles into the ListView
     public void initialize() {
         loadArticles();
     }
 
-    @FXML
+    // Loads all articles from the database into the ListView
     private void loadArticles() {
         try {
 
@@ -51,79 +53,46 @@ public class DeleteArticlesController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
             showAlert("Error retrieving articles from the database.");
         }
     }
-//
-//    @FXML
-//    private void deleteArticle() {
-//        try {
-//            String articleIDText = articleIDTextField.getText().trim();
-//
-//            if (articleIDText.isEmpty()) {
-//                showAlert("Please enter a valid Article ID.");
-//                return;
-//            }
-//
-//            //Admin admin = (Admin) SessionService.getInstance().getLoggedInUser();
-//
-//            boolean isDeleted = admin.deleteArticle(articleIDText);
-//
-//            if (isDeleted) {
-//                showAlert("Article with ID " + articleIDText + " has been successfully deleted.");
-//                loadArticles();
-//                articleIDTextField.clear();
-//            } else {
-//                showAlert("No article found with the given ID: " + articleIDText);
-//                articleIDTextField.clear();
-//            }
-//
-//        } catch (NumberFormatException e) {
-//            showAlert("Invalid Article ID. Please enter a numeric value.");
-//
-//        } catch (IllegalArgumentException e) {
-//            showAlert(e.getMessage());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            showAlert("An error occurred while deleting the article. Please try again later.");
-//        }
-//    }
 
+    // Handles the delete article button click
     @FXML
     private void onDeleteArticleButtonClick() {
         try {
             String articleIDText = articleIDTextField.getText().trim();
 
             if (articleIDText.isEmpty()) {
-                showAlert("Please enter a valid Article ID.");
+                showError("Please enter a valid Article ID.");
                 return;
             }
 
             int articleID = Integer.parseInt(articleIDText);
 
             // Fetch the Article object based on the articleID
-            Article article = DBManager.getArticleByIDQuery(articleID); // Assume this method fetches an Article by ID.
+            Article article = DBManager.getArticleByIDQuery(articleID);
 
             if (article == null) {
-                showAlert("No article found with the given ID: " + articleIDText);
+                showError("No article found with the given ID: " + articleIDText);
                 articleIDTextField.clear();
                 return;
             }
 
-            // Admin admin = (Admin) SessionService.getInstance().getLoggedInUser();
-            boolean isDeleted = admin.deleteArticle(article); // Use the updated deleteArticle method.
+            boolean isDeleted = currentAdmin.deleteArticle(article);
 
             if (isDeleted) {
                 showAlert("Article with ID: " + article.getArticleID() + " has been successfully deleted.");
-                loadArticles(); // Refresh the list of articles.
+                // Refresh the list of articles
+                loadArticles();
                 articleIDTextField.clear();
+
             } else {
-                showAlert("Failed to delete the article. Please try again.");
+                showError("Failed to delete the article. Please try again.");
             }
 
         } catch (NumberFormatException e) {
-            showAlert("Invalid Article ID. Please enter a numeric value.");
+            showError("Invalid Article ID. Please enter a numeric value.");
         } catch (IllegalArgumentException e) {
             showAlert(e.getMessage());
         } catch (Exception e) {
@@ -131,13 +100,8 @@ public class DeleteArticlesController {
         }
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
+    // Navigates back to the admin dashboard
     @FXML
     private void goBackToDashboard() {
         try {
@@ -146,14 +110,13 @@ public class DeleteArticlesController {
             Parent root = loader.load();
 
             AdminDashboardController controller = loader.getController();
-            controller.setAdmin(admin);
+            controller.setAdmin(currentAdmin);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Admin Dashboard.");
-            e.printStackTrace();
         }
     }
 

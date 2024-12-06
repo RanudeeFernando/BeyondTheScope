@@ -1,6 +1,6 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.db.DBManager;
+
 import com.example.cm2601_cw_javafx.model.Article;
 import com.example.cm2601_cw_javafx.model.User;
 
@@ -9,7 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
+
 import javafx.scene.layout.AnchorPane;
 
 
@@ -20,8 +20,6 @@ public class ViewFullArticleControllerUser extends UserBaseController {
 
     @FXML
     private AnchorPane rootPane;
-    @FXML
-    private ImageView imageViewLogo;
     @FXML
     private Label titleLabel;
     @FXML
@@ -39,19 +37,17 @@ public class ViewFullArticleControllerUser extends UserBaseController {
     @FXML
     private Button skipButton;
 
-    User user;
+    private User user;
     private int currentArticleId;
 
-    private final DBManager dbManager = new DBManager();
-    //private final SystemUserManager systemUserManager = new SystemUserManager(dbManager);
 
-
+    // Sets the current user
     @Override
     public void setCurrentUser(User currentUser) {
         this.user = currentUser;
     }
 
-
+    // Populates article details in the view
     public void setArticleDetails(Article article) {
         this.currentArticleId = article.getArticleID();
         titleLabel.setText(article.getTitle());
@@ -67,86 +63,23 @@ public class ViewFullArticleControllerUser extends UserBaseController {
             publishedDateLabel.setText("Published on: N/A");
         }
 
+        // Set the action for the article URL hyperlink
         articleURL.setOnAction(event -> {
             try {
                 java.awt.Desktop.getDesktop().browse(new java.net.URI(article.getUrl()));
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Error: " + e.getMessage());
             }
         });
 
+        // Update button states
         setButtonStates();
 
 
     }
 
-//    private void setButtonStates() {
-//        int currentUserId = user.getUserID();
-//
-//
-//        // Check if the article is liked or skipped
-//        //boolean isLiked = systemUserManager.hasLikedArticle(currentUserId, currentArticleId);
-//
-//        boolean isLiked = user.hasLikedArticle(currentArticleId);
-//
-//        //boolean isSkipped = systemUserManager.hasSkippedArticle(currentUserId, currentArticleId);
-//
-//        boolean isSkipped = user.hasSkippedArticle(currentArticleId);
-//
-//        // Log states for debugging
-//        System.out.println("isLiked: " + isLiked + ", isSkipped: " + isSkipped);
-//
-//        // Update button text
-//        likeButton.setText(isLiked ? "Liked" : "Like");
-//        skipButton.setText(isSkipped ? "Skipped" : "Skip");
-//
-//        // Update button states
-//        skipButton.setDisable(isLiked);
-//        likeButton.setDisable(isSkipped);
-//    }
-//
-//    public void onLikeButtonClick() {
-//        int currentUserId = user.getUserID();
-//        //boolean isLiked = systemUserManager.hasLikedArticle(currentUserId, currentArticleId);
-//        boolean isLiked = user.hasLikedArticle(currentArticleId);
-//
-//        if (isLiked) {
-//            //systemUserManager.unlikeArticle(currentUserId, currentArticleId);
-//            dbManager.removeInteraction(currentUserId, currentArticleId);
-//            showAlert("Article unliked successfully! Your recommendations will be updated accordingly.");
-//        } else {
-//
-//            //systemUserManager.likeArticle(currentUserId, currentArticleId);
-//            dbManager.addInteraction(currentUserId, currentArticleId, "LIKE");
-//            showAlert("Article liked successfully! Your recommendations will be updated accordingly.");
-//        }
-//
-//        setButtonStates();
-//    }
-//
-//    public void onSkipButtonClick() {
-//        int currentUserId = user.getUserID();
-//        boolean isSkipped = systemUserManager.hasSkippedArticle(currentUserId, currentArticleId);
-//
-//        if (!isSkipped) {
-//            //systemUserManager.skipArticle(currentUserId, currentArticleId);
-//            dbManager.addInteraction(currentUserId, currentArticleId, "SKIP");
-//
-//            showAlert("Article skipped successfully!");
-//
-//        }
-//        else {
-//            //systemUserManager.unskipArticle(currentUserId, currentArticleId);
-//
-//            dbManager.removeInteraction(currentUserId, currentArticleId);
-//            showAlert("Article unskipped successfully!");
-//        }
-//
-//        setButtonStates();
-//    }
 
-
-    // Method to return to the home view
+    // Method to return to the home page
     public void goBackToHome() {
         try {
 
@@ -161,23 +94,18 @@ public class ViewFullArticleControllerUser extends UserBaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Home page.");
-            e.printStackTrace();
+
         }
     }
 
-
-    // ------------------------------
-
+    // Updates the states of the Like and Skip buttons
     public void setButtonStates() {
-        Article currentArticle = getCurrentArticle(); // Fetch the current article based on currentArticleId
+        Article currentArticle = getCurrentArticle();
 
         // Check if the article is liked or skipped using the User's lists
         boolean isLiked = user.hasLikedArticle(currentArticle);
         boolean isSkipped = user.hasSkippedArticle(currentArticle);
 
-        // Log states for debugging
-        System.out.println("isLiked: " + isLiked + ", isSkipped: " + isSkipped);
-        System.out.println(currentArticle);
 
         // Update button text
         likeButton.setText(isLiked ? "Liked" : "Like");
@@ -187,7 +115,8 @@ public class ViewFullArticleControllerUser extends UserBaseController {
         skipButton.setDisable(isLiked);
         likeButton.setDisable(isSkipped);
     }
-//
+
+    // Handles the Like button click
     public void onLikeButtonClick() {
         Article currentArticle = getCurrentArticle(); // Fetch the current article based on currentArticleId
 
@@ -202,6 +131,7 @@ public class ViewFullArticleControllerUser extends UserBaseController {
         setButtonStates();
     }
 
+    // Handles the Skip button click
     public void onSkipButtonClick() {
         Article currentArticle = getCurrentArticle(); // Fetch the current article based on currentArticleId
 
@@ -216,7 +146,7 @@ public class ViewFullArticleControllerUser extends UserBaseController {
         setButtonStates();
     }
 
-    // Helper method to fetch the current Article object
+    // Fetch the current Article object
     private Article getCurrentArticle() {
         return new Article(currentArticleId, titleLabel.getText());
     }

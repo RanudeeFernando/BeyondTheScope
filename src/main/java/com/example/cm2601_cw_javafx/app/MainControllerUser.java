@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 
@@ -13,13 +12,8 @@ public class MainControllerUser extends UserBaseController {
     @FXML
     public Button signUpButton;
 
-    @FXML
-    private ImageView imageViewLogo;
 
-    public void initialize() {
-
-    }
-
+    // Navigates to the Sign-Up page
     public void goToSignupPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/sign-up.fxml"));
@@ -36,6 +30,7 @@ public class MainControllerUser extends UserBaseController {
         }
     }//
 
+    // Navigates to the Login page
     public void goToLoginPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/login.fxml"));

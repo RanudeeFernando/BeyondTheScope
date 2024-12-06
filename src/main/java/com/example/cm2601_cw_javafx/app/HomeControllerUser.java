@@ -11,9 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.image.ImageView;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
@@ -26,22 +23,24 @@ public class HomeControllerUser extends UserBaseController {
     private ListView<String> articleListView;
     @FXML
     private Label welcomeLabel;
+    private User currentUser;
 
-
-    User currentUser;
-
+    // Sets the current user for this controller
     @Override
     public void setCurrentUser(User currentUser) {
         super.setCurrentUser(currentUser);
         this.currentUser = currentUser;
     }
 
+    // Initializes the controller
     public void initialize() {
-
+        // Set the welcome label with username
         Platform.runLater(() -> welcomeLabel.setText("Hello, " + currentUser.getUsername() + "!"));
 
+        // Load articles into the ListView
         loadArticles();
 
+        // Handle double-click on articles to view the full article
         articleListView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 String selectedTitle = articleListView.getSelectionModel().getSelectedItem();
@@ -63,6 +62,7 @@ public class HomeControllerUser extends UserBaseController {
         });
     }
 
+    // Loads all articles into the ListView
     private void loadArticles() {
         List<Article> articles = DBManager.getAllArticlesQuery();
         List<String> titles = articles.stream()
@@ -71,13 +71,14 @@ public class HomeControllerUser extends UserBaseController {
         articleListView.setItems(FXCollections.observableArrayList(titles));
     }
 
+    // Adds the selected article to the user's viewed history
     public void addArticleToViewedHistory(Article article) {
         int userId = currentUser.getUserID();
         DBManager.insertViewedArticleQuery(userId, article.getArticleID());
 
     }
 
-
+    // Redirects the user to view the full article
     private void viewFullArticle(Article article) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-full-article.fxml"));
@@ -96,6 +97,7 @@ public class HomeControllerUser extends UserBaseController {
         }
     }
 
+    // Redirects to the View History page
     @FXML
     private void onViewHistoryMenuItemClicked() {
         try {
@@ -117,6 +119,7 @@ public class HomeControllerUser extends UserBaseController {
         }
     }
 
+    // Redirects to the View Liked Articles page
     @FXML
     private void onViewLikedArticlesMenuItemClicked() {
         try {
@@ -138,6 +141,7 @@ public class HomeControllerUser extends UserBaseController {
         }
     }
 
+    // Redirects to the View Skipped Articles page
     @FXML
     private void onViewSkippedArticlesMenuItemClicked() {
         try {
@@ -158,6 +162,7 @@ public class HomeControllerUser extends UserBaseController {
         }
     }
 
+    // Logs out the current user and redirects to the login page
     @FXML
     private void handleLogout() {
 
@@ -174,6 +179,7 @@ public class HomeControllerUser extends UserBaseController {
         }
     }
 
+    // Redirects to the get recommendations page
     @FXML
     private void handleViewRecommendations() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/get-recommendations.fxml"));
@@ -189,6 +195,7 @@ public class HomeControllerUser extends UserBaseController {
         stage.show();
     }
 
+    // Redirects to the Update Profile page
     @FXML
     private void onUpdateProfileMenuItemClicked() {
         try {

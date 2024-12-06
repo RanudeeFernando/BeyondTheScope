@@ -21,20 +21,24 @@ public class GetRecommendationsControllerUser extends UserBaseController {
     @FXML
     private AnchorPane rootPane;
 
-    User currentUser;
+    private User currentUser;
 
+    // Sets the current user
     @Override
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
 
     }
 
+    // Initializes the recommended articles and displays them in the ListView
     public void initializeRecommendedArticles() {
+        // Generate recommendations using the RecommendationModel
         List<RecommendedItem> recommendations = RecommendationModel.generateRecommendations();
 
         boolean hasRecommendations = false;
         int currentUserID = currentUser.getUserID();
 
+        // Iterate through the recommendations and display those for the current user
         for (RecommendedItem recommendation : recommendations) {
             if (recommendation.getUserId().equals(String.valueOf(currentUserID))) {
                 hasRecommendations = true;
@@ -54,13 +58,13 @@ public class GetRecommendationsControllerUser extends UserBaseController {
     }
 
 
-//
-
+    // Navigates back to the user's home page
     public void goBackToHome() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
+            // Pass the current user to the HomeController
             HomeControllerUser controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
@@ -69,7 +73,6 @@ public class GetRecommendationsControllerUser extends UserBaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Home page.");
-            e.printStackTrace();
         }
     }
 }

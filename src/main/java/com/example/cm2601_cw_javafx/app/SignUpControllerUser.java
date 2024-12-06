@@ -1,6 +1,5 @@
 package com.example.cm2601_cw_javafx.app;
 
-import com.example.cm2601_cw_javafx.db.DBManager;
 import com.example.cm2601_cw_javafx.model.Category;
 import com.example.cm2601_cw_javafx.service.SystemUserManager;
 import javafx.fxml.FXML;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SignUpControllerUser extends UserBaseController {
-    private final DBManager DBManager = new DBManager();
     private final SystemUserManager systemUserManager = new SystemUserManager();
 
     @FXML
@@ -43,24 +41,28 @@ public class SignUpControllerUser extends UserBaseController {
     private Button signUpButton;
 
 
+    // Handles the Sign-Up button click
     @FXML
     public void onSignupButtonClick() {
+        // Get user input from fields
         String username = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
 
+        // Get the selected categories
         List<Category> selectedCategories = getSelectedCategories();
 
         String result = systemUserManager.registerUser(username, password, confirmPassword, selectedCategories);
         showAlert(result);
 
-
+        // If registration is successful, clear the fields and navigate to login page
         if (result.equals("User successfully registered as: " + username)) {
             clearFields();
             navigateToLoginPage();
         }
     }
 
+    // Retrieves the categories selected by the user
     private List<Category> getSelectedCategories() {
         List<Category> selectedCategories = new ArrayList<>();
         if (categoryPolitics.isSelected()) selectedCategories.add(Category.POLITICS);
@@ -74,7 +76,7 @@ public class SignUpControllerUser extends UserBaseController {
         return selectedCategories;
     }
 
-
+    // Clears all input fields and checkboxes
     @Override
     public void clearFields() {
         // Clear text fields
@@ -93,6 +95,7 @@ public class SignUpControllerUser extends UserBaseController {
     }
 
 
+    // Navigates to the login page
     private void navigateToLoginPage() {
 
         try {
@@ -105,10 +108,10 @@ public class SignUpControllerUser extends UserBaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to login page.");
-            e.printStackTrace();
         }
     }
 
+    // Navigates back to the main page
     @FXML
     private void goBackToMain(){
         try {
@@ -120,7 +123,6 @@ public class SignUpControllerUser extends UserBaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Main page.");
-            e.printStackTrace();
         }
     }
 

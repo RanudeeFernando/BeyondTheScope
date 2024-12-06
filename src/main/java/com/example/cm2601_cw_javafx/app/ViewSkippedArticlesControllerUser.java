@@ -19,32 +19,15 @@ public class ViewSkippedArticlesControllerUser extends UserBaseController {
     @FXML
     private ListView<String> skippedArticlesListView;
 
-    User currentUser;
-//
-    //private final DBManager dbManager = new DBManager();
-    //private final SystemUserManager systemUserManager = new SystemUserManager();
+    private User currentUser;
 
+    // Sets the current user for this controller
     @Override
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
 
-//    public void initializeSkippedArticles(int userID) {
-//
-//        List<Article> skippedArticles;
-//        try {
-//            skippedArticles = currentUser.getSkippedArticles(userID);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        for (Article article : skippedArticles) {
-//            skippedArticlesListView.getItems().add(article.getTitle());
-//        }
-//
-//
-//    }
-
+    // Initializes the list of skipped articles for the user
     public void initializeSkippedArticles(int userID) {
 
         try {
@@ -64,10 +47,10 @@ public class ViewSkippedArticlesControllerUser extends UserBaseController {
 
         } catch (SQLException e) {
             System.out.println("An error occurred while retrieving skipped articles: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
+    // Navigates back to the Home page
     public void goBackToHome() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
@@ -81,7 +64,6 @@ public class ViewSkippedArticlesControllerUser extends UserBaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Home page.");
-            e.printStackTrace();
         }
     }
 }

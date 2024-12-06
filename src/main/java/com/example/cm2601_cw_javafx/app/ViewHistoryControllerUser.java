@@ -23,12 +23,13 @@ public class ViewHistoryControllerUser extends UserBaseController {
 
     private User currentUser;
 
+    // Sets current user
     @Override
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-        //initializeUserViewHistory(currentUser.getUserID());
+
     }
-    //
+
 
     public void initializeUserViewHistory(int userID) {
 
@@ -53,7 +54,6 @@ public class ViewHistoryControllerUser extends UserBaseController {
         }
 
     }
-
 
 
     // Method to return to Home page

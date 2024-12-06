@@ -21,6 +21,7 @@ public class AdminDashboardController extends AdminBaseController{
 
     private Admin currentAdmin;
 
+    @Override
     public void setAdmin(Admin admin) {
         this.currentAdmin = admin;
 
@@ -58,7 +59,7 @@ public class AdminDashboardController extends AdminBaseController{
             Parent root = loader.load();
 
             UpdateArticleCategoryController controller = loader.getController();
-            controller.setCurrentAdmin(currentAdmin);
+            controller.setAdmin(currentAdmin);
 
             Scene currentScene = rootPane.getScene();
             currentScene.setRoot(root);
