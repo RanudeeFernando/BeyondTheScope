@@ -11,7 +11,6 @@ import net.librec.recommender.item.RecommendedItem;
 import net.librec.similarity.RecommenderSimilarity;
 import net.librec.similarity.PCCSimilarity;
 
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
@@ -20,7 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-//
+
 public class RecommendationModel {
     private static final String CSV_FILE_PATH = "user_interactions.csv";
 
