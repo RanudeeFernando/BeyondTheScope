@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SignUpController extends BaseController {
+public class SignUpControllerUser extends UserBaseController {
     private final DBManager DBManager = new DBManager();
     private final SystemUserManager systemUserManager = new SystemUserManager();
 
@@ -75,7 +75,8 @@ public class SignUpController extends BaseController {
     }
 
 
-    private void clearFields() {
+    @Override
+    public void clearFields() {
         // Clear text fields
         usernameField.clear();
         passwordField.clear();

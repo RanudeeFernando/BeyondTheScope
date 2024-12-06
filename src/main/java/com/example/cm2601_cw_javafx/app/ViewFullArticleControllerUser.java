@@ -16,7 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-public class ViewFullArticleController extends BaseController {
+public class ViewFullArticleControllerUser extends UserBaseController {
 
     @FXML
     private AnchorPane rootPane;
@@ -153,7 +153,7 @@ public class ViewFullArticleController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            HomeController homeController = loader.getController();
+            HomeControllerUser homeController = loader.getController();
             homeController.setCurrentUser(user);
 
             Scene currentScene = rootPane.getScene();
@@ -187,7 +187,7 @@ public class ViewFullArticleController extends BaseController {
         skipButton.setDisable(isLiked);
         likeButton.setDisable(isSkipped);
     }
-
+//
     public void onLikeButtonClick() {
         Article currentArticle = getCurrentArticle(); // Fetch the current article based on currentArticleId
 

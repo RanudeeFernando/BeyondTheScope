@@ -7,28 +7,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 
-public class AdminDashboardController {
+public class AdminDashboardController extends AdminBaseController{
 
     @FXML
     private AnchorPane rootPane;
     @FXML
     private Text welcomeLabel;
-    @FXML
-    private Button fetchArticlesButton;
-    @FXML
-    private Button deleteArticlesButton;
-    @FXML
-    private Button handleArticleCategoryButton;
-    @FXML
-    private Button logoutButton;
 
     private Admin currentAdmin;
 
@@ -57,30 +46,12 @@ public class AdminDashboardController {
 
         } catch (IOException e) {
             System.out.println("Error while navigating to the Fetch Articles page.");
-            e.printStackTrace();
+
         }
     }
 
-//    @FXML
-//    private void handleCategorizeArticles() {
-//        System.out.println("Admin " + loggedInAdmin.getUsername() + " is selected the categorize article option.");
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/categorize-articles.fxml"));
-//            Parent root = loader.load();
-//
-//            CategorizeArticlesController controller = loader.getController();
-//            controller.setAdmin(loggedInAdmin);
-//
-//            Scene currentScene = rootPane.getScene();
-//            currentScene.setRoot(root);
-//        } catch (IOException e) {
-//            System.out.println("Error while navigating to the Categorize Articles page.");
-//            e.printStackTrace();
-//        }
-//    }
-
     @FXML
-    private void handleUpdateCategory() {
+    private void handleUpdateArticleCategoryButton() {
         System.out.println("Admin " + currentAdmin.getUsername() + " is selected the update category option.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/update-category.fxml"));
@@ -93,7 +64,7 @@ public class AdminDashboardController {
             currentScene.setRoot(root);
         } catch (IOException e) {
             System.out.println("Error while navigating to the Update Article Category page.");
-            e.printStackTrace();
+
         }
     }
 
@@ -111,14 +82,12 @@ public class AdminDashboardController {
             currentScene.setRoot(root);
         } catch (IOException e) {
             System.out.println("Error while navigating to the Delete Articles page.");
-            e.printStackTrace();
+
         }
     }
 
     @FXML
     private void handleLogout() {
-
-        //SessionService.getInstance().clearSession();
 
         try {
             showAlert("Logout successful! You will be directed to the Main page soon.");
@@ -130,19 +99,9 @@ public class AdminDashboardController {
 
         } catch (IOException e) {
             System.out.println("Error while navigating to the main page.");
-            e.printStackTrace();
+
         }
     }
-
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-
-
 
 
 

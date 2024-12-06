@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 
-public class MainController extends BaseController {
+public class MainControllerUser extends UserBaseController {
     @FXML
     public Button signUpButton;
 
@@ -34,7 +34,7 @@ public class MainController extends BaseController {
             String errorMessage = "An error occurred while signing up.";
             System.out.println(errorMessage);
         }
-    }
+    }//
 
     public void goToLoginPage() {
         try {

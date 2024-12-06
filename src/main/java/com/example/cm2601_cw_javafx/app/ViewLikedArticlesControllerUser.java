@@ -14,11 +14,11 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
 
-public class ViewLikedArticlesController extends BaseController {
+public class ViewLikedArticlesControllerUser extends UserBaseController {
 
     @FXML
     private AnchorPane rootPane;
-
+//
     @FXML
     private ListView<String> likedArticleListView;
 
@@ -79,7 +79,7 @@ public class ViewLikedArticlesController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            HomeController homeController = loader.getController();
+            HomeControllerUser homeController = loader.getController();
             homeController.setCurrentUser(user);
 
             Scene currentScene = rootPane.getScene();

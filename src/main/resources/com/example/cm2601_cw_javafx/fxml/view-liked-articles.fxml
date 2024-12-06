@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cm2601_cw_javafx.app.ViewLikedArticlesController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cm2601_cw_javafx.app.ViewLikedArticlesControllerUser">
    <children>
       <ImageView fx:id="imageViewLogo" fitHeight="125.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -25,8 +25,13 @@
             </Menu>
          </menus>
       </MenuBar>
-      <ListView fx:id="likedArticleListView" layoutX="42.0" layoutY="244.0" prefHeight="487.0" prefWidth="1016.0" stylesheets="@../css/menu_bar.css" />
-      <Label layoutX="42.0" layoutY="192.0" prefHeight="30.0" prefWidth="754.0" text="Explore your favorites – The journey never ends!">
+      <ListView fx:id="likedArticleListView" layoutX="42.0" layoutY="276.0" prefHeight="455.0" prefWidth="1016.0" stylesheets="@../css/menu_bar.css" />
+      <Label layoutX="42.0" layoutY="225.0" prefHeight="30.0" prefWidth="754.0" text="Explore your favorites – The journey never ends!">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="42.0" layoutY="184.0" prefHeight="30.0" prefWidth="754.0" text="View your liked articles here!">
          <font>
             <Font size="20.0" />
          </font>

@@ -15,7 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
 
-public class FetchArticlesController {
+public class FetchArticlesController extends AdminBaseController{
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -41,13 +41,13 @@ public class FetchArticlesController {
                 if (articles.isEmpty()) {
                     appendLog("No new articles were fetched from the API.");
                 } else {
-                    //ArticleFetcher.saveArticles(articles);
+
                     for (Article article : articles) {
                         try {
                             DBManager.insertArticleQuery(article);
                         } catch (Exception e) {
                             System.out.println("Failed to save article: " + article.getTitle());
-                            e.printStackTrace();
+
                         }
                     }
                     appendLog("Fetched " + articles.size() + " articles. Saving to database...");
@@ -64,7 +64,6 @@ public class FetchArticlesController {
                 }
             } catch (Exception e) {
                 appendLog("An error occurred while fetching articles: " + e.getMessage());
-                e.printStackTrace();
 
             } finally {
                 Platform.runLater(() -> fetchArticlesButton.setDisable(false));
@@ -94,7 +93,7 @@ public class FetchArticlesController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Admin Dashboard.");
-            e.printStackTrace();
+
         }
     }
 }

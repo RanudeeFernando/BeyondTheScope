@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -19,7 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateProfileController extends BaseController{
+public class UpdateProfileControllerUser extends UserBaseController {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -55,17 +54,6 @@ public class UpdateProfileController extends BaseController{
         this.currentUser = currentUser;
     }
 
-//    public void initialize(){
-//        usernameField.setText(currentUser.getUsername());
-//        try {
-//            List<Category> userCategories = DBManager.getUserPreferences(currentUser.getUserID());
-//            setSelectedCategories(userCategories);
-//            System.out.println(userCategories);
-//        } catch (SQLException e) {
-//            showError("Error loading user preferences: " + e.getMessage());
-//        }
-//
-//    }
 
     public void initializeUserDetails(){
         usernameField.setText(currentUser.getUsername());
@@ -117,24 +105,9 @@ public class UpdateProfileController extends BaseController{
 
         //DBManager.updateUserCategories(currentUser.getUserID(), selectedCategories);
         currentUser.updateSelectedCategories(currentUser.getUserID(), selectedCategories);
-        showSuccess("Interests updated successfully!");
+        showAlert("Interests updated successfully!");
     }
 
-
-
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.show();
-    }
-
-    private void showSuccess(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.show();
-    }
 
     @FXML
     private void onUpdatePasswordButtonClick() {
@@ -148,7 +121,7 @@ public class UpdateProfileController extends BaseController{
                 return;
             }
 
-            if (!systemUserManager.validatePassword(newPassword)) {
+            if (systemUserManager.invalidPassword(newPassword)) {
                 showError("Password must be at least 8 characters with letters and numbers.");
                 return;
             }
@@ -167,7 +140,7 @@ public class UpdateProfileController extends BaseController{
 
             currentUser.updatePassword(currentUser.getUserID(), newPassword);
 
-            showSuccess("Password updated successfully!");
+            showAlert("Password updated successfully!");
             currentPasswordField.clear();
             newPasswordField.clear();
             confirmPasswordField.clear();
@@ -183,7 +156,7 @@ public class UpdateProfileController extends BaseController{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            HomeController controller = loader.getController();
+            HomeControllerUser controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
             Scene currentScene = rootPane.getScene();

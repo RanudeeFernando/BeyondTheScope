@@ -10,8 +10,6 @@ module com.example.cm2601_cw_javafx {
     requires librec.core;
 
 
-    opens com.example.cm2601_cw_javafx to javafx.fxml;
-    exports com.example.cm2601_cw_javafx;
     exports com.example.cm2601_cw_javafx.app;
     opens com.example.cm2601_cw_javafx.app to javafx.fxml;
     exports com.example.cm2601_cw_javafx.model;
@@ -20,4 +18,5 @@ module com.example.cm2601_cw_javafx {
     opens com.example.cm2601_cw_javafx.service to javafx.fxml;
     exports com.example.cm2601_cw_javafx.db;
     opens com.example.cm2601_cw_javafx.db to javafx.fxml;
+
 }

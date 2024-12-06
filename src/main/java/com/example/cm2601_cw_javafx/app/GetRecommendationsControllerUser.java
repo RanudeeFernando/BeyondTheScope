@@ -15,7 +15,7 @@ import net.librec.recommender.item.RecommendedItem;
 import java.io.IOException;
 import java.util.List;
 
-public class GetRecommendationsController extends BaseController{
+public class GetRecommendationsControllerUser extends UserBaseController {
     @FXML
     private ListView<String> recommendationListView;
     @FXML
@@ -54,14 +54,14 @@ public class GetRecommendationsController extends BaseController{
     }
 
 
-
+//
 
     public void goBackToHome() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            HomeController controller = loader.getController();
+            HomeControllerUser controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
             Scene currentScene = rootPane.getScene();

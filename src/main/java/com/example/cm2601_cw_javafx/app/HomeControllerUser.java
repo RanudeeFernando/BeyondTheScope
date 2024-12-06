@@ -21,21 +21,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HomeController extends BaseController {
-    @FXML
-    private MenuItem logoutMenuItem;
-    @FXML
-    private ImageView imageViewLogo;
-    @FXML
-    private Menu homeMenu;
-    @FXML
-    private Menu profileMenu;
+public class HomeControllerUser extends UserBaseController {
     @FXML
     private ListView<String> articleListView;
     @FXML
     private Label welcomeLabel;
 
-    //private final DBManager DBManager = new DBManager();
 
     User currentUser;
 
@@ -93,7 +84,7 @@ public class HomeController extends BaseController {
             Parent root = loader.load();
 
 
-            ViewFullArticleController controller = loader.getController();
+            ViewFullArticleControllerUser controller = loader.getController();
             controller.setCurrentUser(currentUser);
             controller.setArticleDetails(article);
 
@@ -102,7 +93,6 @@ public class HomeController extends BaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Full Article page.");
-            e.printStackTrace();
         }
     }
 
@@ -113,7 +103,7 @@ public class HomeController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-history.fxml"));
             Parent root = loader.load();
 
-            ViewHistoryController controller = loader.getController();
+            ViewHistoryControllerUser controller = loader.getController();
 
             controller.setCurrentUser(currentUser);
             controller.initializeUserViewHistory(currentUser.getUserID());
@@ -123,7 +113,7 @@ public class HomeController extends BaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to View History page.");
-            e.printStackTrace();
+
         }
     }
 
@@ -134,7 +124,7 @@ public class HomeController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-liked-articles.fxml"));
             Parent root = loader.load();
 
-            ViewLikedArticlesController controller = loader.getController();
+            ViewLikedArticlesControllerUser controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
             controller.initializeUserLikedArticles(currentUser.getUserID());
@@ -144,7 +134,7 @@ public class HomeController extends BaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to View Liked Articles page.");
-            e.printStackTrace();
+
         }
     }
 
@@ -155,7 +145,7 @@ public class HomeController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-skipped-articles.fxml"));
             Parent root = loader.load();
 
-            ViewSkippedArticlesController controller = loader.getController();
+            ViewSkippedArticlesControllerUser controller = loader.getController();
             controller.setCurrentUser(currentUser);
             controller.initializeSkippedArticles(currentUser.getUserID());
 
@@ -164,7 +154,7 @@ public class HomeController extends BaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to View Skipped Articles page.");
-            e.printStackTrace();
+
         }
     }
 
@@ -180,7 +170,7 @@ public class HomeController extends BaseController {
 
         } catch (IOException e) {
             System.out.println("Error while navigating to the login page.");
-            e.printStackTrace();
+
         }
     }
 
@@ -189,7 +179,7 @@ public class HomeController extends BaseController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/get-recommendations.fxml"));
         Parent root = loader.load();
 
-        GetRecommendationsController controller = loader.getController();
+        GetRecommendationsControllerUser controller = loader.getController();
 
         controller.setCurrentUser(currentUser);
         controller.initializeRecommendedArticles();
@@ -206,7 +196,7 @@ public class HomeController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/update-profile.fxml"));
             Parent root = loader.load();
 
-            UpdateProfileController controller = loader.getController();
+            UpdateProfileControllerUser controller = loader.getController();
             controller.setCurrentUser(currentUser);
             controller.initializeUserDetails();
 
@@ -215,7 +205,7 @@ public class HomeController extends BaseController {
 
         } catch (IOException e) {
             System.out.println("An error occurred while redirecting to Update Profile page.");
-            e.printStackTrace();
+
         }
     }
 
@@ -240,10 +230,10 @@ public class HomeController extends BaseController {
 
 //    public void setUser(User user) {
 //        if (user == null) {
-//            System.err.println("Error: Attempted to set a null user in HomeController.");
+//            System.err.println("Error: Attempted to set a null user in HomeControllerUser.");
 //        } else {
 //            this.loggedInUser = user;
-//            System.out.println("User set in HomeController: " + user.getUsername());
+//            System.out.println("User set in HomeControllerUser: " + user.getUsername());
 //        }
 //        postInitialize();
 //    }

@@ -55,7 +55,7 @@ public class DeleteArticlesController {
             showAlert("Error retrieving articles from the database.");
         }
     }
-
+//
 //    @FXML
 //    private void deleteArticle() {
 //        try {
