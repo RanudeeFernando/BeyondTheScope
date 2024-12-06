@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 
-public class MainControllerUser extends UserBaseController {
+public class MainController extends UserBaseController {
     @FXML
     public Button signUpButton;
 

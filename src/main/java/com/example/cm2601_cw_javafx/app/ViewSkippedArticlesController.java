@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ViewSkippedArticlesControllerUser extends UserBaseController {
+public class ViewSkippedArticlesController extends UserBaseController {
 
     @FXML
     private ListView<String> skippedArticlesListView;
@@ -56,7 +56,7 @@ public class ViewSkippedArticlesControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            HomeControllerUser controller = loader.getController();
+            HomeController controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
             Scene currentScene = skippedArticlesListView.getScene();

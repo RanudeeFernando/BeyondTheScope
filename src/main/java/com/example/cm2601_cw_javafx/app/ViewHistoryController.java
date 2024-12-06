@@ -14,7 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
 
-public class ViewHistoryControllerUser extends UserBaseController {
+public class ViewHistoryController extends UserBaseController {
 
     @FXML
     private AnchorPane rootPane;
@@ -63,7 +63,7 @@ public class ViewHistoryControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            HomeControllerUser controller = loader.getController();
+            HomeController controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
             Scene currentScene = rootPane.getScene();

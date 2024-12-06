@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateProfileControllerUser extends UserBaseController {
+public class UpdateProfileController extends UserBaseController {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -164,7 +164,7 @@ public class UpdateProfileControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            HomeControllerUser controller = loader.getController();
+            HomeController controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
             Scene currentScene = rootPane.getScene();

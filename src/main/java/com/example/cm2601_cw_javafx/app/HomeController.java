@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HomeControllerUser extends UserBaseController {
+public class HomeController extends UserBaseController {
     @FXML
     private ListView<String> articleListView;
     @FXML
@@ -85,7 +85,7 @@ public class HomeControllerUser extends UserBaseController {
             Parent root = loader.load();
 
 
-            ViewFullArticleControllerUser controller = loader.getController();
+            ViewFullArticleController controller = loader.getController();
             controller.setCurrentUser(currentUser);
             controller.setArticleDetails(article);
 
@@ -105,7 +105,7 @@ public class HomeControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-history.fxml"));
             Parent root = loader.load();
 
-            ViewHistoryControllerUser controller = loader.getController();
+            ViewHistoryController controller = loader.getController();
 
             controller.setCurrentUser(currentUser);
             controller.initializeUserViewHistory(currentUser.getUserID());
@@ -127,7 +127,7 @@ public class HomeControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-liked-articles.fxml"));
             Parent root = loader.load();
 
-            ViewLikedArticlesControllerUser controller = loader.getController();
+            ViewLikedArticlesController controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
             controller.initializeUserLikedArticles(currentUser.getUserID());
@@ -149,7 +149,7 @@ public class HomeControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/view-skipped-articles.fxml"));
             Parent root = loader.load();
 
-            ViewSkippedArticlesControllerUser controller = loader.getController();
+            ViewSkippedArticlesController controller = loader.getController();
             controller.setCurrentUser(currentUser);
             controller.initializeSkippedArticles(currentUser.getUserID());
 
@@ -186,7 +186,7 @@ public class HomeControllerUser extends UserBaseController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/get-recommendations.fxml"));
         Parent root = loader.load();
 
-        GetRecommendationsControllerUser controller = loader.getController();
+        GetRecommendationsController controller = loader.getController();
 
         controller.setCurrentUser(currentUser);
         controller.initializeRecommendedArticles();
@@ -204,7 +204,7 @@ public class HomeControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/update-profile.fxml"));
             Parent root = loader.load();
 
-            UpdateProfileControllerUser controller = loader.getController();
+            UpdateProfileController controller = loader.getController();
             controller.setCurrentUser(currentUser);
             controller.initializeUserDetails();
 

@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class LoginControllerUser extends UserBaseController {
+public class LoginController extends UserBaseController {
 
     @FXML
     private TextField usernameField;
@@ -105,8 +105,8 @@ public class LoginControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            // Pass the user data to the HomeControllerUser
-            HomeControllerUser homeController = loader.getController();
+            // Pass the user data to the HomeController
+            HomeController homeController = loader.getController();
             homeController.setCurrentUser(user);
 
             // Change the current scene to the Home Page

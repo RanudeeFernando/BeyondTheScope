@@ -16,7 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-public class ViewFullArticleControllerUser extends UserBaseController {
+public class ViewFullArticleController extends UserBaseController {
 
     @FXML
     private AnchorPane rootPane;
@@ -86,7 +86,7 @@ public class ViewFullArticleControllerUser extends UserBaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cm2601_cw_javafx/fxml/home.fxml"));
             Parent root = loader.load();
 
-            HomeControllerUser homeController = loader.getController();
+            HomeController homeController = loader.getController();
             homeController.setCurrentUser(user);
 
             Scene currentScene = rootPane.getScene();

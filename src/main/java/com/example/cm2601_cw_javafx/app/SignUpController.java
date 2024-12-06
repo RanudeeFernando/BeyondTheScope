@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SignUpControllerUser extends UserBaseController {
+public class SignUpController extends UserBaseController {
     private final SystemUserManager systemUserManager = new SystemUserManager();
 
     @FXML

@@ -15,7 +15,7 @@ import net.librec.recommender.item.RecommendedItem;
 import java.io.IOException;
 import java.util.List;
 
-public class GetRecommendationsControllerUser extends UserBaseController {
+public class GetRecommendationsController extends UserBaseController {
     @FXML
     private ListView<String> recommendationListView;
     @FXML
@@ -65,7 +65,7 @@ public class GetRecommendationsControllerUser extends UserBaseController {
             Parent root = loader.load();
 
             // Pass the current user to the HomeController
-            HomeControllerUser controller = loader.getController();
+            HomeController controller = loader.getController();
             controller.setCurrentUser(currentUser);
 
             Scene currentScene = rootPane.getScene();
