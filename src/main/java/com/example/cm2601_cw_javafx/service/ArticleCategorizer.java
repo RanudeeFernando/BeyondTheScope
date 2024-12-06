@@ -35,7 +35,7 @@ public class ArticleCategorizer {
             // The first element in the array is an array of label/score pairs
             JSONArray labelScores = jsonResponseArray.getJSONArray(0);  // Get the first inner array
 
-            // Find the label with the highest score
+            // Finding label with the highest score
             String predictedCategory = "";
             double highestScore = 0.0;
 
@@ -60,6 +60,7 @@ public class ArticleCategorizer {
     }
 
 
+    // Maps a label string to a category
     private Category mapStringToCategory(String label) {
         switch (label.toLowerCase()) {
             case "arts_&_culture":
@@ -100,23 +101,8 @@ public class ArticleCategorizer {
         }
     }
 
-    // Method to update the articles in the database with their predicted categories
-//    public void categorizeArticles(List<Article> articles) {
-//        for (Article article : articles) {
-//            try {
-//                Category predictedCategory = classifyArticle(article.getContent());
-//                article.setCategory(predictedCategory);  // Set the category as the enum
-//
-//                DBManager DBManager = new DBManager();
-//                DBManager.updateArticleCategoryInDatabase(article);
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
-
+    // Sends an HTTP POST request to the Hugging Face API
     private HttpResponse<String> sendRequestToHuggingFace(JSONObject jsonRequest) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 
@@ -131,29 +117,7 @@ public class ArticleCategorizer {
     }
 
 
-
-//    public void categorizeUnknownArticles1() {
-//        DBManager DBManager = new DBManager();
-//
-//        List<Article> unknownArticles = DBManager.getArticlesWithUnknownCategory();
-//
-//        if (unknownArticles.isEmpty()) {
-//            System.out.println("No articles with 'UNKNOWN' category to categorize.");
-//            return;
-//        }
-//
-//        for (Article article : unknownArticles) {
-//            try {
-//                Category predictedCategory = classifyArticle(article.getContent());
-//                article.setCategory(predictedCategory);
-//                DBManager.updateArticleCategoryInDatabase(article);
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
+    // Categorizes all articles with in "UNKNOWN" category
     public void categorizeUnknownArticles() {
         List<Article> unknownArticles;
 
