@@ -68,7 +68,7 @@ public class NewsApplication extends Application {
                             DBManager.insertArticleQuery(article);
                         } catch (Exception e) {
                             System.out.println("Failed to save article: " + article.getTitle());
-                            e.printStackTrace();
+                            System.out.println("Error: " + e.getMessage());
                         }
                     }
 
@@ -82,7 +82,7 @@ public class NewsApplication extends Application {
         }, 0, 6, TimeUnit.HOURS); // Fetch every 6 hours
     }
 
-    // CategorizeS uncategorized articles according to schedule
+    // Categorizes uncategorized articles according to schedule
     private static void startCategorizationScheduler() {
         categorizeScheduler = Executors.newScheduledThreadPool(1);
 
