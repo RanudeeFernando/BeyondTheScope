@@ -17,6 +17,7 @@ public class DBManager {
     private static final ExecutorService executor = Executors.newFixedThreadPool(2);
 
 
+    // Establishes a connection to the MySQL database
     public static Connection connectToDatabase() {
         try {
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -28,6 +29,7 @@ public class DBManager {
         }
     }
 
+    // Adds or updates user-article interaction in the database
     public static void addInteractionQuery(int userId, int articleId, String interactionType) {
         executor.submit(() -> {
             String sql = "INSERT INTO user_article_interaction (userID, articleID, interactionType) VALUES (?, ?, ?) " +
@@ -41,13 +43,13 @@ public class DBManager {
                 statement.setString(4, interactionType); // Update if already exists
                 statement.executeUpdate();
             } catch (SQLException e) {
-                // Handle the SQLException
-                System.err.println("Error while adding interaction: " + e.getMessage());
-                e.printStackTrace();
+                System.out.println("Error while adding interaction: " + e.getMessage());
+
             }
         });
     }
 
+    // Removes a user-article interaction from the database
     public static void removeInteractionQuery(int userId, int articleId){
         executor.submit(() -> {
             String sql = "DELETE FROM user_article_interaction WHERE userID = ? AND articleID = ?";
@@ -59,12 +61,12 @@ public class DBManager {
                 statement.executeUpdate();
             }
             catch (SQLException e) {
-                System.out.println("Error while removing interaction: " + e.getMessage());
-                e.printStackTrace();
+                System.out.println("Error: " + e.getMessage());
             }
         });
     }
 
+    // Updates the category of an article in the database
     public static void updateArticleCategoryQuery(Article article) {
         executor.submit(() -> {
             String fetchCategoryIDSql = "SELECT categoryID FROM category WHERE categoryName = ?";
@@ -96,11 +98,12 @@ public class DBManager {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Error: " + e.getMessage());
             }
         });
     }
 
+    // Inserts a viewed article into the database
     public static void insertViewedArticleQuery(int userId, int articleId) {
         executor.submit(() -> {
             String insertSQL = "INSERT INTO user_viewed_article (userID, articleID, viewedAt) VALUES (?, ?, ?)";
@@ -114,11 +117,12 @@ public class DBManager {
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 System.out.println("Error while inserting viewed article: " + e.getMessage());
-                e.printStackTrace();
+                System.out.println("Error: " + e.getMessage());
             }
         });
     }
 
+    // Inserts an article into database
     public static void insertArticleQuery(Article article) {
         executor.submit(() -> {
             String sql = "INSERT INTO article (title, source, author, content, url, publishedDate, categoryID) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -146,13 +150,12 @@ public class DBManager {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Error: " + e.getMessage());
             }
         });
     }
 
-
-
+    // Inserts a new user into the database and returns the generated user ID
     public static int insertUserQuery(String username, String password) {
 
             String sql = "INSERT INTO user (username, password) VALUES (?, ?)";
@@ -176,6 +179,8 @@ public class DBManager {
 
     }
 
+
+    // Checks if a username already exists in the database
     public static boolean checkUsernameExistsQuery(String username) throws SQLException {
         String sql = "SELECT COUNT(*) FROM user WHERE username = ?";
         try (Connection connection = connectToDatabase();
@@ -190,6 +195,7 @@ public class DBManager {
         return false;
     }
 
+    // Retrieves user details by username and returns a SystemUser object
     public static SystemUser getUserQuery(String username){
         String sql = "SELECT userID, password, role FROM user WHERE username = ?";
         try (Connection connection = connectToDatabase();
@@ -219,6 +225,7 @@ public class DBManager {
     }
 
 
+    // Checks if the entered password matches the current password in the database
     public static boolean equalsCurrentPasswordQuery(String username, String enteredPassword) throws SQLException {
         String sql = "SELECT password FROM user WHERE username = ?";
         try (Connection connection = connectToDatabase();
@@ -235,6 +242,7 @@ public class DBManager {
         return false;
     }
 
+    // Updates a user's password in the database
     public static void updatePasswordQuery(int userId, String newPassword) throws SQLException {
         String sql = "UPDATE user SET password = ? WHERE userID = ?";
         try (Connection connection = connectToDatabase();
@@ -247,6 +255,7 @@ public class DBManager {
     }
 
 
+    // Inserts user-categories
     public static void insertUserCategoriesQuery(int userId, List<Category> categories) throws SQLException {
         String sql = "INSERT INTO user_category (userID, categoryID) VALUES (?, ?)";
 
@@ -267,7 +276,9 @@ public class DBManager {
     }
 
 
+    // Updates the categories associated with a user
     public static void updateUserCategoriesQuery(int userId, List<Category> categories) throws SQLException {
+        // Delete existing categories for the user
         String deleteSql = "DELETE FROM user_category WHERE userID = ?";
         try (Connection connection = connectToDatabase();
              PreparedStatement deleteStatement = connection.prepareStatement(deleteSql)) {
@@ -276,6 +287,7 @@ public class DBManager {
             deleteStatement.executeUpdate();
         }
 
+        // Insert the new categories for the user
         String insertSql = "INSERT INTO user_category (userID, categoryID) VALUES (?, ?)";
         try (Connection connection = connectToDatabase();
              PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
@@ -289,6 +301,7 @@ public class DBManager {
         }
     }
 
+    // Retrieves categories associated with a user
     public static List<Category> getUserCategoriesQuery(int userId) throws SQLException {
         String sql = "SELECT c.categoryName FROM user_category uc " +
                 "JOIN Category c ON uc.categoryID = c.categoryID " +
@@ -312,6 +325,7 @@ public class DBManager {
     }
 
 
+    // Checks if a user has a specific interaction with an article
     public static boolean findInteractionQuery(int userId, int articleId, String interactionType) {
         String sql = "SELECT COUNT(*) FROM user_article_interaction WHERE userID = ? AND articleID = ? AND interactionType = ?";
         try (Connection connection = connectToDatabase();
@@ -325,12 +339,13 @@ public class DBManager {
             return resultSet.next() && resultSet.getInt(1) > 0;
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
         return false;
 
     }
 
+    // Retrieves articles by user interactions
     public static List<Article> getArticlesByInteractionQuery(int userId, String interactionType) throws SQLException{
         String sql = "SELECT a.*, c.categoryName FROM article a " +
                 "INNER JOIN user_article_interaction ui ON a.articleID = ui.articleID " +
@@ -365,6 +380,7 @@ public class DBManager {
         return articles;
     }
 
+    // Retrieves all articles from the database
     public static List<Article> getAllArticlesQuery() {
         List<Article> articles = new ArrayList<>();
         String sql = "SELECT a.*, c.categoryName FROM article a " +
@@ -392,12 +408,12 @@ public class DBManager {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
         return articles;
     }
 
-
+    // Deletes an article from the database based on its ID
     public static boolean deleteArticleByIDQuery(int articleID) {
         String sql = "DELETE FROM article WHERE articleID = ?";
 
@@ -410,11 +426,12 @@ public class DBManager {
             return rowsAffected > 0;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
             return false;
         }
     }
 
+    // Retrieves all articles in category 'UNKNOWN'
     public static List<Article> getArticlesWithUnknownCategoryQuery() {
         List<Article> articles = new ArrayList<>();
         String query = "SELECT a.articleID, a.title, a.content, a.author, a.source, a.url, "
@@ -445,12 +462,13 @@ public class DBManager {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
         return articles;
     }
 
 
+    // Retrieves an article by its ID from the database
     public static Article getArticleByIDQuery(int articleId) {
         String sql = "SELECT a.*, c.categoryName FROM article a " +
                 "LEFT JOIN category c ON a.categoryID = c.categoryID " +
@@ -479,11 +497,12 @@ public class DBManager {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
         return null;
     }
 
+    // Retrieves the title of an article by its ID
     public static String getArticleNameByIdQuery(String itemId) {
         String query = "SELECT title FROM article WHERE articleID = ?";
         String articleName = "[No Title]";
@@ -499,7 +518,7 @@ public class DBManager {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
 
         return articleName;
@@ -530,13 +549,13 @@ public class DBManager {
             }
         } catch (SQLException e) {
             System.out.println("Error while retrieving viewed articles: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
 
         return viewedArticles;
     }
 
-
+    // Retrieves the ID of a category by its name
     private static int getCategoryIDQuery(String categoryName) throws SQLException {
         String sql = "SELECT categoryID FROM Category WHERE categoryName = ?";
         try (Connection connection = connectToDatabase();
@@ -552,6 +571,7 @@ public class DBManager {
     }
 
 
+    // Checks if an article with the given URL already exists in the database
     public static boolean isDuplicateArticleQuery(String url) {
         String sql = "SELECT COUNT(*) FROM article WHERE url = ?";
         try (Connection dbConnection = connectToDatabase();
@@ -564,70 +584,16 @@ public class DBManager {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
         return false;
     }
 
+    // Shuts down the executor service
     public static void shutdownExecutor() {
         executor.shutdown();
         System.out.println("Executor service shut down.");
     }
-
-    // ---------------------
-
-//    public Article getArticleById(int articleId) {
-//        String sql = "SELECT a.*, c.categoryName FROM article a " +
-//                "LEFT JOIN Category c ON a.categoryID = c.categoryID " +
-//                "WHERE a.articleID = ?";
-//        Article article = null;
-//
-//        try (Connection connection = connectToDatabase();
-//             PreparedStatement statement = connection.prepareStatement(sql)) {
-//
-//            statement.setInt(1, articleId);
-//            try (ResultSet resultSet = statement.executeQuery()) {
-//                if (resultSet.next()) {
-//                    String title = resultSet.getString("title");
-//                    String content = resultSet.getString("content");
-//                    String author = resultSet.getString("author");
-//                    String source = resultSet.getString("source");
-//                    String url = resultSet.getString("url");
-//                    Timestamp publishedDate = resultSet.getTimestamp("publishedDate");
-//                    String categoryName = resultSet.getString("categoryName");
-//
-//                    Category category;
-//                    try {
-//                        category = categoryName != null ? Category.valueOf(categoryName) : Category.UNKNOWN;
-//                    } catch (IllegalArgumentException e) {
-//                        category = Category.UNKNOWN;
-//                    }
-//
-//                    article = new Article(articleId, title, content, category, author, source, url, publishedDate);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            System.err.println("An error occurred while fetching the article: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-//        return article;
-//    }
-//
-//    public static int getUserIdByUsername(String username) throws SQLException {
-//        String sql = "SELECT userID FROM user WHERE username = ?";
-//        try (Connection connection = connectToDatabase();
-//             PreparedStatement statement = connection.prepareStatement(sql)) {
-//
-//            statement.setString(1, username);
-//            ResultSet resultSet = statement.executeQuery();
-//
-//            if (resultSet.next()) {
-//                return resultSet.getInt("userID");
-//            }
-//        }
-//        return -1;
-//    }
 
 }
 
