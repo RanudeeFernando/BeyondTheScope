@@ -20,10 +20,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
+//
 public class RecommendationModel {
     private static final String CSV_FILE_PATH = "user_interactions.csv";
 
+    // Generates a CSV file of user interactions with articles
     public static void generateUserPreferenceCSV() {
         String query = """
         SELECT
@@ -68,52 +69,53 @@ public class RecommendationModel {
     }
 
 
+    // Generates article recommendations using UserKNNRecommender
+    // returns a list of recommended items
     public static List<RecommendedItem> generateRecommendations() {
         List<RecommendedItem> recommendations = new ArrayList<>();
 
         try {
             generateUserPreferenceCSV();
 
-            // Configuration
+            // Configure the recommendation model
             Configuration conf = new Configuration();
-            conf.set("dfs.data.dir", ".");
-            conf.set("data.model.splitter", "ratio");
-            conf.set("data.splitter.trainset.ratio", "0.8");
-            conf.set("data.column.format", "UIR");
-            conf.set("data.model.format", "text");
+            conf.set("dfs.data.dir", ".");  // Set the data directory
+            conf.set("data.model.splitter", "ratio");  // Split dataset for training/testing
+            conf.set("data.splitter.trainset.ratio", "0.8");  // 80% training, 20% testing
+            conf.set("data.column.format", "UIR");  // User, Item, Rating format
+            conf.set("data.model.format", "text");  // Text-based model
             conf.set("data.input.path", CSV_FILE_PATH);
 
-            // Add required configuration for UserKNNRecommender
-            conf.set("rec.neighbors.knn.number", "10");
+            conf.set("rec.neighbors.knn.number", "10");  // Use 10 nearest neighbors
 
-            // Data Model
+            // Build the data model
             DataModel dataModel = new TextDataModel(conf);
             dataModel.buildDataModel();
 
-
+            // Set up similarity metrics (PCC)
             RecommenderSimilarity similarity = new PCCSimilarity();
             similarity.buildSimilarityMatrix(dataModel);
 
+            // Create recommendation context
             RecommenderContext context = new RecommenderContext(conf, dataModel);
             context.setSimilarity(similarity); // Set the similarity object
 
-            // Initialize the recommender
+            // Initialize and train the recommender
             Recommender recommender = new UserKNNRecommender();
             recommender.setContext(context);
-
-            // Train and generate recommendations
             recommender.recommend(context);
 
-            // Retrieve recommendations
+            // Retrieve recommendations from the trained model
             List<RecommendedItem> allRecommendations = recommender.getRecommendedList();
 
             // Filter out negative scores
             for (RecommendedItem recommendation : allRecommendations) {
-                if (recommendation.getValue() > 2) {
+                if (recommendation.getValue() > 0) {
                     recommendations.add(recommendation);
                 }
             }
 
+            // Print recommended items
             for (RecommendedItem recommendation : recommendations) {
                 System.out.println("User: " + recommendation.getUserId() +
                         ", Item: " + recommendation.getItemId() +
@@ -121,71 +123,10 @@ public class RecommendationModel {
             }
 
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
 
         return recommendations;
     }
 
-    public static void main(String[] args) {
-        List<RecommendedItem> recommendations = new ArrayList<>();
-        try {
-            // Generate CSV file
-            generateUserPreferenceCSV();
-
-            // Configuration
-            Configuration conf = new Configuration();
-            conf.set("dfs.data.dir", ".");
-            conf.set("data.model.splitter", "ratio");
-            conf.set("data.splitter.trainset.ratio", "0.7");
-            conf.set("data.column.format", "UIR");
-            conf.set("data.model.format", "text");
-            conf.set("data.input.path", CSV_FILE_PATH);
-
-            // Add required configuration for UserKNNRecommender
-            conf.set("rec.neighbors.knn.number", "10");
-            conf.set("rec.similarity.class", "cosine"); // Similarity metric
-
-            // Data Model
-            DataModel dataModel = new TextDataModel(conf);
-            dataModel.buildDataModel();
-
-            // Initialize similarity metric
-            RecommenderSimilarity similarity = new PCCSimilarity();
-            similarity.buildSimilarityMatrix(dataModel);
-
-            // Create the RecommenderContext
-            RecommenderContext context = new RecommenderContext(conf, dataModel);
-            context.setSimilarity(similarity); // Set the similarity object
-
-            // Initialize the recommender
-            Recommender recommender = new UserKNNRecommender();
-            recommender.setContext(context);
-
-            // Train and generate recommendations
-            recommender.recommend(context);
-
-            // Retrieve recommendations
-            List<RecommendedItem> allRecommendations = recommender.getRecommendedList();
-
-            for (RecommendedItem recommendation : allRecommendations) {
-                if (recommendation.getValue() > 1) {
-                    recommendations.add(recommendation);
-                }
-            }
-
-            for (RecommendedItem recommendation : recommendations) {
-                System.out.println("User: " + recommendation.getUserId() +
-                        ", Item: " + recommendation.getItemId() +
-                        ", Score: " + recommendation.getValue());
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-
-    }
 }
