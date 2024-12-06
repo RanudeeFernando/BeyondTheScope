@@ -12,7 +12,7 @@ public class Article {
     private String url;
     private Timestamp publishedDate;
 
-    // Constructor
+    // Full constructor
     public Article(int articleID, String title, String content, Category category, String author, String source, String url, Timestamp publishedDate) {
         this.articleID = articleID;
         this.title = title;
@@ -24,7 +24,7 @@ public class Article {
         this.publishedDate = publishedDate;
     }
 
-
+    // Constructor to initialize article with minimal attributes
     public Article(int articleID, String title){
         this.articleID = articleID;
         this.title = title;
@@ -74,9 +74,9 @@ public class Article {
     public void setUrl(String url) {
         this.url = url;
     }
+//
 
-
-    // Optionally, override toString() for better display
+    // Provides a formatted string representation of the article
     @Override
     public String toString() {
         return "Article {articleID='" + articleID + '\'' +
