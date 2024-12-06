@@ -2,6 +2,7 @@ package com.example.cm2601_cw_javafx.model;
 
 import java.sql.Timestamp;
 
+// Represents an article viewed by a user
 public class ViewedArticle extends Article {
     private final Timestamp viewedAt;
 
